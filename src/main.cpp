@@ -37,11 +37,16 @@ bool parse_args(int argc, char* argv[], size_t& n, size_t& d, size_t& k, size_t&
 // Generate synthetic data with Gaussian blobs
 void generate_data(Data& data, unsigned seed) {
     std::mt19937 gen(seed);
-    std::normal_distribution<float> noise_dist(0.0f, 1.0f);
-    std::uniform_real_distribution<float> center_dist(-5.0f, 5.0f);
+    
+    // More challenging parameters for clustering
+    float noise_std = 1.5f;  // Increased noise
+    float center_range = 3.0f;  // Reduced center range (closer clusters)
+    
+    std::normal_distribution<float> noise_dist(0.0f, noise_std);
+    std::uniform_real_distribution<float> center_dist(-center_range, center_range);
     std::uniform_int_distribution<int> cluster_dist(0, static_cast<int>(data.K - 1));
     
-    // Generate K random centers in [-5,5]^D
+    // Generate K random centers in smaller range (closer together)
     std::vector<std::vector<float>> centers(data.K, std::vector<float>(data.D));
     for (size_t k = 0; k < data.K; ++k) {
         for (size_t dim = 0; dim < data.D; ++dim) {
@@ -49,7 +54,7 @@ void generate_data(Data& data, unsigned seed) {
         }
     }
     
-    // Generate N points: assign to random center + N(0,1) noise
+    // Generate N points: assign to random center + increased noise
     for (size_t i = 0; i < data.N; ++i) {
         int cluster = cluster_dist(gen);
         for (size_t dim = 0; dim < data.D; ++dim) {
@@ -57,10 +62,12 @@ void generate_data(Data& data, unsigned seed) {
         }
     }
     
-    // Initialize centroids to the generated centers
+    // Initialize centroids to RANDOM positions (not the true centers)
+    // This makes clustering much more challenging
+    std::uniform_real_distribution<float> centroid_dist(-8.0f, 8.0f);
     for (size_t k = 0; k < data.K; ++k) {
         for (size_t dim = 0; dim < data.D; ++dim) {
-            data.centroids[k * data.D + dim] = centers[k][dim];
+            data.centroids[k * data.D + dim] = centroid_dist(gen);
         }
     }
 }
