@@ -3,7 +3,7 @@
 
 # Compiler and flags
 CXX ?= g++
-CXXFLAGS_BASE = -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion
+CXXFLAGS_BASE = -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 
 # Detect compiler for anti-vectorization flags
 CXX_VERSION := $(shell $(CXX) --version 2>/dev/null | head -n1)
