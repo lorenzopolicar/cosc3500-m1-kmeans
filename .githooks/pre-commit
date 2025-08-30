@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Only scan staged C/C++ files
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(c|cc|cpp|hpp|h)$' || true)
+[ -z "$files" ] && exit 0
+
+# Block disallowed parallelism/SIMD includes or APIs
+if git diff --cached -- $files | grep -E '<immintrin\.h>|#pragma[[:space:]]+omp|<execution>|std::thread'; then
+  echo "❌ Found disallowed headers/APIs (SIMD/threads/parallel policies). Remove them before committing."
+  echo "Blocked patterns: <immintrin.h>, #pragma omp, <execution>, std::thread"
+  exit 1
+fi
+
+# Optional: block accidental OpenMP linker flag additions
+if git diff --cached | grep -E '\-fopenmp'; then
+  echo "❌ Detected '-fopenmp' in build flags. OpenMP is out of scope for M1."
+  exit 1
+fi
+
+exit 0
