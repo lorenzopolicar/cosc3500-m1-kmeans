@@ -6,6 +6,11 @@
 #include <fstream>
 #include <filesystem>
 #include <iomanip>
+#include <cstdlib>
+#include <cstring>
+
+// Forward declarations
+void capture_metadata(const std::string& experiment, size_t n, size_t d, size_t k, size_t iters, unsigned seed);
 
 // Parse command line arguments
 bool parse_args(int argc, char* argv[], size_t& n, size_t& d, size_t& k, size_t& iters, unsigned& seed) {
@@ -72,6 +77,56 @@ void generate_data(Data& data, unsigned seed) {
     }
 }
 
+// Capture run metadata for benchmarking
+void capture_metadata(const std::string& experiment, size_t n, size_t d, size_t k, size_t iters, unsigned seed, const std::string& run_suffix = "") {
+    // Create experiment directory
+    std::string exp_dir = "bench/" + experiment;
+    std::filesystem::create_directories(exp_dir);
+    
+    // Create metadata filename
+    std::string meta_filename = exp_dir + "/meta_N" + std::to_string(n) + "_D" + std::to_string(d) + 
+                               "_K" + std::to_string(k) + "_iters" + std::to_string(iters) + 
+                               "_seed" + std::to_string(seed) + run_suffix + ".txt";
+    
+    std::ofstream meta_file(meta_filename);
+    if (meta_file.is_open()) {
+        meta_file << "Experiment: " << experiment << "\n";
+        meta_file << "Timestamp: " << std::chrono::system_clock::now().time_since_epoch().count() << "\n";
+        
+        // Git SHA if available
+        std::string git_sha = "unknown";
+        FILE* git_pipe = popen("git rev-parse --short HEAD 2>/dev/null", "r");
+        if (git_pipe) {
+            char buffer[128];
+            if (fgets(buffer, sizeof(buffer), git_pipe) != nullptr) {
+                git_sha = std::string(buffer);
+                git_sha.erase(git_sha.find_last_not_of(" \n\r\t") + 1);
+            }
+            pclose(git_pipe);
+        }
+        meta_file << "Git SHA: " << git_sha << "\n";
+        
+        // Compiler and flags
+        const char* cxx = std::getenv("CXX");
+        const char* cxxflags = std::getenv("CXXFLAGS");
+        meta_file << "Compiler: " << (cxx ? cxx : "c++") << "\n";
+        meta_file << "Flags: " << (cxxflags ? cxxflags : "(default)") << "\n";
+        
+        // ANTIVEC value
+        const char* antivec = std::getenv("ANTIVEC");
+        meta_file << "ANTIVEC: " << (antivec ? antivec : "not set") << "\n";
+        
+        // CLI arguments
+        meta_file << "CLI Args: --n " << n << " --d " << d << " --k " << k 
+                  << " --iters " << iters << " --seed " << seed << "\n";
+        
+        // Data generation parameters
+        meta_file << "Data Params: noise_std=1.5, center_range=3.0, init=random\n";
+        
+        meta_file.close();
+    }
+}
+
 int main(int argc, char* argv[]) {
     size_t n, d, k, iters;
     unsigned seed;
@@ -92,6 +147,16 @@ int main(int argc, char* argv[]) {
     
     // Generate synthetic data
     generate_data(data, seed);
+    
+    // Capture metadata for benchmarking
+    const char* exp_env = std::getenv("EXPERIMENT");
+    std::string experiment = exp_env ? exp_env : "e0";
+    
+    // Get run number for multiple runs (warm-up + measurement)
+    const char* run_env = std::getenv("RUN_NUM");
+    std::string run_suffix = run_env ? "_run" + std::string(run_env) : "";
+    
+    capture_metadata(experiment, n, d, k, iters, seed, run_suffix);
     
     // Prepare timing vectors
     std::vector<double> assign_ms(iters);
@@ -122,13 +187,10 @@ int main(int argc, char* argv[]) {
         }
     }
     
-    // Ensure bench directory exists
-    std::filesystem::create_directories("bench");
-    
     // Write timing CSV
-    std::string times_filename = "bench/times_N" + std::to_string(n) + "_D" + std::to_string(d) + 
+    std::string times_filename = "bench/" + experiment + "/times_N" + std::to_string(n) + "_D" + std::to_string(d) + 
                                 "_K" + std::to_string(k) + "_iters" + std::to_string(iters) + 
-                                "_seed" + std::to_string(seed) + ".csv";
+                                "_seed" + std::to_string(seed) + run_suffix + ".csv";
     std::ofstream times_file(times_filename);
     times_file << "iter,assign_ms,update_ms,total_ms\n";
     for (size_t iter = 0; iter < iters; ++iter) {
@@ -138,9 +200,9 @@ int main(int argc, char* argv[]) {
     times_file.close();
     
     // Write inertia CSV
-    std::string inertia_filename = "bench/inertia_N" + std::to_string(n) + "_D" + std::to_string(d) + 
+    std::string inertia_filename = "bench/" + experiment + "/inertia_N" + std::to_string(n) + "_D" + std::to_string(d) + 
                                   "_K" + std::to_string(k) + "_iters" + std::to_string(iters) + 
-                                  "_seed" + std::to_string(seed) + ".csv";
+                                  "_seed" + std::to_string(seed) + run_suffix + ".csv";
     std::ofstream inertia_file(inertia_filename);
     inertia_file << "iter,inertia,N,D,K,iters,seed\n";
     for (size_t iter = 0; iter < iters; ++iter) {

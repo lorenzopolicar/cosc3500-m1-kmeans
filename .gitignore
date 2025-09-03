@@ -7,9 +7,6 @@ gmon.out
 cachegrind.out.*
 *.csv
 
-# benchmark artefacts
-bench/*
-!bench/.gitkeep
 
 # OS/editor
 .DS_Store

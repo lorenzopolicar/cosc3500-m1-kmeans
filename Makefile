@@ -24,8 +24,8 @@ OBJECTS = $(SOURCES:src/%.cpp=$(BUILD_DIR)/%.o)
 # Default target
 all: $(TARGET)
 
-# Release build with optional anti-vectorization
-release: CXXFLAGS = $(CXXFLAGS_BASE) $(if $(ANTIVEC),$(ANTIVEC_FLAGS))
+# Release build with optional anti-vectorization and definitions
+release: CXXFLAGS = $(CXXFLAGS_BASE) $(if $(ANTIVEC),$(ANTIVEC_FLAGS)) $(DEFS)
 release: $(TARGET)
 
 # Debug build with sanitizers
@@ -33,8 +33,8 @@ debug: CXXFLAGS = -std=c++17 -O0 -g -Wall -Wextra -Wshadow -Wconversion -fsaniti
 debug: LDFLAGS = -fsanitize=address -fsanitize=undefined
 debug: $(TARGET)
 
-# Profile build with gprof
-profile: CXXFLAGS = $(CXXFLAGS_BASE) -pg
+# Profile build with gprof and optional definitions
+profile: CXXFLAGS = $(CXXFLAGS_BASE) -pg $(DEFS)
 profile: LDFLAGS = -pg
 profile: $(TARGET)
 
@@ -67,6 +67,7 @@ info:
 	@echo "Base flags: $(CXXFLAGS_BASE)"
 	@echo "Anti-vectorization flags: $(ANTIVEC_FLAGS)"
 	@echo "ANTIVEC setting: $(ANTIVEC)"
+	@echo "Build definitions: $(DEFS)"
 	@echo ""
 	@echo "=== System Info ==="
 	@uname -a

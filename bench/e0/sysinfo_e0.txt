@@ -1,0 +1,13 @@
+=== System info ===
+Wed  3 Sep 2025 15:36:42 AEST
+Compiler: Apple clang version 17.0.0 (clang-1700.0.13.5)
+Makefile CXXFLAGS_BASE: -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
+Makefile ANTIVEC_FLAGS: 
+Environment CXX: g++
+Environment CXXFLAGS: not set
+Environment ANTIVEC: not set
+Environment DEFS: not set
+Git SHA: 7905c6c
+Git branch: main
+Git status: 13 files modified
+System: Darwin Mac-3.modem 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:40 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T6041 arm64
