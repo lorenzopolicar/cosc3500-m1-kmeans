@@ -21,20 +21,21 @@ TARGET = $(BUILD_DIR)/kmeans
 SOURCES = src/main.cpp src/kmeans.cpp
 OBJECTS = $(SOURCES:src/%.cpp=$(BUILD_DIR)/%.o)
 
-# Default target
+# Default target with anti-vectorization
+all: CXXFLAGS = $(CXXFLAGS_BASE) $(if $(ANTIVEC),$(ANTIVEC_FLAGS))
 all: $(TARGET)
 
 # Release build with optional anti-vectorization and definitions
 release: CXXFLAGS = $(CXXFLAGS_BASE) $(if $(ANTIVEC),$(ANTIVEC_FLAGS)) $(DEFS)
 release: $(TARGET)
 
-# Debug build with sanitizers
-debug: CXXFLAGS = -std=c++17 -O0 -g -Wall -Wextra -Wshadow -Wconversion -fsanitize=address -fsanitize=undefined
+# Debug build with sanitizers and anti-vectorization
+debug: CXXFLAGS = -std=c++17 -O0 -g -Wall -Wextra -Wshadow -Wconversion $(ANTIVEC_FLAGS) -fsanitize=address -fsanitize=undefined
 debug: LDFLAGS = -fsanitize=address -fsanitize=undefined
 debug: $(TARGET)
 
-# Profile build with gprof and optional definitions
-profile: CXXFLAGS = $(CXXFLAGS_BASE) -pg $(DEFS)
+# Profile build with gprof, anti-vectorization, and optional definitions
+profile: CXXFLAGS = $(CXXFLAGS_BASE) $(ANTIVEC_FLAGS) -pg $(DEFS)
 profile: LDFLAGS = -pg
 profile: $(TARGET)
 
@@ -78,10 +79,10 @@ info:
 	@lscpu 2>/dev/null | head -n 10 || echo "lscpu not available"
 	@echo ""
 	@echo "=== Available Targets ==="
-	@echo "  all      - Default build with -O2"
-	@echo "  release  - Release build (use ANTIVEC=1 for anti-vectorization)"
-	@echo "  debug    - Debug build with AddressSanitizer and UBSan"
-	@echo "  profile  - Build with gprof profiling"
+	@echo "  all      - Default build with -O2 (respects ANTIVEC setting)"
+	@echo "  release  - Release build (respects ANTIVEC setting)"
+	@echo "  debug    - Debug build with sanitizers and anti-vectorization"
+	@echo "  profile  - Build with gprof and anti-vectorization"
 	@echo "  clean    - Remove build artifacts"
 	@echo "  cachegrind - Run valgrind cachegrind on tiny test"
 	@echo "  info     - Show this information"
