@@ -1,5 +1,5 @@
 === System info ===
-Thu Sep  4 14:19:43 AEST 2025
+Thu Sep  4 14:48:07 AEST 2025
 Compiler: g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-24)
 Makefile CXXFLAGS_BASE: -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 Makefile ANTIVEC_FLAGS: 
@@ -7,9 +7,9 @@ Environment CXX: g++
 Environment CXXFLAGS: not set
 Environment ANTIVEC: 1
 Environment DEFS: not set
-Git SHA: bf59fb6
+Git SHA: 801de5a
 Git branch: main
-Git status: 20 files modified
+Git status: 21 files modified
 System: Linux vcpu-5 4.18.0-553.44.1.el8_10.x86_64 #1 SMP Mon Mar 10 05:10:11 EDT 2025 x86_64 x86_64 x86_64 GNU/Linux
 Architecture:        x86_64
 CPU op-mode(s):      32-bit, 64-bit
@@ -37,7 +37,7 @@ Swap:         5.0Gi          0B       5.0Gi
 Slurm Node Information:
 SLURM_NODELIST: vcpu-5
 SLURM_NODEID: 0
-SLURM_JOB_ID: 269570
+SLURM_JOB_ID: 269597
 SLURM_PARTITION: 
 SLURM_CPUS_ON_NODE: 1
 SLURM_MEM_PER_NODE: 

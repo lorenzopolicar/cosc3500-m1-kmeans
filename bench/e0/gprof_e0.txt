@@ -3,23 +3,24 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
- 90.17      1.65     1.65                             assign_labels(Data&)
-  4.92      1.74     0.09  8255364    10.90    10.90  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()
-  2.73      1.79     0.05                             update_centroids(Data&)
-  1.09      1.81     0.02  8155370     2.45    13.36  frame_dummy
-  1.09      1.83     0.02                             generate_data(Data&, unsigned int)
-  0.00      1.83     0.00   100000     0.00    10.90  int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&)
-  0.00      1.83     0.00       42     0.00     1.91  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
-  0.00      1.83     0.00       18     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
-  0.00      1.83     0.00       15     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
-  0.00      1.83     0.00       15     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
-  0.00      1.83     0.00        6     0.00    13.36  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
-  0.00      1.83     0.00        5     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...)
-  0.00      1.83     0.00        5     0.00     0.00  unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int)
-  0.00      1.83     0.00        2     0.00     0.00  std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector()
-  0.00      1.83     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj
-  0.00      1.83     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z13assign_labelsR4Data
-  0.00      1.83     0.00        1     0.00    11.45  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+ 89.51      1.62     1.62                             assign_labels(Data&)
+  3.87      1.69     0.07  8255364     8.48     8.48  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()
+  2.21      1.73     0.04                             generate_data(Data&, unsigned int)
+  1.66      1.76     0.03  8155370     3.68    12.16  frame_dummy
+  1.66      1.79     0.03                             inertia(Data const&)
+  1.11      1.81     0.02                             update_centroids(Data&)
+  0.00      1.81     0.00   100000     0.00     8.48  int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&)
+  0.00      1.81     0.00       42     0.00     1.74  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
+  0.00      1.81     0.00       18     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
+  0.00      1.81     0.00       15     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+  0.00      1.81     0.00       15     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+  0.00      1.81     0.00        6     0.00    12.16  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
+  0.00      1.81     0.00        5     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...)
+  0.00      1.81     0.00        5     0.00     0.00  unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int)
+  0.00      1.81     0.00        2     0.00     0.00  std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector()
+  0.00      1.81     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj
+  0.00      1.81     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z13assign_labelsR4Data
+  0.00      1.81     0.00        1     0.00    10.42  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -57,98 +58,101 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) for 0.55% of 1.83 seconds
+granularity: each sample hit covers 2 byte(s) for 0.55% of 1.81 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     90.2    1.65    0.00                 assign_labels(Data&) [1]
+[1]     89.5    1.62    0.00                 assign_labels(Data&) [1]
 -----------------------------------------------
                                                  <spontaneous>
-[2]      7.1    0.02    0.11                 generate_data(Data&, unsigned int) [2]
-                0.02    0.09 8155364/8155370     frame_dummy [3]
-                0.00    0.00  100000/100000      int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [6]
+[2]      7.7    0.04    0.10                 generate_data(Data&, unsigned int) [2]
+                0.03    0.07 8155364/8155370     frame_dummy [3]
+                0.00    0.00  100000/100000      int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [7]
 -----------------------------------------------
-                0.00    0.00       6/8155370     std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [8]
-                0.02    0.09 8155364/8155370     generate_data(Data&, unsigned int) [2]
-[3]      6.0    0.02    0.09 8155370         frame_dummy [3]
-                0.09    0.00 8155364/8255364     std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
+                0.00    0.00       6/8155370     std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [9]
+                0.03    0.07 8155364/8155370     generate_data(Data&, unsigned int) [2]
+[3]      5.5    0.03    0.07 8155370         frame_dummy [3]
+                0.07    0.00 8155364/8255364     std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
 -----------------------------------------------
-                0.00    0.00  100000/8255364     int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [6]
-                0.09    0.00 8155364/8255364     frame_dummy [3]
-[4]      4.9    0.09    0.00 8255364         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
+                0.00    0.00  100000/8255364     int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [7]
+                0.07    0.00 8155364/8255364     frame_dummy [3]
+[4]      3.9    0.07    0.00 8255364         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
 -----------------------------------------------
                                                  <spontaneous>
-[5]      2.7    0.05    0.00                 update_centroids(Data&) [5]
+[5]      1.7    0.03    0.00                 inertia(Data const&) [5]
+-----------------------------------------------
+                                                 <spontaneous>
+[6]      1.1    0.02    0.00                 update_centroids(Data&) [6]
 -----------------------------------------------
                 0.00    0.00  100000/100000      generate_data(Data&, unsigned int) [2]
-[6]      0.1    0.00    0.00  100000         int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [6]
+[7]      0.0    0.00    0.00  100000         int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [7]
                 0.00    0.00  100000/8255364     std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
 -----------------------------------------------
-                0.00    0.00       2/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13]
-                0.00    0.00       6/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [12]
-                0.00    0.00      10/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [11]
-                0.00    0.00      12/42          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*) [10]
-[7]      0.0    0.00    0.00      42         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
-                0.00    0.00       6/6           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [8]
+                0.00    0.00       2/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [14]
+                0.00    0.00       6/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13]
+                0.00    0.00      10/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [12]
+                0.00    0.00      12/42          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*) [11]
+[8]      0.0    0.00    0.00      42         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
+                0.00    0.00       6/6           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [9]
 -----------------------------------------------
-                0.00    0.00       6/6           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
-[8]      0.0    0.00    0.00       6         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [8]
+                0.00    0.00       6/6           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
+[9]      0.0    0.00    0.00       6         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [9]
                 0.00    0.00       6/8155370     frame_dummy [3]
 -----------------------------------------------
                                                  <spontaneous>
-[9]      0.0    0.00    0.00                 capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
-                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [12]
-                0.00    0.00       5/5           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [23]
-                0.00    0.00       3/15          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [22]
-                0.00    0.00       2/2           std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [25]
-                0.00    0.00       1/18          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [20]
+[10]     0.0    0.00    0.00                 capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
+                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13]
+                0.00    0.00       5/5           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [24]
+                0.00    0.00       3/15          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [23]
+                0.00    0.00       2/2           std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [26]
+                0.00    0.00       1/18          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [21]
 -----------------------------------------------
                                                  <spontaneous>
-[10]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*) [10]
-                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
+[11]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*) [11]
+                0.00    0.00      12/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
 -----------------------------------------------
                                                  <spontaneous>
-[11]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [11]
-                0.00    0.00      10/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
+[12]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [12]
+                0.00    0.00      10/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
 -----------------------------------------------
-                0.00    0.00       1/1           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-[12]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [12]
-                0.00    0.00       6/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
+                0.00    0.00       1/1           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+[13]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13]
+                0.00    0.00       6/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
 -----------------------------------------------
                                                  <spontaneous>
-[13]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13]
-                0.00    0.00       2/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [7]
+[14]     0.0    0.00    0.00                 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [14]
+                0.00    0.00       2/42          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long) [8]
 -----------------------------------------------
-                0.00    0.00       1/18          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
+                0.00    0.00       1/18          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
                 0.00    0.00       2/18          std::filesystem::__cxx11::path::_Cmpt& std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::filesystem::__cxx11::path::_Type, unsigned long&>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, std::filesystem::__cxx11::path::_Type&&, unsigned long&) [183]
-                0.00    0.00      15/18          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [23]
-[20]     0.0    0.00    0.00      18         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [20]
+                0.00    0.00      15/18          std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [24]
+[21]     0.0    0.00    0.00      18         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [21]
 -----------------------------------------------
-                0.00    0.00      15/15          parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [28]
-[21]     0.0    0.00    0.00      15         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const [21]
+                0.00    0.00      15/15          parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [29]
+[22]     0.0    0.00    0.00      15         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const [22]
 -----------------------------------------------
                 0.00    0.00       2/15          std::filesystem::__cxx11::path::_M_add_filename(unsigned long, unsigned long) [132]
-                0.00    0.00       3/15          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-                0.00    0.00      10/15          parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [28]
-[22]     0.0    0.00    0.00      15         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [22]
+                0.00    0.00       3/15          capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+                0.00    0.00      10/15          parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [29]
+[23]     0.0    0.00    0.00      15         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [23]
 -----------------------------------------------
-                0.00    0.00       5/5           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-[23]     0.0    0.00    0.00       5         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [23]
-                0.00    0.00      15/18          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [20]
+                0.00    0.00       5/5           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+[24]     0.0    0.00    0.00       5         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [24]
+                0.00    0.00      15/18          void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [21]
 -----------------------------------------------
-                0.00    0.00       5/5           parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [28]
-[24]     0.0    0.00    0.00       5         unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int) [24]
+                0.00    0.00       5/5           parse_args(int, char**, unsigned long&, unsigned long&, unsigned long&, unsigned long&, unsigned int&) [29]
+[25]     0.0    0.00    0.00       5         unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int) [25]
 -----------------------------------------------
-                0.00    0.00       2/2           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [9]
-[25]     0.0    0.00    0.00       2         std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [25]
------------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [209]
-[26]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj [26]
+                0.00    0.00       2/2           capture_metadata(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, unsigned long, unsigned long, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [10]
+[26]     0.0    0.00    0.00       2         std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [26]
 -----------------------------------------------
                 0.00    0.00       1/1           __libc_csu_init [209]
-[27]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z13assign_labelsR4Data [27]
+[27]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj [27]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [209]
+[28]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z13assign_labelsR4Data [28]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -241,9 +245,9 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [26] _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj [24] unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int) [20] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
-  [27] _GLOBAL__sub_I__Z13assign_labelsR4Data [21] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const [7] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
-   [1] assign_labels(Data&)    [4] std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [8] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
-   [2] generate_data(Data&, unsigned int) [6] int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [12] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
-   [5] update_centroids(Data&) [25] std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [3] frame_dummy
-  [23] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [22] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+  [27] _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj [24] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...) [23] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+  [28] _GLOBAL__sub_I__Z13assign_labelsR4Data [25] unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int) [21] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
+   [1] assign_labels(Data&)   [22] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const [8] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
+   [2] generate_data(Data&, unsigned int) [4] std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [9] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
+   [6] update_centroids(Data&) [7] int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [13] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+   [5] inertia(Data const&)   [26] std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector() [3] frame_dummy
