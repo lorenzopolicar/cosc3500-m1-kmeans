@@ -1,13 +1,43 @@
 === System info ===
-Wed  3 Sep 2025 15:36:42 AEST
-Compiler: Apple clang version 17.0.0 (clang-1700.0.13.5)
+Thu Sep  4 14:19:43 AEST 2025
+Compiler: g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-24)
 Makefile CXXFLAGS_BASE: -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 Makefile ANTIVEC_FLAGS: 
 Environment CXX: g++
 Environment CXXFLAGS: not set
-Environment ANTIVEC: not set
+Environment ANTIVEC: 1
 Environment DEFS: not set
-Git SHA: 7905c6c
+Git SHA: bf59fb6
 Git branch: main
-Git status: 13 files modified
-System: Darwin Mac-3.modem 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:40 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T6041 arm64
+Git status: 20 files modified
+System: Linux vcpu-5 4.18.0-553.44.1.el8_10.x86_64 #1 SMP Mon Mar 10 05:10:11 EDT 2025 x86_64 x86_64 x86_64 GNU/Linux
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              8
+On-line CPU(s) list: 0-7
+Thread(s) per core:  1
+Core(s) per socket:  8
+Socket(s):           1
+NUMA node(s):        1
+Vendor ID:           AuthenticAMD
+CPU family:          23
+Model:               0
+Model name:          AMD EPYC 7542 32-Core Processor
+Stepping:            0
+CPU MHz:             2894.562
+BogoMIPS:            5789.12
+Hypervisor vendor:   VMware
+Virtualization type: full
+L1d cache:           32K
+L1i cache:           32K
+              total        used        free      shared  buff/cache   available
+Mem:           46Gi        11Gi        32Gi       353Mi       2.5Gi        34Gi
+Swap:         5.0Gi          0B       5.0Gi
+Slurm Node Information:
+SLURM_NODELIST: vcpu-5
+SLURM_NODEID: 0
+SLURM_JOB_ID: 269570
+SLURM_PARTITION: 
+SLURM_CPUS_ON_NODE: 1
+SLURM_MEM_PER_NODE: 
