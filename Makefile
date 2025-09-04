@@ -39,8 +39,9 @@ profile: LDFLAGS = -pg
 profile: $(TARGET)
 
 # Main target
+# Note: -lstdc++fs needed for std::filesystem in GCC < 9.0 (e.g., GCC 8.5.0 on Rangpur)
 $(TARGET): $(OBJECTS) | $(BUILD_DIR)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX) $(OBJECTS) $(LDFLAGS) -lstdc++fs -o $@
 
 # Object files
 $(BUILD_DIR)/%.o: src/%.cpp | $(BUILD_DIR)
@@ -68,6 +69,7 @@ info:
 	@echo "Anti-vectorization flags: $(ANTIVEC_FLAGS)"
 	@echo "ANTIVEC setting: $(ANTIVEC)"
 	@echo "Build definitions: $(DEFS)"
+	@echo "Filesystem library: -lstdc++fs (for GCC < 9.0 compatibility)"
 	@echo ""
 	@echo "=== System Info ==="
 	@uname -a
