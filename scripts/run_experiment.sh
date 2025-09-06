@@ -275,11 +275,12 @@ if command -v perf &> /dev/null; then
         fi
     else
         print_warning "perf record failed or timed out - likely permission or event availability issue"
-        print_info "Note: perf may require special permissions or the cache events may not be available on this system"
+        print_warning "Note: perf may require special permissions or the cache events may not be available on this system"
+        print_warning "Continuing without perf cache analysis..."
     fi
 else
     print_warning "perf not available, skipping cache analysis"
-    print_info "Note: perf provides hardware cache performance counters (recommended for Linux HPC)"
+    print_warning "Note: perf provides hardware cache performance counters (recommended for Linux HPC)"
 fi
 
 
