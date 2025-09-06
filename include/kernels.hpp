@@ -36,7 +36,3 @@ void assign_labels_branchless(Data& data);  // E2: Branchless argmin optimizatio
 #ifdef STRIDE_PTR
 void assign_labels_strided(Data& data);  // E2: Strided pointer optimization
 #endif
-
-#ifdef UNROLL_D
-void assign_labels_unrolled(Data& data);  // E2: D-dimension loop unrolling
-#endif

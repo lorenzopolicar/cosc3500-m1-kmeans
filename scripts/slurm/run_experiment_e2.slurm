@@ -16,13 +16,12 @@
 # - Invariant hoisting (HOIST): Hoist N, D, K and data pointers outside loops
 # - Branchless argmin (BRANCHLESS): Use ternary operators instead of if-statements
 # - Strided pointers (STRIDE_PTR): Eliminate d*K multiplies in transposed access
-# - Loop unrolling (UNROLL_D): Unroll inner D loop by 4 with remainder peel
 #
 # ============================================================================
 
 # Experiment configuration
 EXPERIMENT_NUM=2
-BUILD_DEFS="-DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4"
+BUILD_DEFS="-DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1"
 
 # Load any required modules (uncomment if needed)
 # module load gcc/11.2.0
@@ -47,7 +46,6 @@ echo "  - TRANSPOSED_C: Transposed centroids (from E1)"
 echo "  - HOIST: Invariant hoisting"
 echo "  - BRANCHLESS: Branchless argmin"
 echo "  - STRIDE_PTR: Strided pointer arithmetic"
-echo "  - UNROLL_D: D-dimension loop unrolling (factor 4)"
 echo "=========================================="
 
 # Print system information
@@ -81,7 +79,6 @@ echo "Optimizations:"
 echo "  - Invariant hoisting: Reduce repeated memory access"
 echo "  - Branchless argmin: Better CPU branch prediction"
 echo "  - Strided pointers: Eliminate d*K multiplies"
-echo "  - Loop unrolling: Improve instruction-level parallelism"
 echo ""
 
 echo "This will generate:"

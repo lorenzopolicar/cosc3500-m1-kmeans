@@ -82,50 +82,18 @@ for (size_t d = 0; d < D; ++d) {
 
 **Expected Impact:** 2-4% improvement
 
-### 4. Loop Unrolling (`-DUNROLL_D=4`)
-
-**Goal:** Improve instruction-level parallelism by unrolling the inner D loop.
-
-**Implementation:**
-```cpp
-// Unroll inner D loop by UNROLL_D factor
-size_t d = 0;
-for (; d < D - (D % UNROLL_D); d += UNROLL_D) {
-    // Process UNROLL_D dimensions at once
-    for (size_t unroll_idx = 0; unroll_idx < UNROLL_D; ++unroll_idx) {
-        float diff = px[d + unroll_idx] - ck[0];
-        d2 += static_cast<double>(diff) * static_cast<double>(diff);
-        ck += K;  // Move to next dimension
-    }
-}
-
-// Handle remainder dimensions
-for (; d < D; ++d) {
-    float diff = px[d] - *ck;
-    d2 += static_cast<double>(diff) * static_cast<double>(diff);
-    ck += K;
-}
-```
-
-**Benefits:**
-- Reduces loop overhead
-- Enables better instruction scheduling
-- Improves register utilization
-
-**Expected Impact:** 2-5% improvement
 
 ## Build Configuration
 
 E2 uses the following build definitions:
 ```bash
-BUILD_DEFS="-DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4"
+BUILD_DEFS="-DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1"
 ```
 
 **Optimization Priority:**
-1. `UNROLL_D` - Highest priority (most aggressive)
-2. `STRIDE_PTR` - High priority (arithmetic reduction)
-3. `BRANCHLESS` - Medium priority (branch prediction)
-4. `HOIST` - Base optimization (foundation)
+1. `STRIDE_PTR` - Highest priority (arithmetic reduction)
+2. `BRANCHLESS` - Medium priority (branch prediction)
+3. `HOIST` - Base optimization (foundation)
 
 ## Function Routing
 
@@ -134,11 +102,6 @@ The `assign_labels` function routes to optimized versions based on defined flags
 ```cpp
 void assign_labels(Data& data) {
     // Route to E2 optimized versions if flags are defined
-#ifdef UNROLL_D
-    assign_labels_unrolled(data);
-    return;
-#endif
-
 #ifdef STRIDE_PTR
     assign_labels_strided(data);
     return;
@@ -162,12 +125,12 @@ void assign_labels(Data& data) {
 ## Expected Performance Impact
 
 **Combined E2 Improvements:**
-- **Canonical Config (N=200K, D=16, K=8):** 6-14% improvement over E1
-- **Stress Config (N=100K, D=64, K=64):** 8-16% improvement over E1
+- **Canonical Config (N=200K, D=16, K=8):** 3-8% improvement over E1
+- **Stress Config (N=100K, D=64, K=64):** 4-10% improvement over E1
 
 **Total E0→E1→E2 Improvement:**
-- **Canonical:** 10-20% total improvement
-- **Stress:** 12-22% total improvement
+- **Canonical:** 6-12% total improvement
+- **Stress:** 7-15% total improvement
 
 ## Correctness Validation
 
