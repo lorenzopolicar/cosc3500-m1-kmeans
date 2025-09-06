@@ -1,7 +1,7 @@
 ==========================================
 K-Means E1: Transposed Centroids Optimization
 ==========================================
-Job ID: 270309
+Job ID: 270438
 Node: a100-a
 Partition: 
 Time limit: 
@@ -52,7 +52,7 @@ g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 [0;34m[INFO][0m Creating benchmark directory structure...
 [0;34m[INFO][0m Capturing system information...
 === System info ===
-Sat Sep  6 14:12:28 AEST 2025
+Sat Sep  6 17:22:09 AEST 2025
 Compiler: g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-20)
 Makefile CXXFLAGS_BASE: -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 Makefile ANTIVEC_FLAGS: 
@@ -60,9 +60,9 @@ Environment CXX: g++
 Environment CXXFLAGS: not set
 Environment ANTIVEC: 1
 Environment DEFS: not set
-Git SHA: 65fdfe6
+Git SHA: 4830601
 Git branch: main
-Git status: 39 files modified
+Git status: 177 files modified
 System: Linux a100-a 4.18.0-513.9.1.el8_9.x86_64 #1 SMP Sat Dec 2 05:23:44 EST 2023 x86_64 x86_64 x86_64 GNU/Linux
 Architecture:        x86_64
 CPU op-mode(s):      32-bit, 64-bit
@@ -85,7 +85,7 @@ Virtualization type: full
 L1d cache:           32K
 L1i cache:           32K
               total        used        free      shared  buff/cache   available
-Mem:           62Gi       927Mi        10Gi       1.0Gi        51Gi        59Gi
+Mem:           62Gi       932Mi       5.3Gi       1.1Gi        56Gi        59Gi
 Swap:         5.0Gi        14Mi       5.0Gi
 [0;34m[INFO][0m Capturing Slurm node information...
 [0;32m[SUCCESS][0m Slurm node info captured
@@ -97,19 +97,19 @@ Swap:         5.0Gi        14Mi       5.0Gi
 [0;34m[INFO][0m Warm-up run 3/3
 [0;34m[INFO][0m Measurement run 1/5
 Final inertia: 7984073.996076
-Time split: assign=88.873567%, update=11.126433%
+Time split: assign=89.080354%, update=10.919646%
 [0;34m[INFO][0m Measurement run 2/5
 Final inertia: 7984073.996076
-Time split: assign=88.825258%, update=11.174742%
+Time split: assign=89.188488%, update=10.811512%
 [0;34m[INFO][0m Measurement run 3/5
 Final inertia: 7984073.996076
-Time split: assign=89.042788%, update=10.957212%
+Time split: assign=89.067685%, update=10.932315%
 [0;34m[INFO][0m Measurement run 4/5
 Final inertia: 7984073.996076
-Time split: assign=89.148152%, update=10.851848%
+Time split: assign=89.228063%, update=10.771937%
 [0;34m[INFO][0m Measurement run 5/5
 Final inertia: 7984073.996076
-Time split: assign=88.886739%, update=11.113261%
+Time split: assign=89.163525%, update=10.836475%
 [0;32m[SUCCESS][0m Canonical config complete (5 measurement runs)
 [0;34m[INFO][0m Running stress config: N=100000, D=64, K=64, iters=10, seed=1
 [0;34m[INFO][0m Running 3 warm-up + 5 measurement runs for statistical significance...
@@ -119,34 +119,45 @@ Time split: assign=88.886739%, update=11.113261%
 [0;34m[INFO][0m Measurement run 1/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.470054%, update=1.529946%
+Time split: assign=98.533322%, update=1.466678%
 [0;34m[INFO][0m Measurement run 2/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.480518%, update=1.519482%
+Time split: assign=98.495452%, update=1.504548%
 [0;34m[INFO][0m Measurement run 3/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.383498%, update=1.616502%
+Time split: assign=98.545730%, update=1.454270%
 [0;34m[INFO][0m Measurement run 4/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.464756%, update=1.535244%
+Time split: assign=98.553137%, update=1.446863%
 [0;34m[INFO][0m Measurement run 5/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.461258%, update=1.538742%
+Time split: assign=98.545907%, update=1.454093%
 [0;32m[SUCCESS][0m Stress config complete (5 measurement runs)
 [0;34m[INFO][0m Running profiling on stress config...
-[0;34m[INFO][0m Using gprof for profiling (Linux)...
+[0;34m[INFO][0m Using gprof for function-level profiling...
 rm -rf build
 mkdir -p build
 g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -c src/main.cpp -o build/main.o
 g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o -pg -lstdc++fs -o build/kmeans
 [0;32m[SUCCESS][0m gprof profile saved to bench/e1/gprof_e1.txt
-[1;33m[WARNING][0m valgrind not available, skipping cachegrind profiling
-[0;34m[INFO][0m Note: Install valgrind for cache behavior analysis (recommended for Linux HPC)
+[0;34m[INFO][0m Using perf for hardware cache analysis...
+rm -rf build
+mkdir -p build
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -c src/kmeans.cpp -o build/kmeans.o
+g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
+[0;34m[INFO][0m Checking available perf events...
+[0;32m[SUCCESS][0m L1 cache events available
+[1;33m[WARNING][0m L2 cache events not available, using L1 only
+[0;34m[INFO][0m Recording hardware performance with perf (events: L1-dcache-load-misses,L1-dcache-loads)...
+[1;33m[WARNING][0m perf record failed or timed out - likely permission or event availability issue
+[1;33m[WARNING][0m Note: perf may require special permissions or the cache events may not be available on this system
+[1;33m[WARNING][0m Continuing without perf cache analysis...
 [0;34m[INFO][0m Capturing system information (Linux)...
 [0;32m[SUCCESS][0m System info saved to bench/e1/system_info.txt
 rm -rf build
@@ -159,63 +170,64 @@ g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 Results saved in bench/e1/
 
 Files generated:
-total 506
-drwx------ 2 s4698382 uusers    56 Sep  6 14:13 .
-drwx------ 4 s4698382 uusers     5 Sep  6 14:12 ..
--rw------- 1 s4698382 uusers 27059 Sep  6 14:13 gprof_e1.txt
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   349 Sep  6 14:12 inertia_N100000_D64_K64_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   184 Sep  6 14:13 inertia_N100000_D64_K64_iters5_seed1.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   339 Sep  6 14:12 inertia_N200000_D16_K8_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run1.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run2.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run3.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run4.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run5.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run6.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run7.txt
--rw------- 1 s4698382 uusers   218 Sep  6 14:12 meta_N100000_D64_K64_iters10_seed1_run8.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:13 meta_N100000_D64_K64_iters5_seed1.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run1.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run2.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run3.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run4.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run5.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run6.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run7.txt
--rw------- 1 s4698382 uusers   217 Sep  6 14:12 meta_N200000_D16_K8_iters10_seed1_run8.txt
--rw------- 1 s4698382 uusers  1401 Sep  6 14:12 sysinfo_e1.txt
--rw------- 1 s4698382 uusers  1200 Sep  6 14:13 system_info.txt
--rw------- 1 s4698382 uusers   292 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   288 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   290 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   289 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   288 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   291 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   290 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   290 Sep  6 14:12 times_N100000_D64_K64_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   160 Sep  6 14:13 times_N100000_D64_K64_iters5_seed1.csv
--rw------- 1 s4698382 uusers   291 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   291 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   291 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   289 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   291 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   288 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   292 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   288 Sep  6 14:12 times_N200000_D16_K8_iters10_seed1_run8.csv
+total 570
+drwx------ 2 s4698382 uusers    57 Sep  6 17:22 .
+drwx------ 4 s4698382 uusers     4 Sep  6 17:22 ..
+-rw------- 1 s4698382 uusers 27059 Sep  6 17:22 gprof_e1.txt
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:22 inertia_N100000_D64_K64_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   184 Sep  6 17:22 inertia_N100000_D64_K64_iters5_seed1.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:22 inertia_N200000_D16_K8_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run1.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run2.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run3.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run4.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run5.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run6.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run7.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:22 meta_N100000_D64_K64_iters10_seed1_run8.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N100000_D64_K64_iters5_seed1.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run1.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run2.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run3.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run4.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run5.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run6.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run7.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:22 meta_N200000_D16_K8_iters10_seed1_run8.txt
+-rw------- 1 s4698382 uusers   632 Sep  6 17:22 perf_cache.data
+-rw------- 1 s4698382 uusers  1402 Sep  6 17:22 sysinfo_e1.txt
+-rw------- 1 s4698382 uusers  1200 Sep  6 17:22 system_info.txt
+-rw------- 1 s4698382 uusers   293 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   294 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   288 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   290 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:22 times_N100000_D64_K64_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   162 Sep  6 17:22 times_N100000_D64_K64_iters5_seed1.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   289 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   290 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:22 times_N200000_D16_K8_iters10_seed1_run8.csv
 
 Key improvements in this run:
   ✓ 3 warm-up + 5 measurement runs for statistical significance
@@ -233,30 +245,30 @@ Next steps:
 E1 Experiment completed successfully!
 ==========================================
 Generated files in bench/e1/:
-57
+58
 files generated
 
 File structure:
-bench/e1/times_N100000_D64_K64_iters10_seed1_run2.csv
-bench/e1/times_N100000_D64_K64_iters10_seed1_run5.csv
-bench/e1/inertia_N100000_D64_K64_iters10_seed1_run5.csv
-bench/e1/inertia_N100000_D64_K64_iters10_seed1_run2.csv
-bench/e1/inertia_N200000_D16_K8_iters10_seed1_run5.csv
-bench/e1/inertia_N200000_D16_K8_iters10_seed1_run2.csv
-bench/e1/meta_N100000_D64_K64_iters10_seed1_run7.txt
-bench/e1/meta_N200000_D16_K8_iters10_seed1_run3.txt
-bench/e1/times_N200000_D16_K8_iters10_seed1_run8.csv
-bench/e1/meta_N200000_D16_K8_iters10_seed1_run4.txt
 bench/e1/times_N200000_D16_K8_iters10_seed1_run1.csv
+bench/e1/times_N100000_D64_K64_iters10_seed1_run1.csv
 bench/e1/times_N200000_D16_K8_iters10_seed1_run6.csv
-bench/e1/inertia_N200000_D16_K8_iters10_seed1_run3.csv
-bench/e1/gprof_e1.txt
-bench/e1/sysinfo_e1.txt
-bench/e1/inertia_N200000_D16_K8_iters10_seed1_run4.csv
+bench/e1/times_N100000_D64_K64_iters10_seed1_run6.csv
+bench/e1/times_N200000_D16_K8_iters10_seed1_run8.csv
+bench/e1/times_N100000_D64_K64_iters10_seed1_run8.csv
+bench/e1/meta_N100000_D64_K64_iters10_seed1_run7.txt
+bench/e1/meta_N200000_D16_K8_iters10_seed1_run6.txt
+bench/e1/inertia_N200000_D16_K8_iters10_seed1_run8.csv
+bench/e1/meta_N200000_D16_K8_iters10_seed1_run1.txt
+bench/e1/inertia_N200000_D16_K8_iters10_seed1_run6.csv
+bench/e1/inertia_N200000_D16_K8_iters10_seed1_run1.csv
+bench/e1/meta_N200000_D16_K8_iters10_seed1_run8.txt
 bench/e1/inertia_N100000_D64_K64_iters10_seed1_run3.csv
 bench/e1/inertia_N100000_D64_K64_iters10_seed1_run4.csv
-bench/e1/system_info.txt
-bench/e1/times_N100000_D64_K64_iters10_seed1_run4.csv
+bench/e1/times_N100000_D64_K64_iters5_seed1.csv
+bench/e1/meta_N100000_D64_K64_iters10_seed1_run8.txt
+bench/e1/inertia_N200000_D16_K8_iters10_seed1_run7.csv
+bench/e1/meta_N100000_D64_K64_iters10_seed1_run1.txt
+bench/e1/meta_N100000_D64_K64_iters10_seed1_run6.txt
 
 Key output files:
 ✅ System information captured
@@ -270,4 +282,4 @@ Next steps:
   3. Check plots: ls -la plots/
   4. Compare with baseline: python scripts/analyze_experiment.py 0
 
-Job completed at: Sat Sep  6 14:13:03 AEST 2025
+Job completed at: Sat Sep  6 17:22:46 AEST 2025

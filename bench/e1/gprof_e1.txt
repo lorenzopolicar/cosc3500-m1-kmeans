@@ -3,25 +3,25 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
- 90.54      1.53     1.53                             assign_labels(Data&)
-  4.14      1.60     0.07                             generate_data(Data&, unsigned int)
-  1.78      1.63     0.03  8255364     3.63     3.63  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()
-  1.78      1.66     0.03                             update_centroids(Data&)
-  1.18      1.68     0.02                             inertia(Data const&)
-  0.59      1.69     0.01  8155370     1.23     4.86  frame_dummy
-  0.00      1.69     0.00   100000     0.00     3.63  int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&)
-  0.00      1.69     0.00       42     0.00     0.69  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
-  0.00      1.69     0.00       18     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
-  0.00      1.69     0.00       15     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
-  0.00      1.69     0.00       15     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
-  0.00      1.69     0.00        6     0.00     4.86  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
-  0.00      1.69     0.00        5     0.00     0.00  transpose_centroids(Data&)
-  0.00      1.69     0.00        5     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...)
-  0.00      1.69     0.00        5     0.00     0.00  unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int)
-  0.00      1.69     0.00        2     0.00     0.00  std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector()
-  0.00      1.69     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj
-  0.00      1.69     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z19transpose_centroidsR4Data
-  0.00      1.69     0.00        1     0.00     4.17  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+ 90.60      1.54     1.54                             assign_labels(Data&)
+  2.94      1.59     0.05  8255364     6.06     6.06  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()
+  2.94      1.64     0.05                             generate_data(Data&, unsigned int)
+  1.76      1.67     0.03                             update_centroids(Data&)
+  1.18      1.69     0.02                             inertia(Data const&)
+  0.59      1.70     0.01  8155370     1.23     7.28  frame_dummy
+  0.00      1.70     0.00   100000     0.00     6.06  int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&)
+  0.00      1.70     0.00       42     0.00     1.04  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned long)
+  0.00      1.70     0.00       18     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
+  0.00      1.70     0.00       15     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+  0.00      1.70     0.00       15     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+  0.00      1.70     0.00        6     0.00     7.28  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long)
+  0.00      1.70     0.00        5     0.00     0.00  transpose_centroids(Data&)
+  0.00      1.70     0.00        5     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > __gnu_cxx::__to_xstring<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char>(int (*)(char*, unsigned long, char const*, __va_list_tag*), unsigned long, char const*, ...)
+  0.00      1.70     0.00        5     0.00     0.00  unsigned long __gnu_cxx::__stoa<unsigned long, unsigned long, char, int>(unsigned long (*)(char const*, char**, int), char const*, char const*, unsigned long*, int)
+  0.00      1.70     0.00        2     0.00     0.00  std::vector<std::filesystem::__cxx11::path::_Cmpt, std::allocator<std::filesystem::__cxx11::path::_Cmpt> >::~vector()
+  0.00      1.70     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z10parse_argsiPPcRmS1_S1_S1_Rj
+  0.00      1.70     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z19transpose_centroidsR4Data
+  0.00      1.70     0.00        1     0.00     6.24  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -59,25 +59,25 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) for 0.59% of 1.69 seconds
+granularity: each sample hit covers 2 byte(s) for 0.59% of 1.70 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     90.5    1.53    0.00                 assign_labels(Data&) [1]
+[1]     90.6    1.54    0.00                 assign_labels(Data&) [1]
 -----------------------------------------------
                                                  <spontaneous>
-[2]      6.5    0.07    0.04                 generate_data(Data&, unsigned int) [2]
-                0.01    0.03 8155364/8155370     frame_dummy [3]
+[2]      6.5    0.05    0.06                 generate_data(Data&, unsigned int) [2]
+                0.01    0.05 8155364/8155370     frame_dummy [3]
                 0.00    0.00  100000/100000      int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [7]
 -----------------------------------------------
                 0.00    0.00       6/8155370     std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned long, unsigned long, char const*, unsigned long) [9]
-                0.01    0.03 8155364/8155370     generate_data(Data&, unsigned int) [2]
-[3]      2.3    0.01    0.03 8155370         frame_dummy [3]
-                0.03    0.00 8155364/8255364     std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
+                0.01    0.05 8155364/8155370     generate_data(Data&, unsigned int) [2]
+[3]      3.5    0.01    0.05 8155370         frame_dummy [3]
+                0.05    0.00 8155364/8255364     std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
 -----------------------------------------------
                 0.00    0.00  100000/8255364     int std::uniform_int_distribution<int>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_int_distribution<int>::param_type const&) [7]
-                0.03    0.00 8155364/8255364     frame_dummy [3]
-[4]      1.8    0.03    0.00 8255364         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
+                0.05    0.00 8155364/8255364     frame_dummy [3]
+[4]      2.9    0.05    0.00 8255364         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()() [4]
 -----------------------------------------------
                                                  <spontaneous>
 [5]      1.8    0.03    0.00                 update_centroids(Data&) [5]
