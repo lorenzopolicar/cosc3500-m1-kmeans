@@ -129,14 +129,14 @@ print_status "Running profiling on stress config..."
 # Function-level profiling with gprof (Linux/macOS)
 if command -v gprof &> /dev/null; then
     print_status "Using gprof for function-level profiling..."
-    make clean
+make clean
     if [[ -n "$BUILD_DEFS" ]]; then
         ANTIVEC=1 DEFS="$BUILD_DEFS" make profile
     else
         ANTIVEC=1 make profile
     fi
     EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
-    if [[ -f "gmon.out" ]]; then
+if [[ -f "gmon.out" ]]; then
         gprof ./build/kmeans gmon.out > bench/${EXPERIMENT_DIR}/gprof_e${EXPERIMENT_NUM}.txt
         print_success "gprof profile saved to bench/${EXPERIMENT_DIR}/gprof_e${EXPERIMENT_NUM}.txt"
     else
@@ -172,67 +172,110 @@ if command -v perf &> /dev/null; then
         ANTIVEC=1 make release
     fi
     
-    # Record cache performance with perf
-    print_status "Recording hardware cache performance with perf..."
-    perf record -e L1-dcache-load-misses,L1-dcache-loads,L2-dcache-load-misses,L2-dcache-loads \
-                -o bench/${EXPERIMENT_DIR}/perf_cache.data \
-                EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
-    
-    if [[ -f "bench/${EXPERIMENT_DIR}/perf_cache.data" ]]; then
-        print_success "Found perf cache data: bench/${EXPERIMENT_DIR}/perf_cache.data"
+    # Check if perf events are available
+    print_status "Checking available perf events..."
+    if perf list | grep -q "L1-dcache-load-misses" 2>/dev/null; then
+        print_success "L1 cache events available"
+        CACHE_EVENTS="L1-dcache-load-misses,L1-dcache-loads"
         
-        # Generate cache performance report
-        perf report -i bench/${EXPERIMENT_DIR}/perf_cache.data > bench/${EXPERIMENT_DIR}/perf_cache_report.txt 2>&1
-        print_success "perf cache report saved to bench/${EXPERIMENT_DIR}/perf_cache_report.txt"
-        
-        # Get detailed cache statistics
-        print_status "Computing detailed cache statistics with perf stat..."
-        perf stat -e L1-dcache-load-misses,L1-dcache-loads,L2-dcache-load-misses,L2-dcache-loads \
-                  EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > bench/${EXPERIMENT_DIR}/perf_cache_stats.txt 2>&1
-        
-        # Extract and normalize cache statistics
-        print_status "Extracting normalized cache statistics..."
-        N=100000
-        D=64
-        K=64
-        ITERS=5
-        TOTAL_OPERATIONS=$((N * K * ITERS))
-        
-        # Extract cache miss counts from perf stat output
-        L1_MISSES=$(grep "L1-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
-        L1_LOADS=$(grep "L1-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
-        L2_MISSES=$(grep "L2-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
-        L2_LOADS=$(grep "L2-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
-        
-        if [[ -n "$L1_MISSES" && -n "$L1_LOADS" && -n "$L2_MISSES" && -n "$L2_LOADS" ]]; then
-            L1_MISS_RATE=$(echo "scale=6; $L1_MISSES / $L1_LOADS" | bc -l 2>/dev/null || echo "N/A")
-            L2_MISS_RATE=$(echo "scale=6; $L2_MISSES / $L2_LOADS" | bc -l 2>/dev/null || echo "N/A")
-            L1_MISSES_PER_OP=$(echo "scale=6; $L1_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
-            L2_MISSES_PER_OP=$(echo "scale=6; $L2_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
-            
-            echo "Hardware Cache Performance Analysis:" > bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "Total operations (N×K×iters): $TOTAL_OPERATIONS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "L1 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Loads: $L1_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Misses: $L1_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Miss Rate: $L1_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Misses per operation: $L1_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "L2 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Loads: $L2_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Misses: $L2_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Miss Rate: $L2_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "  Misses per operation: $L2_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            echo "Build definitions: $BUILD_DEFS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
-            
-            print_success "Hardware cache analysis saved to bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt"
+        # Try to add L2 events if available
+        if perf list | grep -q "L2-dcache-load-misses" 2>/dev/null; then
+            print_success "L2 cache events available"
+            CACHE_EVENTS="${CACHE_EVENTS},L2-dcache-load-misses,L2-dcache-loads"
         else
-            print_warning "Could not extract cache statistics from perf output"
+            print_warning "L2 cache events not available, using L1 only"
         fi
     else
-        print_warning "perf cache data not generated"
+        print_warning "Cache events not available, trying basic CPU events"
+        CACHE_EVENTS="cpu-cycles,instructions"
+    fi
+    
+    # Record cache performance with perf (with error handling)
+    print_status "Recording hardware performance with perf (events: $CACHE_EVENTS)..."
+    if timeout 30 perf record -e "$CACHE_EVENTS" \
+                -o bench/${EXPERIMENT_DIR}/perf_cache.data \
+                EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1; then
+        
+        if [[ -f "bench/${EXPERIMENT_DIR}/perf_cache.data" ]]; then
+            print_success "Found perf data: bench/${EXPERIMENT_DIR}/perf_cache.data"
+            
+            # Generate performance report
+            if perf report -i bench/${EXPERIMENT_DIR}/perf_cache.data > bench/${EXPERIMENT_DIR}/perf_cache_report.txt 2>&1; then
+                print_success "perf report saved to bench/${EXPERIMENT_DIR}/perf_cache_report.txt"
+            else
+                print_warning "perf report generation failed"
+            fi
+            
+            # Get detailed statistics
+            print_status "Computing detailed performance statistics with perf stat..."
+            if timeout 30 perf stat -e "$CACHE_EVENTS" \
+                      EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > bench/${EXPERIMENT_DIR}/perf_cache_stats.txt 2>&1; then
+                
+                # Extract and normalize statistics
+                print_status "Extracting normalized performance statistics..."
+                N=100000
+                D=64
+                K=64
+                ITERS=5
+                TOTAL_OPERATIONS=$((N * K * ITERS))
+                
+                # Extract performance counters from perf stat output
+                L1_MISSES=$(grep "L1-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                L1_LOADS=$(grep "L1-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                L2_MISSES=$(grep "L2-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                L2_LOADS=$(grep "L2-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                CPU_CYCLES=$(grep "cpu-cycles" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                INSTRUCTIONS=$(grep "instructions" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+                
+                echo "Hardware Performance Analysis:" > bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                echo "Total operations (N×K×iters): $TOTAL_OPERATIONS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                echo "Events recorded: $CACHE_EVENTS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                
+                if [[ -n "$L1_MISSES" && -n "$L1_LOADS" ]]; then
+                    L1_MISS_RATE=$(echo "scale=6; $L1_MISSES / $L1_LOADS" | bc -l 2>/dev/null || echo "N/A")
+                    L1_MISSES_PER_OP=$(echo "scale=6; $L1_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
+                    
+                    echo "L1 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Loads: $L1_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Misses: $L1_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Miss Rate: $L1_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Misses per operation: $L1_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                fi
+                
+                if [[ -n "$L2_MISSES" && -n "$L2_LOADS" ]]; then
+                    L2_MISS_RATE=$(echo "scale=6; $L2_MISSES / $L2_LOADS" | bc -l 2>/dev/null || echo "N/A")
+                    L2_MISSES_PER_OP=$(echo "scale=6; $L2_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
+                    
+                    echo "L2 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Loads: $L2_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Misses: $L2_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Miss Rate: $L2_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Misses per operation: $L2_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                fi
+                
+                if [[ -n "$CPU_CYCLES" && -n "$INSTRUCTIONS" ]]; then
+                    IPC=$(echo "scale=6; $INSTRUCTIONS / $CPU_CYCLES" | bc -l 2>/dev/null || echo "N/A")
+                    echo "CPU Performance:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  CPU Cycles: $CPU_CYCLES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  Instructions: $INSTRUCTIONS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "  IPC (Instructions per Cycle): $IPC" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                    echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                fi
+                
+                echo "Build definitions: $BUILD_DEFS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+                print_success "Hardware performance analysis saved to bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt"
+            else
+                print_warning "perf stat failed or timed out"
+            fi
+        else
+            print_warning "perf data not generated"
+        fi
+    else
+        print_warning "perf record failed or timed out - likely permission or event availability issue"
+        print_info "Note: perf may require special permissions or the cache events may not be available on this system"
     fi
 else
     print_warning "perf not available, skipping cache analysis"
