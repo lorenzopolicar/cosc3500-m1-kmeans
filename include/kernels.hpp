@@ -23,3 +23,20 @@ double inertia(const Data& data);   // sum of squared distances for current labe
 // Helper function to transpose centroids from [K×D] to [D×K]
 void transpose_centroids(Data& data);
 #endif
+
+// E2 Micro-optimization function declarations
+#ifdef HOIST
+void assign_labels_hoisted(Data& data);  // E2: Invariant hoisting optimization
+#endif
+
+#ifdef BRANCHLESS
+void assign_labels_branchless(Data& data);  // E2: Branchless argmin optimization
+#endif
+
+#ifdef STRIDE_PTR
+void assign_labels_strided(Data& data);  // E2: Strided pointer optimization
+#endif
+
+#ifdef UNROLL_D
+void assign_labels_unrolled(Data& data);  // E2: D-dimension loop unrolling
+#endif
