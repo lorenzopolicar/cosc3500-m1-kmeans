@@ -1,18 +1,17 @@
 ==========================================
 K-Means E2: Micro-optimizations
 ==========================================
-Job ID: 270430
+Job ID: 270435
 Node: a100-a
 Partition: 
 Time limit: 
 Experiment: e2
-Build definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4
+Build definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1
 Optimizations:
   - TRANSPOSED_C: Transposed centroids (from E1)
   - HOIST: Invariant hoisting
   - BRANCHLESS: Branchless argmin
   - STRIDE_PTR: Strided pointer arithmetic
-  - UNROLL_D: D-dimension loop unrolling (factor 4)
 ==========================================
 System Information:
 Linux a100-a 4.18.0-513.9.1.el8_9.x86_64 #1 SMP Sat Dec 2 05:23:44 EST 2023 x86_64 x86_64 x86_64 GNU/Linux
@@ -27,8 +26,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Building project with E2 micro-optimizations...
 rm -rf build
 mkdir -p build
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/main.cpp -o build/main.o
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/kmeans.cpp -o build/kmeans.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 Build completed successfully!
 
@@ -37,7 +36,6 @@ Optimizations:
   - Invariant hoisting: Reduce repeated memory access
   - Branchless argmin: Better CPU branch prediction
   - Strided pointers: Eliminate d*K multiplies
-  - Loop unrolling: Improve instruction-level parallelism
 
 This will generate:
   - Timing data (3 warm-up + 5 measurement runs)
@@ -51,16 +49,16 @@ Available profiling tools: gprof, perf, valgrind/cachegrind
 
 [0;34m[INFO][0m Building project for TIMINGS...
 rm -rf build
-[0;34m[INFO][0m Building with definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4
+[0;34m[INFO][0m Building with definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1
 mkdir -p build
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/main.cpp -o build/main.o
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/kmeans.cpp -o build/kmeans.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 [0;32m[SUCCESS][0m Build complete
 [0;34m[INFO][0m Creating benchmark directory structure...
 [0;34m[INFO][0m Capturing system information...
 === System info ===
-Sat Sep  6 17:04:15 AEST 2025
+Sat Sep  6 17:15:51 AEST 2025
 Compiler: g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-20)
 Makefile CXXFLAGS_BASE: -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 Makefile ANTIVEC_FLAGS: 
@@ -68,9 +66,9 @@ Environment CXX: g++
 Environment CXXFLAGS: not set
 Environment ANTIVEC: 1
 Environment DEFS: not set
-Git SHA: 39cadba
+Git SHA: 15caa8d
 Git branch: main
-Git status: 49 files modified
+Git status: 104 files modified
 System: Linux a100-a 4.18.0-513.9.1.el8_9.x86_64 #1 SMP Sat Dec 2 05:23:44 EST 2023 x86_64 x86_64 x86_64 GNU/Linux
 Architecture:        x86_64
 CPU op-mode(s):      32-bit, 64-bit
@@ -93,7 +91,7 @@ Virtualization type: full
 L1d cache:           32K
 L1i cache:           32K
               total        used        free      shared  buff/cache   available
-Mem:           62Gi       933Mi       5.4Gi       1.1Gi        56Gi        59Gi
+Mem:           62Gi       935Mi       5.3Gi       1.1Gi        56Gi        59Gi
 Swap:         5.0Gi        14Mi       5.0Gi
 [0;34m[INFO][0m Capturing Slurm node information...
 [0;32m[SUCCESS][0m Slurm node info captured
@@ -105,19 +103,19 @@ Swap:         5.0Gi        14Mi       5.0Gi
 [0;34m[INFO][0m Warm-up run 3/3
 [0;34m[INFO][0m Measurement run 1/5
 Final inertia: 7984073.996076
-Time split: assign=89.801562%, update=10.198438%
+Time split: assign=88.544151%, update=11.455849%
 [0;34m[INFO][0m Measurement run 2/5
 Final inertia: 7984073.996076
-Time split: assign=89.722760%, update=10.277240%
+Time split: assign=88.599369%, update=11.400631%
 [0;34m[INFO][0m Measurement run 3/5
 Final inertia: 7984073.996076
-Time split: assign=89.949995%, update=10.050005%
+Time split: assign=87.783418%, update=12.216582%
 [0;34m[INFO][0m Measurement run 4/5
 Final inertia: 7984073.996076
-Time split: assign=89.756816%, update=10.243184%
+Time split: assign=88.021266%, update=11.978734%
 [0;34m[INFO][0m Measurement run 5/5
 Final inertia: 7984073.996076
-Time split: assign=89.877128%, update=10.122872%
+Time split: assign=88.557250%, update=11.442750%
 [0;32m[SUCCESS][0m Canonical config complete (5 measurement runs)
 [0;34m[INFO][0m Running stress config: N=100000, D=64, K=64, iters=10, seed=1
 [0;34m[INFO][0m Running 3 warm-up + 5 measurement runs for statistical significance...
@@ -127,42 +125,41 @@ Time split: assign=89.877128%, update=10.122872%
 [0;34m[INFO][0m Measurement run 1/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.483072%, update=1.516928%
+Time split: assign=98.376843%, update=1.623157%
 [0;34m[INFO][0m Measurement run 2/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.488454%, update=1.511546%
+Time split: assign=98.364983%, update=1.635017%
 [0;34m[INFO][0m Measurement run 3/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.472473%, update=1.527527%
+Time split: assign=98.391761%, update=1.608239%
 [0;34m[INFO][0m Measurement run 4/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.469689%, update=1.530311%
+Time split: assign=98.367767%, update=1.632233%
 [0;34m[INFO][0m Measurement run 5/5
 Warning: centroid 14 has no assigned points
 Final inertia: 16505107.138741
-Time split: assign=98.476586%, update=1.523414%
+Time split: assign=98.375222%, update=1.624778%
 [0;32m[SUCCESS][0m Stress config complete (5 measurement runs)
 [0;34m[INFO][0m Running profiling on stress config...
 [0;34m[INFO][0m Using gprof for function-level profiling...
 rm -rf build
 mkdir -p build
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/main.cpp -o build/main.o
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/kmeans.cpp -o build/kmeans.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -pg -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o -pg -lstdc++fs -o build/kmeans
 [0;32m[SUCCESS][0m gprof profile saved to bench/e2/gprof_e2.txt
 [0;34m[INFO][0m Using perf for hardware cache analysis...
 rm -rf build
 mkdir -p build
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/main.cpp -o build/main.o
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/kmeans.cpp -o build/kmeans.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 [0;34m[INFO][0m Checking available perf events...
-[0;32m[SUCCESS][0m L1 cache events available
-[1;33m[WARNING][0m L2 cache events not available, using L1 only
-[0;34m[INFO][0m Recording hardware performance with perf (events: L1-dcache-load-misses,L1-dcache-loads)...
+[1;33m[WARNING][0m Cache events not available, trying basic CPU events
+[0;34m[INFO][0m Recording hardware performance with perf (events: cpu-cycles,instructions)...
 [1;33m[WARNING][0m perf record failed or timed out - likely permission or event availability issue
 [1;33m[WARNING][0m Note: perf may require special permissions or the cache events may not be available on this system
 [1;33m[WARNING][0m Continuing without perf cache analysis...
@@ -170,8 +167,8 @@ g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 [0;32m[SUCCESS][0m System info saved to bench/e2/system_info.txt
 rm -rf build
 mkdir -p build
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/main.cpp -o build/main.o
-g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4 -c src/kmeans.cpp -o build/kmeans.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/main.cpp -o build/main.o
+g++ -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude -fno-tree-vectorize -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -c src/kmeans.cpp -o build/kmeans.o
 g++ build/main.o build/kmeans.o  -lstdc++fs -o build/kmeans
 
 === Experiment E2 Complete ===
@@ -179,69 +176,69 @@ Results saved in bench/e2/
 
 Files generated:
 total 570
-drwx------ 2 s4698382 uusers    57 Sep  6 17:04 .
-drwx------ 5 s4698382 uusers     6 Sep  6 17:04 ..
--rw------- 1 s4698382 uusers 27084 Sep  6 17:04 gprof_e2.txt
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   349 Sep  6 17:04 inertia_N100000_D64_K64_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   184 Sep  6 17:04 inertia_N100000_D64_K64_iters5_seed1.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   339 Sep  6 17:04 inertia_N200000_D16_K8_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run1.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run2.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run3.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run4.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run5.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run6.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run7.txt
--rw------- 1 s4698382 uusers   218 Sep  6 17:04 meta_N100000_D64_K64_iters10_seed1_run8.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N100000_D64_K64_iters5_seed1.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run1.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run2.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run3.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run4.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run5.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run6.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run7.txt
--rw------- 1 s4698382 uusers   217 Sep  6 17:04 meta_N200000_D16_K8_iters10_seed1_run8.txt
--rw------- 1 s4698382 uusers   632 Sep  6 17:04 perf_cache.data
--rw------- 1 s4698382 uusers  1401 Sep  6 17:04 sysinfo_e2.txt
--rw------- 1 s4698382 uusers  1200 Sep  6 17:04 system_info.txt
--rw------- 1 s4698382 uusers   293 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   289 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   293 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   286 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   288 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   286 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   287 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   293 Sep  6 17:04 times_N100000_D64_K64_iters10_seed1_run8.csv
--rw------- 1 s4698382 uusers   159 Sep  6 17:04 times_N100000_D64_K64_iters5_seed1.csv
--rw------- 1 s4698382 uusers   291 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run1.csv
--rw------- 1 s4698382 uusers   292 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run2.csv
--rw------- 1 s4698382 uusers   288 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run3.csv
--rw------- 1 s4698382 uusers   291 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run4.csv
--rw------- 1 s4698382 uusers   290 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run5.csv
--rw------- 1 s4698382 uusers   290 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run6.csv
--rw------- 1 s4698382 uusers   287 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run7.csv
--rw------- 1 s4698382 uusers   293 Sep  6 17:04 times_N200000_D16_K8_iters10_seed1_run8.csv
+drwx------ 2 s4698382 uusers    57 Sep  6 17:16 .
+drwx------ 5 s4698382 uusers     6 Sep  6 17:15 ..
+-rw------- 1 s4698382 uusers 27081 Sep  6 17:16 gprof_e2.txt
+-rw------- 1 s4698382 uusers   349 Sep  6 17:15 inertia_N100000_D64_K64_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   349 Sep  6 17:16 inertia_N100000_D64_K64_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   184 Sep  6 17:16 inertia_N100000_D64_K64_iters5_seed1.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   339 Sep  6 17:15 inertia_N200000_D16_K8_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   218 Sep  6 17:15 meta_N100000_D64_K64_iters10_seed1_run1.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:15 meta_N100000_D64_K64_iters10_seed1_run2.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run3.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run4.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run5.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run6.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run7.txt
+-rw------- 1 s4698382 uusers   218 Sep  6 17:16 meta_N100000_D64_K64_iters10_seed1_run8.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:16 meta_N100000_D64_K64_iters5_seed1.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run1.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run2.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run3.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run4.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run5.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run6.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run7.txt
+-rw------- 1 s4698382 uusers   217 Sep  6 17:15 meta_N200000_D16_K8_iters10_seed1_run8.txt
+-rw------- 1 s4698382 uusers   632 Sep  6 17:16 perf_cache.data
+-rw------- 1 s4698382 uusers  1402 Sep  6 17:15 sysinfo_e2.txt
+-rw------- 1 s4698382 uusers  1200 Sep  6 17:16 system_info.txt
+-rw------- 1 s4698382 uusers   292 Sep  6 17:15 times_N100000_D64_K64_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   289 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:16 times_N100000_D64_K64_iters10_seed1_run8.csv
+-rw------- 1 s4698382 uusers   162 Sep  6 17:16 times_N100000_D64_K64_iters5_seed1.csv
+-rw------- 1 s4698382 uusers   290 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run1.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run2.csv
+-rw------- 1 s4698382 uusers   291 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run3.csv
+-rw------- 1 s4698382 uusers   288 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run4.csv
+-rw------- 1 s4698382 uusers   292 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run5.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run6.csv
+-rw------- 1 s4698382 uusers   293 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run7.csv
+-rw------- 1 s4698382 uusers   290 Sep  6 17:15 times_N200000_D16_K8_iters10_seed1_run8.csv
 
 Key improvements in this run:
   ✓ 3 warm-up + 5 measurement runs for statistical significance
   ✓ Normalized cache statistics (misses per operation)
   ✓ Slurm node pinning information captured
-  ✓ Build definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DUNROLL_D=4
+  ✓ Build definitions: -DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1
 
 Next steps:
 1. Review optimization results in bench/e2/
@@ -257,26 +254,26 @@ Generated files in bench/e2/:
 files generated
 
 File structure:
-bench/e2/meta_N200000_D16_K8_iters10_seed1_run1.txt
-bench/e2/times_N100000_D64_K64_iters10_seed1_run7.csv
-bench/e2/meta_N200000_D16_K8_iters10_seed1_run6.txt
-bench/e2/meta_N200000_D16_K8_iters10_seed1_run8.txt
-bench/e2/inertia_N200000_D16_K8_iters10_seed1_run7.csv
-bench/e2/inertia_N100000_D64_K64_iters10_seed1_run7.csv
-bench/e2/times_N200000_D16_K8_iters10_seed1_run7.csv
-bench/e2/meta_N100000_D64_K64_iters10_seed1_run6.txt
-bench/e2/meta_N100000_D64_K64_iters10_seed1_run1.txt
-bench/e2/meta_N100000_D64_K64_iters10_seed1_run8.txt
-bench/e2/inertia_N200000_D16_K8_iters10_seed1_run8.csv
-bench/e2/inertia_N100000_D64_K64_iters10_seed1_run6.csv
-bench/e2/inertia_N100000_D64_K64_iters10_seed1_run1.csv
-bench/e2/gprof_e2.txt
-bench/e2/inertia_N200000_D16_K8_iters10_seed1_run1.csv
-bench/e2/inertia_N200000_D16_K8_iters10_seed1_run6.csv
-bench/e2/inertia_N100000_D64_K64_iters10_seed1_run8.csv
-bench/e2/times_N100000_D64_K64_iters10_seed1_run8.csv
-bench/e2/times_N100000_D64_K64_iters10_seed1_run6.csv
 bench/e2/meta_N200000_D16_K8_iters10_seed1_run7.txt
+bench/e2/inertia_N100000_D64_K64_iters10_seed1_run7.csv
+bench/e2/inertia_N200000_D16_K8_iters10_seed1_run8.csv
+bench/e2/inertia_N200000_D16_K8_iters10_seed1_run6.csv
+bench/e2/meta_N100000_D64_K64_iters10_seed1_run2.txt
+bench/e2/inertia_N200000_D16_K8_iters10_seed1_run1.csv
+bench/e2/meta_N100000_D64_K64_iters10_seed1_run5.txt
+bench/e2/times_N100000_D64_K64_iters10_seed1_run5.csv
+bench/e2/sysinfo_e2.txt
+bench/e2/times_N100000_D64_K64_iters10_seed1_run2.csv
+bench/e2/times_N200000_D16_K8_iters10_seed1_run4.csv
+bench/e2/times_N200000_D16_K8_iters10_seed1_run3.csv
+bench/e2/gprof_e2.txt
+bench/e2/meta_N200000_D16_K8_iters10_seed1_run6.txt
+bench/e2/meta_N200000_D16_K8_iters10_seed1_run1.txt
+bench/e2/meta_N200000_D16_K8_iters10_seed1_run8.txt
+bench/e2/times_N200000_D16_K8_iters10_seed1_run2.csv
+bench/e2/times_N200000_D16_K8_iters10_seed1_run5.csv
+bench/e2/times_N100000_D64_K64_iters10_seed1_run3.csv
+bench/e2/times_N100000_D64_K64_iters10_seed1_run4.csv
 
 Key output files:
 ✅ System information captured
@@ -290,4 +287,4 @@ Next steps:
   3. Check plots: ls -la plots/
   4. Compare with E0/E1: python scripts/analyze_experiment.py 0 1 2
 
-Job completed at: Sat Sep  6 17:04:52 AEST 2025
+Job completed at: Sat Sep  6 17:16:25 AEST 2025
