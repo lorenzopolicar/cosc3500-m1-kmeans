@@ -5,18 +5,18 @@ Configuration: N200000_D16_K8_iters10_seed1
   Parameters: N=200,000, D=16, K=8, iters=10
   Measurement runs: 5
   Overall median times:
-    Assign kernel: 17.972 ms
-    Update kernel: 2.131 ms
-    Total time: 20.115 ms
-  Performance: 89.03 MLUPS
-  Time distribution: Assign 89.3%, Update 10.6%
+    Assign kernel: 17.944 ms
+    Update kernel: 2.203 ms
+    Total time: 20.157 ms
+  Performance: 89.17 MLUPS
+  Time distribution: Assign 89.0%, Update 10.9%
 
 Configuration: N100000_D64_K64_iters10_seed1
   Parameters: N=100,000, D=64, K=64, iters=10
   Measurement runs: 5
   Overall median times:
-    Assign kernel: 326.004 ms
-    Update kernel: 5.141 ms
-    Total time: 331.185 ms
-  Performance: 19.63 MLUPS
-  Time distribution: Assign 98.4%, Update 1.6%
+    Assign kernel: 329.314 ms
+    Update kernel: 4.807 ms
+    Total time: 334.078 ms
+  Performance: 19.43 MLUPS
+  Time distribution: Assign 98.6%, Update 1.4%
