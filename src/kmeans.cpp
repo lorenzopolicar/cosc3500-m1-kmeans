@@ -3,6 +3,17 @@
 #include <algorithm>
 #include <limits>
 
+#ifdef TRANSPOSED_C
+// Helper function to transpose centroids from [K×D] to [D×K]
+void transpose_centroids(Data& data) {
+    for (size_t d = 0; d < data.D; ++d) {
+        for (size_t k = 0; k < data.K; ++k) {
+            data.centroidsT[d * data.K + k] = data.centroids[k * data.D + d];
+        }
+    }
+}
+#endif
+
 void assign_labels(Data& data) {
     // For each point, find the nearest centroid using squared L2 distance
     for (size_t i = 0; i < data.N; ++i) {
@@ -15,7 +26,13 @@ void assign_labels(Data& data) {
             
             // Sum squared differences over all dimensions
             for (size_t d = 0; d < data.D; ++d) {
+#ifdef TRANSPOSED_C
+                // Use transposed centroids for cache-friendly access
+                float diff = data.points[i * data.D + d] - data.centroidsT[d * data.K + k];
+#else
+                // Original row-major access
                 float diff = data.points[i * data.D + d] - data.centroids[k * data.D + d];
+#endif
                 d2 += static_cast<double>(diff) * static_cast<double>(diff);
             }
             
@@ -61,6 +78,11 @@ void update_centroids(Data& data) {
             }
         }
     }
+    
+#ifdef TRANSPOSED_C
+    // Rebuild transposed centroids after update (cost belongs to update timer)
+    transpose_centroids(data);
+#endif
 }
 
 double inertia(const Data& data) {

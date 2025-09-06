@@ -5,14 +5,23 @@
 CXX ?= g++
 CXXFLAGS_BASE = -std=c++17 -O2 -Wall -Wextra -Wshadow -Wconversion -Iinclude
 
-# Detect compiler for anti-vectorization flags
+# Detect compiler for anti-vectorization flags and filesystem library
 CXX_VERSION := $(shell $(CXX) --version 2>/dev/null | head -n1)
 ifeq ($(findstring GCC,$(CXX_VERSION)),GCC)
     ANTIVEC_FLAGS = -fno-tree-vectorize
+    # GCC < 9.0 needs -lstdc++fs for filesystem support
+    ifeq ($(shell $(CXX) -dumpversion | cut -d. -f1),8)
+        FS_LIB = -lstdc++fs
+    else
+        FS_LIB = 
+    endif
 else ifeq ($(findstring clang,$(CXX_VERSION)),clang)
     ANTIVEC_FLAGS = -fno-vectorize -fno-slp-vectorize
+    # Clang on macOS has filesystem support built-in
+    FS_LIB = 
 else
     ANTIVEC_FLAGS = 
+    FS_LIB = 
 endif
 
 # Build configuration
@@ -40,9 +49,8 @@ profile: LDFLAGS = -pg
 profile: $(TARGET)
 
 # Main target
-# Note: -lstdc++fs needed for std::filesystem in GCC < 9.0 (e.g., GCC 8.5.0 on Rangpur)
 $(TARGET): $(OBJECTS) | $(BUILD_DIR)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -lstdc++fs -o $@
+	$(CXX) $(OBJECTS) $(LDFLAGS) $(FS_LIB) -o $@
 
 # Object files
 $(BUILD_DIR)/%.o: src/%.cpp | $(BUILD_DIR)
@@ -70,7 +78,7 @@ info:
 	@echo "Anti-vectorization flags: $(ANTIVEC_FLAGS)"
 	@echo "ANTIVEC setting: $(ANTIVEC)"
 	@echo "Build definitions: $(DEFS)"
-	@echo "Filesystem library: -lstdc++fs (for GCC < 9.0 compatibility)"
+	@echo "Filesystem library: $(FS_LIB)"
 	@echo ""
 	@echo "=== System Info ==="
 	@uname -a

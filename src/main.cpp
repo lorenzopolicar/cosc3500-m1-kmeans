@@ -145,8 +145,18 @@ int main(int argc, char* argv[]) {
     data.centroids.resize(k * d);
     data.labels.resize(n);
     
+#ifdef TRANSPOSED_C
+    // Initialize transposed centroids buffer
+    data.centroidsT.resize(d * k);
+#endif
+    
     // Generate synthetic data
     generate_data(data, seed);
+    
+#ifdef TRANSPOSED_C
+    // Build initial transposed centroids
+    transpose_centroids(data);
+#endif
     
     // Capture metadata for benchmarking
     const char* exp_env = std::getenv("EXPERIMENT");

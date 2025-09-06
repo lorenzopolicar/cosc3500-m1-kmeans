@@ -131,9 +131,9 @@ if command -v gprof &> /dev/null; then
     print_status "Using gprof for profiling (Linux)..."
     make clean
     if [[ -n "$BUILD_DEFS" ]]; then
-        DEFS="$BUILD_DEFS" make profile
+        ANTIVEC=1 DEFS="$BUILD_DEFS" make profile
     else
-        make profile
+        ANTIVEC=1 make profile
     fi
     EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
     if [[ -f "gmon.out" ]]; then
@@ -146,7 +146,11 @@ if command -v gprof &> /dev/null; then
 elif command -v perf &> /dev/null; then
     print_status "Using perf for profiling (Linux)..."
     make clean
-    make release
+    if [[ -n "$BUILD_DEFS" ]]; then
+        ANTIVEC=1 DEFS="$BUILD_DEFS" make release
+    else
+        ANTIVEC=1 make release
+    fi
     perf record -o bench/${EXPERIMENT_DIR}/perf_stress_config.data \
                 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
     if [[ -f "bench/${EXPERIMENT_DIR}/perf_stress_config.data" ]]; then
@@ -159,7 +163,11 @@ elif command -v perf &> /dev/null; then
 elif command -v sample &> /dev/null; then
     print_status "Using macOS sample for profiling..."
     make clean
-    make release
+    if [[ -n "$BUILD_DEFS" ]]; then
+        ANTIVEC=1 DEFS="$BUILD_DEFS" make release
+    else
+        ANTIVEC=1 make release
+    fi
     # Use a larger dataset that runs longer for sampling
     ./build/kmeans --n 500000 --d 32 --k 32 --iters 20 --seed 1 > /dev/null 2>&1 &
     KMEANS_PID=$!
@@ -240,7 +248,11 @@ fi
 
 # Clean up profiling artifacts
 make clean
-make release
+if [[ -n "$BUILD_DEFS" ]]; then
+    ANTIVEC=1 DEFS="$BUILD_DEFS" make release
+else
+    ANTIVEC=1 make release
+fi
 
 # Show results summary
 echo
