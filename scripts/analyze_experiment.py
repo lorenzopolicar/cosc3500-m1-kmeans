@@ -38,8 +38,14 @@ class ExperimentAnalyzer:
         """Initialize analyzer with experiment directory."""
         self.experiment_dir = Path(experiment_dir)
         self.experiment_name = self.experiment_dir.name
-        self.plots_dir = Path("plots")
-        self.plots_dir.mkdir(exist_ok=True)
+        
+        # Create experiment-specific subdirectory in plots/
+        self.plots_dir = Path("plots") / self.experiment_name
+        self.plots_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Keep the main plots directory for backward compatibility
+        self.main_plots_dir = Path("plots")
+        self.main_plots_dir.mkdir(parents=True, exist_ok=True)
         
         # Data storage
         self.timing_data: Dict[str, pd.DataFrame] = {}
@@ -182,8 +188,8 @@ class ExperimentAnalyzer:
         
         plt.tight_layout()
         
-        # Save plot
-        output_file = self.plots_dir / f"{self.experiment_name}_periter_timings_{tag}.png"
+        # Save plot in experiment subdirectory
+        output_file = self.plots_dir / f"periter_timings_{tag}.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         print(f"Saved per-iteration timings plot: {output_file}")
         plt.close()
@@ -233,8 +239,8 @@ class ExperimentAnalyzer:
         
         plt.tight_layout()
         
-        # Save plot
-        output_file = self.plots_dir / f"{self.experiment_name}_periter_mlups_{tag}.png"
+        # Save plot in experiment subdirectory
+        output_file = self.plots_dir / f"periter_mlups_{tag}.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         print(f"Saved per-iteration MLUPS plot: {output_file}")
         plt.close()
@@ -287,8 +293,8 @@ class ExperimentAnalyzer:
         
         plt.tight_layout()
         
-        # Save plot
-        output_file = self.plots_dir / f"{self.experiment_name}_inertia_{tag}.png"
+        # Save plot in experiment subdirectory
+        output_file = self.plots_dir / f"inertia_{tag}.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         print(f"Saved convergence plot: {output_file}")
         plt.close()
@@ -359,8 +365,8 @@ class ExperimentAnalyzer:
         
         plt.tight_layout()
         
-        # Save plot
-        output_file = self.plots_dir / f"{self.experiment_name}_median_kernels_{tag}.png"
+        # Save plot in experiment subdirectory
+        output_file = self.plots_dir / f"median_kernels_{tag}.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         print(f"Saved median kernel cost plot: {output_file}")
         plt.close()
@@ -371,11 +377,28 @@ class ExperimentAnalyzer:
         print(f"EXPERIMENT SUMMARY: {self.experiment_name}")
         print(f"{'='*60}")
         
-        if tag and tag in self.timing_data:
-            self._print_tag_summary(tag)
-        else:
-            for tag in self.timing_data.keys():
+        # Capture the summary output
+        import io
+        from contextlib import redirect_stdout
+        
+        summary_buffer = io.StringIO()
+        with redirect_stdout(summary_buffer):
+            if tag and tag in self.timing_data:
                 self._print_tag_summary(tag)
+            else:
+                for tag in self.timing_data.keys():
+                    self._print_tag_summary(tag)
+        
+        # Print to console
+        print(summary_buffer.getvalue())
+        
+        # Save to plots subdirectory
+        summary_file = self.plots_dir / f"summary_{tag or 'all'}.txt"
+        with open(summary_file, 'w') as f:
+            f.write(f"EXPERIMENT SUMMARY: {self.experiment_name}\n")
+            f.write("="*60 + "\n")
+            f.write(summary_buffer.getvalue())
+        print(f"Saved summary report: {summary_file}")
     
     def _print_tag_summary(self, tag: str):
         """Print summary for a specific tag."""
@@ -458,7 +481,8 @@ def main():
     
     analyzer.generate_all_plots(args.tag)
     
-    print(f"\nAnalysis complete! Check the 'plots/' directory for generated visualizations.")
+    print(f"\nAnalysis complete! Check the experiment-specific directory for generated files:")
+    print(f"  - plots/e{args.experiment}/ (experiment analysis and plots)")
 
 
 if __name__ == "__main__":

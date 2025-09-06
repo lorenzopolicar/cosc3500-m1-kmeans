@@ -126,9 +126,9 @@ print_success "Stress config complete (5 measurement runs)"
 # Profile the stress config
 print_status "Running profiling on stress config..."
 
-# Try gprof first (Linux - preferred for HPC)
+# Function-level profiling with gprof (Linux/macOS)
 if command -v gprof &> /dev/null; then
-    print_status "Using gprof for profiling (Linux)..."
+    print_status "Using gprof for function-level profiling..."
     make clean
     if [[ -n "$BUILD_DEFS" ]]; then
         ANTIVEC=1 DEFS="$BUILD_DEFS" make profile
@@ -142,26 +142,9 @@ if command -v gprof &> /dev/null; then
     else
         print_warning "gprof output not generated - program may not have exited cleanly"
     fi
-# Use perf if available (Linux performance monitoring)
-elif command -v perf &> /dev/null; then
-    print_status "Using perf for profiling (Linux)..."
-    make clean
-    if [[ -n "$BUILD_DEFS" ]]; then
-        ANTIVEC=1 DEFS="$BUILD_DEFS" make release
-    else
-        ANTIVEC=1 make release
-    fi
-    perf record -o bench/${EXPERIMENT_DIR}/perf_stress_config.data \
-                ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
-    if [[ -f "bench/${EXPERIMENT_DIR}/perf_stress_config.data" ]]; then
-        perf report -i bench/${EXPERIMENT_DIR}/perf_stress_config.data > bench/${EXPERIMENT_DIR}/perf_stress_config.txt
-        print_success "perf profile saved to bench/${EXPERIMENT_DIR}/perf_stress_config.txt"
-    else
-        print_warning "perf output not generated"
-    fi
-# Use macOS sample if available
+# Use macOS sample if gprof not available
 elif command -v sample &> /dev/null; then
-    print_status "Using macOS sample for profiling..."
+    print_status "Using macOS sample for function-level profiling..."
     make clean
     if [[ -n "$BUILD_DEFS" ]]; then
         ANTIVEC=1 DEFS="$BUILD_DEFS" make release
@@ -176,68 +159,86 @@ elif command -v sample &> /dev/null; then
     wait $KMEANS_PID 2>/dev/null || true
     print_success "sample profile saved to bench/${EXPERIMENT_DIR}/sample_stress_config.txt"
 else
-    print_warning "No profiling tools available (gprof/perf/sample)"
+    print_warning "No function-level profiling tools available (gprof/sample)"
 fi
 
-# Profile with cachegrind if available (Linux)
-if command -v valgrind &> /dev/null; then
-    print_status "Running cachegrind profile on stress config (Linux)..."
+# Cache performance analysis with perf (Linux only)
+if command -v perf &> /dev/null; then
+    print_status "Using perf for hardware cache analysis..."
     make clean
     if [[ -n "$BUILD_DEFS" ]]; then
         ANTIVEC=1 DEFS="$BUILD_DEFS" make release
     else
         ANTIVEC=1 make release
     fi
-    # Try to load valgrind module (common on HPC clusters)
-    module load valgrind 2>/dev/null || echo "valgrind module not available, using system valgrind"
     
-    valgrind --tool=cachegrind --cache-sim=yes \
-             EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 3 --seed 1 > /dev/null 2>&1
+    # Record cache performance with perf
+    print_status "Recording hardware cache performance with perf..."
+    perf record -e L1-dcache-load-misses,L1-dcache-loads,L2-dcache-load-misses,L2-dcache-loads \
+                -o bench/${EXPERIMENT_DIR}/perf_cache.data \
+                EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > /dev/null 2>&1
     
-    # Find the cachegrind output file and annotate it
-    CACHEGRIND_OUT=$(ls cachegrind.out.* 2>/dev/null | head -1)
-    if [[ -n "$CACHEGRIND_OUT" ]]; then
-        print_success "Found cachegrind output: $CACHEGRIND_OUT"
-        if command -v cg_annotate &> /dev/null; then
-            cg_annotate "$CACHEGRIND_OUT" > bench/${EXPERIMENT_DIR}/cachegrind_e${EXPERIMENT_NUM}.txt
-            print_success "cachegrind profile saved to bench/${EXPERIMENT_DIR}/cachegrind_e${EXPERIMENT_NUM}.txt"
+    if [[ -f "bench/${EXPERIMENT_DIR}/perf_cache.data" ]]; then
+        print_success "Found perf cache data: bench/${EXPERIMENT_DIR}/perf_cache.data"
+        
+        # Generate cache performance report
+        perf report -i bench/${EXPERIMENT_DIR}/perf_cache.data > bench/${EXPERIMENT_DIR}/perf_cache_report.txt 2>&1
+        print_success "perf cache report saved to bench/${EXPERIMENT_DIR}/perf_cache_report.txt"
+        
+        # Get detailed cache statistics
+        print_status "Computing detailed cache statistics with perf stat..."
+        perf stat -e L1-dcache-load-misses,L1-dcache-loads,L2-dcache-load-misses,L2-dcache-loads \
+                  EXPERIMENT=${EXPERIMENT_DIR} ANTIVEC=1 ./build/kmeans --n 100000 --d 64 --k 64 --iters 5 --seed 1 > bench/${EXPERIMENT_DIR}/perf_cache_stats.txt 2>&1
+        
+        # Extract and normalize cache statistics
+        print_status "Extracting normalized cache statistics..."
+        N=100000
+        D=64
+        K=64
+        ITERS=5
+        TOTAL_OPERATIONS=$((N * K * ITERS))
+        
+        # Extract cache miss counts from perf stat output
+        L1_MISSES=$(grep "L1-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+        L1_LOADS=$(grep "L1-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+        L2_MISSES=$(grep "L2-dcache-load-misses" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+        L2_LOADS=$(grep "L2-dcache-loads" bench/${EXPERIMENT_DIR}/perf_cache_stats.txt | awk '{print $1}' | sed 's/,//g' | head -1)
+        
+        if [[ -n "$L1_MISSES" && -n "$L1_LOADS" && -n "$L2_MISSES" && -n "$L2_LOADS" ]]; then
+            L1_MISS_RATE=$(echo "scale=6; $L1_MISSES / $L1_LOADS" | bc -l 2>/dev/null || echo "N/A")
+            L2_MISS_RATE=$(echo "scale=6; $L2_MISSES / $L2_LOADS" | bc -l 2>/dev/null || echo "N/A")
+            L1_MISSES_PER_OP=$(echo "scale=6; $L1_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
+            L2_MISSES_PER_OP=$(echo "scale=6; $L2_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
             
-            # Normalize cache stats: compute L1/L2 misses per label-update
-            print_status "Computing normalized cache statistics..."
-            N=100000
-            D=64
-            K=64
-            ITERS=3
-            TOTAL_OPERATIONS=$((N * K * ITERS))
+            echo "Hardware Cache Performance Analysis:" > bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "Total operations (N×K×iters): $TOTAL_OPERATIONS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "L1 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Loads: $L1_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Misses: $L1_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Miss Rate: $L1_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Misses per operation: $L1_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "L2 Data Cache:" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Loads: $L2_LOADS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Misses: $L2_MISSES" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Miss Rate: $L2_MISS_RATE" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "  Misses per operation: $L2_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
+            echo "Build definitions: $BUILD_DEFS" >> bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt
             
-            # Extract L1 and L2 miss counts from cachegrind output
-            L1_MISSES=$(grep "D1  misses" "$CACHEGRIND_OUT" | awk '{print $4}' | head -1)
-            L2_MISSES=$(grep "LL misses" "$CACHEGRIND_OUT" | awk '{print $4}' | head -1)
-            
-            if [[ -n "$L1_MISSES" && -n "$L2_MISSES" ]]; then
-                L1_MISSES_PER_OP=$(echo "scale=6; $L1_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
-                L2_MISSES_PER_OP=$(echo "scale=6; $L2_MISSES / $TOTAL_OPERATIONS" | bc -l 2>/dev/null || echo "N/A")
-                
-                echo "Normalized cache statistics:" > bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "Total operations (N×K×iters): $TOTAL_OPERATIONS" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "L1 misses: $L1_MISSES" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "L2 misses: $L2_MISSES" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "L1 misses per operation: $L1_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "L2 misses per operation: $L2_MISSES_PER_OP" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                echo "Build definitions: $BUILD_DEFS" >> bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt
-                
-                print_success "Normalized cache stats saved to bench/${EXPERIMENT_DIR}/cache_stats_e${EXPERIMENT_NUM}.txt"
-            else
-                print_warning "Could not extract cache miss counts for normalization"
-            fi
+            print_success "Hardware cache analysis saved to bench/${EXPERIMENT_DIR}/cache_analysis_e${EXPERIMENT_NUM}.txt"
+        else
+            print_warning "Could not extract cache statistics from perf output"
         fi
     else
-        print_warning "cachegrind output not generated"
+        print_warning "perf cache data not generated"
     fi
 else
-    print_warning "valgrind not available, skipping cachegrind profiling"
-    print_status "Note: Install valgrind for cache behavior analysis (recommended for Linux HPC)"
+    print_warning "perf not available, skipping cache analysis"
+    print_info "Note: perf provides hardware cache performance counters (recommended for Linux HPC)"
 fi
+
 
 # Additional Linux profiling: CPU info and system details
 if command -v lscpu &> /dev/null; then
