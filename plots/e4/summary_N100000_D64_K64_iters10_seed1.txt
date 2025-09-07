@@ -1,0 +1,22 @@
+EXPERIMENT SUMMARY: e4
+============================================================
+
+Configuration: N200000_D16_K8_iters10_seed1
+  Parameters: N=200,000, D=16, K=8, iters=10
+  Measurement runs: 5
+  Overall median times:
+    Assign kernel: 21.444 ms
+    Update kernel: 2.338 ms
+    Total time: 23.814 ms
+  Performance: 74.61 MLUPS
+  Time distribution: Assign 90.0%, Update 9.8%
+
+Configuration: N100000_D64_K64_iters10_seed1
+  Parameters: N=100,000, D=64, K=64, iters=10
+  Measurement runs: 5
+  Overall median times:
+    Assign kernel: 321.686 ms
+    Update kernel: 4.668 ms
+    Total time: 326.347 ms
+  Performance: 19.90 MLUPS
+  Time distribution: Assign 98.6%, Update 1.4%

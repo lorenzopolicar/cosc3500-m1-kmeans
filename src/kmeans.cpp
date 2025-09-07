@@ -15,9 +15,9 @@ void transpose_centroids(Data& data) {
 #endif
 
 void assign_labels(Data& data) {
-    // Route to E4 optimized versions if flags are defined
-#ifdef TILE_D
-    assign_labels_d_tiled(data);
+    // Route to E5 optimized versions if flags are defined
+#ifdef TK
+    assign_labels_k_blocked(data);
     return;
 #endif
 
@@ -350,14 +350,21 @@ void assign_labels_strided(Data& data) {
 
 
 // ============================================================================
-// E4 CACHE OPTIMIZATION: D-TILING (DIMENSION BLOCKING)
+// E4 CACHE OPTIMIZATION: D-TILING (DIMENSION BLOCKING) - FAILED
 // ============================================================================
 
-#ifdef TILE_D
-// E4: D-tiling (dimension blocking) optimization
-// Improves cache locality by processing dimensions in tiles of TD
-// This approach blocks the dimension loop to improve spatial locality
-void assign_labels_d_tiled(Data& data) {
+// E4 D-tiling implementation removed - see docs/e4_d_tiling.md for failure analysis
+// Performance regression: -30% (canonical) and -12% (stress) vs E2
+
+// ============================================================================
+// E5 CACHE OPTIMIZATION: K-REGISTER BLOCKING
+// ============================================================================
+
+#ifdef TK
+// E5: K-register blocking optimization
+// Reduces per-point overhead by evaluating TK centroids at once using multiple accumulators
+// Reuses the loaded point value px[d] across TK centroids for better temporal locality
+void assign_labels_k_blocked(Data& data) {
     // Hoist invariants outside loops (from E2)
     const size_t N = data.N;
     const size_t D = data.D;
@@ -367,7 +374,7 @@ void assign_labels_d_tiled(Data& data) {
 #ifdef TRANSPOSED_C
     const float* __restrict__ centroidsT = data.centroidsT.data();
     
-    // For each point, find the nearest centroid using D-tiling
+    // For each point, find the nearest centroid using K-register blocking
     for (size_t i = 0; i < N; ++i) {
         double best_d2 = std::numeric_limits<double>::max();
         int best_k = 0;
@@ -375,29 +382,33 @@ void assign_labels_d_tiled(Data& data) {
         // Cache point pointer for this iteration (from E2)
         const float* __restrict__ px = &points[i * D];
         
-        // Compute squared distance to each centroid
-        for (size_t k = 0; k < K; ++k) {
-            double d2 = 0.0;
+        // Process centroids in tiles of TK for register blocking
+        for (size_t k0 = 0; k0 < K; k0 += TK) {
+            size_t k_end = std::min(k0 + TK, K);
+            size_t tile_size = k_end - k0;
             
-            // Process dimensions in tiles of TD for better cache locality
-            for (size_t d0 = 0; d0 < D; d0 += TILE_D) {
-                size_t d_end = std::min(d0 + TILE_D, D);
+            // Initialize accumulators for this tile
+            double s[TK] = {0.0};
+            
+            // Inner loop over dimensions - reuse px[d] across TK centroids
+            for (size_t d = 0; d < D; ++d) {
+                float px_d = px[d];  // Load point value once per dimension
                 
-                // Use strided pointer for this tile (from E2)
-                const float* __restrict__ ck = &centroidsT[k + d0 * K];
-                
-                // Process all dimensions in current tile
-                for (size_t d = d0; d < d_end; ++d) {
-                    float diff = px[d] - *ck;
-                    d2 += static_cast<double>(diff) * static_cast<double>(diff);
-                    ck += K;  // Move to next dimension, same centroid (stride by K)
+                // Process all centroids in current tile
+                for (size_t j = 0; j < tile_size; ++j) {
+                    // Contiguous access: centroidsT[d*K + (k0+j)]
+                    float c_j = centroidsT[d * K + (k0 + j)];
+                    float diff_j = px_d - c_j;
+                    s[j] += static_cast<double>(diff_j) * static_cast<double>(diff_j);
                 }
             }
             
-            // Update best if this centroid is closer (branch-minimal pattern)
-            if (d2 < best_d2) {
-                best_d2 = d2;
-                best_k = static_cast<int>(k);
+            // Branchless argmin across accumulators in this tile
+            for (size_t j = 0; j < tile_size; ++j) {
+                if (s[j] < best_d2) {
+                    best_d2 = s[j];
+                    best_k = static_cast<int>(k0 + j);
+                }
             }
         }
         
@@ -413,26 +424,32 @@ void assign_labels_d_tiled(Data& data) {
         
         const float* __restrict__ px = &points[i * D];
         
-        // Compute squared distance to each centroid
-        for (size_t k = 0; k < K; ++k) {
-            double d2 = 0.0;
-            const float* __restrict__ ck = &centroids[k * D];
+        // Process centroids in tiles of TK for register blocking
+        for (size_t k0 = 0; k0 < K; k0 += TK) {
+            size_t k_end = std::min(k0 + TK, K);
+            size_t tile_size = k_end - k0;
             
-            // Process dimensions in tiles of TD for better cache locality
-            for (size_t d0 = 0; d0 < D; d0 += TILE_D) {
-                size_t d_end = std::min(d0 + TILE_D, D);
+            // Initialize accumulators for this tile
+            double s[TK] = {0.0};
+            
+            // Inner loop over dimensions - reuse px[d] across TK centroids
+            for (size_t d = 0; d < D; ++d) {
+                float px_d = px[d];  // Load point value once per dimension
                 
-                // Process all dimensions in current tile
-                for (size_t d = d0; d < d_end; ++d) {
-                    float diff = px[d] - ck[d];
-                    d2 += static_cast<double>(diff) * static_cast<double>(diff);
+                // Process all centroids in current tile
+                for (size_t j = 0; j < tile_size; ++j) {
+                    float c_j = centroids[(k0 + j) * D + d];
+                    float diff_j = px_d - c_j;
+                    s[j] += static_cast<double>(diff_j) * static_cast<double>(diff_j);
                 }
             }
             
-            // Update best if this centroid is closer
-            if (d2 < best_d2) {
-                best_d2 = d2;
-                best_k = static_cast<int>(k);
+            // Branchless argmin across accumulators in this tile
+            for (size_t j = 0; j < tile_size; ++j) {
+                if (s[j] < best_d2) {
+                    best_d2 = s[j];
+                    best_k = static_cast<int>(k0 + j);
+                }
             }
         }
         

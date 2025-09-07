@@ -37,7 +37,10 @@ void assign_labels_branchless(Data& data);  // E2: Branchless argmin optimizatio
 void assign_labels_strided(Data& data);  // E2: Strided pointer optimization
 #endif
 
-// E4 Cache optimization function declarations
-#ifdef TILE_D
-void assign_labels_d_tiled(Data& data);  // E4: D-tiling (dimension blocking) optimization
+// E4 D-tiling removed - see docs/e4_d_tiling.md for failure analysis
+// Performance regression: -30% (canonical) and -12% (stress) vs E2
+
+// E5 Cache optimization function declarations
+#ifdef TK
+void assign_labels_k_blocked(Data& data);  // E5: K-register blocking optimization
 #endif

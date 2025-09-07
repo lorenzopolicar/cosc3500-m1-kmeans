@@ -83,17 +83,64 @@ ANTIVEC=1 DEFS="-DTRANSPOSED_C=1 -DHOIST=1 -DBRANCHLESS=1 -DSTRIDE_PTR=1 -DTILE_
 sbatch scripts/slurm/run_experiment_e4.slurm
 ```
 
-## Expected Performance Impact
+## E4 Implementation Failure Analysis
 
-### Cache Analysis
-- **Current E2**: D dimensions accessed sequentially per centroid
-- **E4 with TD=8**: 8-dimension tiles = better cache line utilization
-- **Cache Efficiency**: Improved spatial locality for dimension data
+### Why E4 D-Tiling Failed
 
-### Performance Predictions
-- **Canonical Config (N=200K, D=16, K=8)**: 2-8% improvement (D=16 benefits from tiling)
-- **Stress Config (N=100K, D=64, K=64)**: 5-15% improvement (D=64 major benefit)
-- **Total E0→E4**: 25-45% cumulative improvement
+The E4 D-tiling optimization was **fundamentally flawed** and resulted in **significant performance regression**. Here's why:
+
+#### Performance Results
+- **E2 → E4 (Canonical)**: 16.495ms → 21.444ms (**-30.0% regression**)
+- **E2 → E4 (Stress)**: 287.299ms → 321.686ms (**-12.0% regression**)
+- **Same final inertia**: Algorithm correctness maintained
+- **No cache benefits**: Loop overhead without performance gains
+
+#### The Core Problems
+
+1. **Spatial Locality Already Optimal**: E1 + E2 already read dimensions contiguously with strided pointers. Tiling the same contiguous stream doesn't create new reuse.
+
+2. **Wrong Temporal Reuse Target**: Temporal reuse lives across K (centroids), not within a D-tile. The point value `px[d]` is reused for many centroids, not many tiles of the same centroid.
+
+3. **Added Overhead**: Extra loop and `min()` bound checks per tile add unnecessary overhead.
+
+4. **Prefetcher Already Handles It**: EPYC's prefetcher already handles the contiguous dimension access well.
+
+#### Memory Access Pattern Analysis
+- **E2**: `for (d = 0; d < D; ++d) { ... }` (optimal contiguous access)
+- **E4**: `for (d0 = 0; d0 < D; d0 += TD) { for (d = d0; d < d_end; ++d) { ... } }` (same access + overhead)
+
+**Result**: Same memory access pattern with added loop overhead.
+
+### What Would Make "Blocking" Real and Useful
+
+#### Register Blocking Across K (Not D)
+
+The correct approach would be **register blocking across K centroids**:
+
+```cpp
+// Register blocking across K centroids
+for (size_t k0 = 0; k0 < K; k0 += TK) {
+    for (size_t i = 0; i < N; ++i) {
+        // Process TK centroids at once with register accumulators
+        for (size_t k = k0; k < k_end; ++k) {
+            // Reuse loaded px[d] across several centroids
+        }
+    }
+}
+```
+
+**Benefits**:
+- **Reduces index math**: Process multiple centroids in one tile
+- **Reuses loaded px[d]**: Across several centroids while keeping accesses contiguous
+- **Contiguous memory access**: Thanks to E1 transposed layout
+- **Register efficiency**: Better utilization of CPU registers
+
+### Lessons Learned
+1. **D-tiling doesn't help when spatial locality is already optimal**
+2. **Temporal reuse in K-means lives across centroids, not dimensions**
+3. **Modern prefetchers handle contiguous access well**
+4. **Loop overhead can easily outweigh theoretical cache benefits**
+5. **Register blocking across K would be more promising than D-tiling**
 
 ### Optimization Hierarchy
 1. **E1**: Memory layout optimization (transposed centroids)
