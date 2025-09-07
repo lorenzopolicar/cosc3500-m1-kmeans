@@ -356,7 +356,7 @@ void assign_labels_strided(Data& data) {
 #ifdef TILE_K
 // E3: K-tiling (centroid blocking) optimization
 // Improves cache locality by processing centroids in tiles of TK
-// so a D×TK slab of centroids stays hot while evaluating one point
+// This is a simplified approach that maintains correctness
 void assign_labels_tiled(Data& data) {
     // Hoist invariants outside loops (from E2)
     const size_t N = data.N;
@@ -393,10 +393,11 @@ void assign_labels_tiled(Data& data) {
                     ck += K;  // Move to next dimension, same centroid (stride by K)
                 }
                 
-                // Branchless update: use ternary operator instead of if-statement (from E2)
-                bool is_better = (d2 < best_d2);
-                best_d2 = is_better ? d2 : best_d2;
-                best_k = is_better ? static_cast<int>(k) : best_k;
+                // Update best if this centroid is closer
+                if (d2 < best_d2) {
+                    best_d2 = d2;
+                    best_k = static_cast<int>(k);
+                }
             }
         }
         
@@ -425,10 +426,11 @@ void assign_labels_tiled(Data& data) {
                     d2 += static_cast<double>(diff) * static_cast<double>(diff);
                 }
                 
-                // Branchless update
-                bool is_better = (d2 < best_d2);
-                best_d2 = is_better ? d2 : best_d2;
-                best_k = is_better ? static_cast<int>(k) : best_k;
+                // Update best if this centroid is closer
+                if (d2 < best_d2) {
+                    best_d2 = d2;
+                    best_k = static_cast<int>(k);
+                }
             }
         }
         
