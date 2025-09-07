@@ -36,3 +36,8 @@ void assign_labels_branchless(Data& data);  // E2: Branchless argmin optimizatio
 #ifdef STRIDE_PTR
 void assign_labels_strided(Data& data);  // E2: Strided pointer optimization
 #endif
+
+// E3 Cache optimization function declarations
+#ifdef TILE_K
+void assign_labels_tiled(Data& data);  // E3: K-tiling (centroid blocking) optimization
+#endif

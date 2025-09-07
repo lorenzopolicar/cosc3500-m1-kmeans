@@ -15,7 +15,12 @@ void transpose_centroids(Data& data) {
 #endif
 
 void assign_labels(Data& data) {
-    // Route to E2 optimized versions if flags are defined
+    // Route to E3 optimized versions if flags are defined
+#ifdef TILE_K
+    assign_labels_tiled(data);
+    return;
+#endif
+
 #ifdef STRIDE_PTR
     assign_labels_strided(data);
     return;
@@ -334,6 +339,96 @@ void assign_labels_strided(Data& data) {
             if (d2 < best_d2) {
                 best_d2 = d2;
                 best_k = static_cast<int>(k);
+            }
+        }
+        
+        data.labels[i] = best_k;
+    }
+#endif
+}
+#endif
+
+
+// ============================================================================
+// E3 CACHE OPTIMIZATION: K-TILING (CENTROID BLOCKING)
+// ============================================================================
+
+#ifdef TILE_K
+// E3: K-tiling (centroid blocking) optimization
+// Improves cache locality by processing centroids in tiles of TK
+// so a D×TK slab of centroids stays hot while evaluating one point
+void assign_labels_tiled(Data& data) {
+    // Hoist invariants outside loops (from E2)
+    const size_t N = data.N;
+    const size_t D = data.D;
+    const size_t K = data.K;
+    const float* __restrict__ points = data.points.data();
+    
+#ifdef TRANSPOSED_C
+    const float* __restrict__ centroidsT = data.centroidsT.data();
+    
+    // For each point, find the nearest centroid using K-tiling
+    for (size_t i = 0; i < N; ++i) {
+        double best_d2 = std::numeric_limits<double>::max();
+        int best_k = 0;
+        
+        // Cache point pointer for this iteration (from E2)
+        const float* __restrict__ px = &points[i * D];
+        
+        // Process centroids in tiles of TK for better cache locality
+        for (size_t k0 = 0; k0 < K; k0 += TILE_K) {
+            size_t k_end = std::min(k0 + TILE_K, K);
+            
+            // Process all centroids in current tile
+            for (size_t k = k0; k < k_end; ++k) {
+                double d2 = 0.0;
+                
+                // Use strided pointer to eliminate d*K multiplies (from E2)
+                const float* __restrict__ ck = &centroidsT[k];
+                
+                // Sum squared differences over all dimensions
+                for (size_t d = 0; d < D; ++d) {
+                    float diff = px[d] - *ck;
+                    d2 += static_cast<double>(diff) * static_cast<double>(diff);
+                    ck += K;  // Move to next dimension, same centroid (stride by K)
+                }
+                
+                // Branchless update: use ternary operator instead of if-statement (from E2)
+                bool is_better = (d2 < best_d2);
+                best_d2 = is_better ? d2 : best_d2;
+                best_k = is_better ? static_cast<int>(k) : best_k;
+            }
+        }
+        
+        data.labels[i] = best_k;
+    }
+#else
+    // Fallback to regular implementation for non-transposed case
+    const float* __restrict__ centroids = data.centroids.data();
+    
+    for (size_t i = 0; i < N; ++i) {
+        double best_d2 = std::numeric_limits<double>::max();
+        int best_k = 0;
+        
+        const float* __restrict__ px = &points[i * D];
+        
+        // Process centroids in tiles of TK for better cache locality
+        for (size_t k0 = 0; k0 < K; k0 += TILE_K) {
+            size_t k_end = std::min(k0 + TILE_K, K);
+            
+            for (size_t k = k0; k < k_end; ++k) {
+                double d2 = 0.0;
+                const float* __restrict__ ck = &centroids[k * D];
+                
+                for (size_t d = 0; d < D; ++d) {
+                    float diff = px[d] - ck[d];
+                    d2 += static_cast<double>(diff) * static_cast<double>(diff);
+                }
+                
+                // Branchless update
+                bool is_better = (d2 < best_d2);
+                best_d2 = is_better ? d2 : best_d2;
+                best_k = is_better ? static_cast<int>(k) : best_k;
             }
         }
         
