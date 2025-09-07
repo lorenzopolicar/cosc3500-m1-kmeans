@@ -1,0 +1,8 @@
+Experiment: e3
+Timestamp: 1757212490521559202
+Git SHA: 76cdb37
+Compiler: c++
+Flags: (default)
+ANTIVEC: 1
+CLI Args: --n 100000 --d 64 --k 64 --iters 10 --seed 1
+Data Params: noise_std=1.5, center_range=3.0, init=random
