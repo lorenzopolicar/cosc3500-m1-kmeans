@@ -15,9 +15,9 @@ void transpose_centroids(Data& data) {
 #endif
 
 void assign_labels(Data& data) {
-    // Route to E3 optimized versions if flags are defined
-#ifdef TILE_K
-    assign_labels_tiled(data);
+    // Route to E4 optimized versions if flags are defined
+#ifdef TILE_D
+    assign_labels_d_tiled(data);
     return;
 #endif
 
@@ -350,14 +350,14 @@ void assign_labels_strided(Data& data) {
 
 
 // ============================================================================
-// E3 CACHE OPTIMIZATION: K-TILING (CENTROID BLOCKING)
+// E4 CACHE OPTIMIZATION: D-TILING (DIMENSION BLOCKING)
 // ============================================================================
 
-#ifdef TILE_K
-// E3: K-tiling (centroid blocking) optimization
-// Improves cache locality by processing centroids in tiles of TK
-// This is a simplified approach that maintains correctness
-void assign_labels_tiled(Data& data) {
+#ifdef TILE_D
+// E4: D-tiling (dimension blocking) optimization
+// Improves cache locality by processing dimensions in tiles of TD
+// This approach blocks the dimension loop to improve spatial locality
+void assign_labels_d_tiled(Data& data) {
     // Hoist invariants outside loops (from E2)
     const size_t N = data.N;
     const size_t D = data.D;
@@ -367,7 +367,7 @@ void assign_labels_tiled(Data& data) {
 #ifdef TRANSPOSED_C
     const float* __restrict__ centroidsT = data.centroidsT.data();
     
-    // For each point, find the nearest centroid using K-tiling
+    // For each point, find the nearest centroid using D-tiling
     for (size_t i = 0; i < N; ++i) {
         double best_d2 = std::numeric_limits<double>::max();
         int best_k = 0;
@@ -375,29 +375,29 @@ void assign_labels_tiled(Data& data) {
         // Cache point pointer for this iteration (from E2)
         const float* __restrict__ px = &points[i * D];
         
-        // Process centroids in tiles of TK for better cache locality
-        for (size_t k0 = 0; k0 < K; k0 += TILE_K) {
-            size_t k_end = std::min(k0 + TILE_K, K);
+        // Compute squared distance to each centroid
+        for (size_t k = 0; k < K; ++k) {
+            double d2 = 0.0;
             
-            // Process all centroids in current tile
-            for (size_t k = k0; k < k_end; ++k) {
-                double d2 = 0.0;
+            // Process dimensions in tiles of TD for better cache locality
+            for (size_t d0 = 0; d0 < D; d0 += TILE_D) {
+                size_t d_end = std::min(d0 + TILE_D, D);
                 
-                // Use strided pointer to eliminate d*K multiplies (from E2)
-                const float* __restrict__ ck = &centroidsT[k];
+                // Use strided pointer for this tile (from E2)
+                const float* __restrict__ ck = &centroidsT[k + d0 * K];
                 
-                // Sum squared differences over all dimensions
-                for (size_t d = 0; d < D; ++d) {
+                // Process all dimensions in current tile
+                for (size_t d = d0; d < d_end; ++d) {
                     float diff = px[d] - *ck;
                     d2 += static_cast<double>(diff) * static_cast<double>(diff);
                     ck += K;  // Move to next dimension, same centroid (stride by K)
                 }
-                
-                // Update best if this centroid is closer
-                if (d2 < best_d2) {
-                    best_d2 = d2;
-                    best_k = static_cast<int>(k);
-                }
+            }
+            
+            // Update best if this centroid is closer (branch-minimal pattern)
+            if (d2 < best_d2) {
+                best_d2 = d2;
+                best_k = static_cast<int>(k);
             }
         }
         
@@ -413,24 +413,26 @@ void assign_labels_tiled(Data& data) {
         
         const float* __restrict__ px = &points[i * D];
         
-        // Process centroids in tiles of TK for better cache locality
-        for (size_t k0 = 0; k0 < K; k0 += TILE_K) {
-            size_t k_end = std::min(k0 + TILE_K, K);
+        // Compute squared distance to each centroid
+        for (size_t k = 0; k < K; ++k) {
+            double d2 = 0.0;
+            const float* __restrict__ ck = &centroids[k * D];
             
-            for (size_t k = k0; k < k_end; ++k) {
-                double d2 = 0.0;
-                const float* __restrict__ ck = &centroids[k * D];
+            // Process dimensions in tiles of TD for better cache locality
+            for (size_t d0 = 0; d0 < D; d0 += TILE_D) {
+                size_t d_end = std::min(d0 + TILE_D, D);
                 
-                for (size_t d = 0; d < D; ++d) {
+                // Process all dimensions in current tile
+                for (size_t d = d0; d < d_end; ++d) {
                     float diff = px[d] - ck[d];
                     d2 += static_cast<double>(diff) * static_cast<double>(diff);
                 }
-                
-                // Update best if this centroid is closer
-                if (d2 < best_d2) {
-                    best_d2 = d2;
-                    best_k = static_cast<int>(k);
-                }
+            }
+            
+            // Update best if this centroid is closer
+            if (d2 < best_d2) {
+                best_d2 = d2;
+                best_k = static_cast<int>(k);
             }
         }
         

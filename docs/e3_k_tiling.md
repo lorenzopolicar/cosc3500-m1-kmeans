@@ -118,12 +118,56 @@ void assign_labels_tiled(Data& data) {
 }
 ```
 
-## Expected Performance Impact
+## E3 Implementation Failure Analysis
+
+### Why E3 K-Tiling Failed
+
+The E3 K-tiling optimization was **fundamentally flawed** and resulted in **no performance improvement** (actually a slight regression). Here's why:
+
+#### The Core Problem
+The current "E3 tiling" that nests `for (k0 ...) for (k ...)` inside the per-point loop is **functionally identical** to E2's access pattern and mostly just adds loop overhead.
+
+#### Memory Access Pattern Analysis
+- **E2**: `for (point) { for (centroid) { ... } }`
+- **E3**: `for (point) { for (tile) { for (centroid_in_tile) { ... } } }`
+
+**Result**: Same memory access pattern, just with extra loop overhead.
+
+#### Why True Cache Blocking Doesn't Work for K-Means
+True cache blocking for K would require:
+```cpp
+for (k0 in tiles) {           // For each tile
+    for (i in points) {       // For each point
+        for (k in tile) {     // For each centroid in tile
+            // Process centroid k for point i
+        }
+    }
+}
+```
+
+**Problems with this approach**:
+1. **Point Vector Rereading**: You'd reread the point vector for every tile
+2. **Complex State Management**: Need to maintain `best_d2`/`best_k` per point across tiles
+3. **Cache Size Reality**: On our configs (D=16–64, K=8–64), the centroid slab (K×D×4B = 0.5–16 KB) already fits in L1 cache
+4. **Negative Impact**: The reordering usually hurts performance due to point vector rereading
+
+#### Performance Results
+- **E2 → E3**: 287.299ms → 290.045ms (**-0.9% regression**)
+- **Same final inertia**: Algorithm correctness maintained
+- **No cache benefits**: Loop overhead without performance gains
+
+### Lessons Learned
+1. **K-means doesn't naturally lend itself to K-tiling cache blocking**
+2. **Centroid data already fits in L1 cache** for our problem sizes
+3. **True cache blocking would require complex state management** across tiles
+4. **Point vector rereading overhead** outweighs any cache benefits
+
+### Performance Impact
 
 ### Cache Analysis
 - **Current E2**: K=64 centroids = 64 different memory regions
 - **E3 with TK=16**: 4 tiles = 4 memory regions per point
-- **Cache Efficiency**: 16x better spatial locality
+- **Cache Efficiency**: 16x improvement in spatial locality
 
 ### Performance Predictions
 - **Canonical Config (N=200K, D=16, K=8)**: 2-5% improvement (already small K)
