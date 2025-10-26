@@ -1,0 +1,21 @@
+K-Means CUDA Implementation Metadata
+=====================================
+Date: Oct 26 2025 18:40:42
+CUDA Version: 11010
+Implementation: CUDA
+
+Configuration:
+  N (points): 200000
+  D (dimensions): 16
+  K (clusters): 8
+  Max iterations: 20
+  Random seed: 42
+  CUDA block size: 256
+  Warmup iterations: 3
+  Benchmark iterations: 5
+
+GPU Information:
+  Device: NVIDIA A100-PCIE-40GB
+  Compute capability: 8.0
+  Global memory: 39.3939 GB
+  SMs: 108

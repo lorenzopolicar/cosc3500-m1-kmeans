@@ -1,0 +1,5 @@
+CUDA Baseline Build Information
+Date: Sun Oct 26 18:40:44 AEST 2025
+Compiler: nvcc: NVIDIA (R) Cuda compiler driver
+Git SHA: f041228b1f9e9524ab5013f3d24851a426adb335
+SLURM Job ID: 321675
