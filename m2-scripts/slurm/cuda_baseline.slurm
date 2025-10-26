@@ -8,7 +8,7 @@
 #SBATCH --gres shard:1
 #SBATCH --partition=cosc3500
 #SBATCH --account=cosc3500
-#SBATCH --time=0-00:30:00
+#SBATCH --time=0-00:15:00
 #SBATCH --output=cuda_baseline_%j.out
 #SBATCH --error=cuda_baseline_%j.err
 
