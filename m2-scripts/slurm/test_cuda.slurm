@@ -24,7 +24,7 @@ nvidia-smi --query-gpu=name,memory.total --format=csv
 echo ""
 
 # Navigate to M2 directory
-cd ../../m2 || exit 1
+cd m2 || exit 1
 
 # Build
 echo "=== Building CUDA Implementation ==="
