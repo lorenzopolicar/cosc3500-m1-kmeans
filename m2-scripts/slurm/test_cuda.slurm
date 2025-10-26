@@ -5,8 +5,9 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --gres=gpu:1
-#SBATCH --partition=gpu
+#SBATCH --gres shard:1
+#SBATCH --partition=cosc3500
+#SBATCH --account=cosc3500
 #SBATCH --time=0-00:10:00
 #SBATCH --output=cuda_test_%j.out
 #SBATCH --error=cuda_test_%j.err
