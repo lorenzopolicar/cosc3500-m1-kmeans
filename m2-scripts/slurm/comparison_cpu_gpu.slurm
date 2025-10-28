@@ -4,11 +4,11 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=16
 #SBATCH --gres shard:1
 #SBATCH --partition=cosc3500
 #SBATCH --account=cosc3500
-#SBATCH --time=0-01:00:00
+#SBATCH --time=0-00:15:00
 #SBATCH --output=comparison_%j.out
 #SBATCH --error=comparison_%j.err
 
@@ -89,7 +89,7 @@ for config in "${CONFIGS[@]}"; do
     echo "$N,$D,$K,Serial,1,$SERIAL_TIME,$SERIAL_ASSIGN,$SERIAL_UPDATE,$SERIAL_MLUPS,1.0" >> "${OUTPUT_DIR}/comparison_results.csv"
 
     # Run OpenMP with different thread counts
-    for THREADS in 2 4 8 16 32; do
+    for THREADS in 2 4 8 16; do
         echo "Running OpenMP with $THREADS threads..."
         export OMP_NUM_THREADS=$THREADS
 
@@ -118,7 +118,7 @@ for config in "${CONFIGS[@]}"; do
     echo ""
     echo "Summary for N=$N, D=$D, K=$K:"
     echo "  Serial: ${SERIAL_TIME}ms"
-    echo "  OpenMP (32 threads): ${OMP_TIME}ms (Speedup: ${OMP_SPEEDUP}x)"
+    echo "  OpenMP (16 threads): ${OMP_TIME}ms (Speedup: ${OMP_SPEEDUP}x)"
     echo "  CUDA: ${CUDA_TIME}ms (Speedup: ${CUDA_SPEEDUP}x)"
 done
 

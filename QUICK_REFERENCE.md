@@ -32,7 +32,7 @@ cat openmp_baseline_*.out
 - **Large**: ~70x speedup
 
 ### OpenMP (To Get)
-- Expected: 15-20x speedup with 32 threads
+- Expected: 12-16x speedup with 16 threads
 - Will enable CPU vs GPU comparison
 
 ---

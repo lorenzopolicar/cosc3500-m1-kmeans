@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=16
 #SBATCH --partition=cosc3500
 #SBATCH --account=cosc3500
 #SBATCH --time=0-00:15:00
@@ -49,7 +49,7 @@ echo "Git SHA: $(git rev-parse HEAD)" >> "${OUTPUT_DIR}/build_info.txt"
 echo "SLURM Job ID: ${SLURM_JOB_ID}" >> "${OUTPUT_DIR}/build_info.txt"
 
 # Thread configurations to test
-THREAD_COUNTS="1 2 4 8 16 32"
+THREAD_COUNTS="1 2 4 8 16"
 
 # Test different thread counts for scaling analysis
 for THREADS in ${THREAD_COUNTS}; do
@@ -78,19 +78,19 @@ done
 
 # Large scale test with optimal thread count
 echo ""
-echo "=== Large Scale Test with 32 threads ==="
-export OMP_NUM_THREADS=32
+echo "=== Large Scale Test with 16 threads ==="
+export OMP_NUM_THREADS=16
 
 # Test 4: Large Scale
 echo "Test 4: Large Scale (N=1000000, D=64, K=64)"
-./kmeans_openmp -N 1000000 -D 64 -K 64 -I 10 -S 42 -T 32 \
-    -o "${OUTPUT_DIR}/large_N1000000_D64_K64_T32.csv" \
+./kmeans_openmp -N 1000000 -D 64 -K 64 -I 10 -S 42 -T 16 \
+    -o "${OUTPUT_DIR}/large_N1000000_D64_K64_T16.csv" \
     --warmup 3 --bench 5 --verbose
 
 # Test 5: Very Large Scale
 echo "Test 5: Very Large Scale (N=5000000, D=128, K=128)"
-./kmeans_openmp -N 5000000 -D 128 -K 128 -I 10 -S 42 -T 32 \
-    -o "${OUTPUT_DIR}/xlarge_N5000000_D128_K128_T32.csv" \
+./kmeans_openmp -N 5000000 -D 128 -K 128 -I 10 -S 42 -T 16 \
+    -o "${OUTPUT_DIR}/xlarge_N5000000_D128_K128_T16.csv" \
     --warmup 2 --bench 3 --verbose
 
 echo ""
