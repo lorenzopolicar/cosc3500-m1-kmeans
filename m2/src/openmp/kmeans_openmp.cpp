@@ -1,4 +1,5 @@
 #include "../../include/kmeans_openmp.hpp"
+#include <iostream>
 #include <limits>
 #include <algorithm>
 #include <cmath>
