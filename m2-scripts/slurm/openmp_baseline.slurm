@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --partition=cosc3500
 #SBATCH --account=cosc3500
-#SBATCH --time=0-00:30:00
+#SBATCH --time=0-00:15:00
 #SBATCH --output=openmp_baseline_%j.out
 #SBATCH --error=openmp_baseline_%j.err
 

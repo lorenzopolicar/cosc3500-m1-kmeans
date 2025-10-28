@@ -80,13 +80,13 @@ COMMON_SRCS = src/common/kmeans_common.cpp
 CUDA_SRCS = src/cuda/kmeans_cuda.cu \
             src/cuda/main_cuda.cu
 
+# OpenMP sources
+OPENMP_SRCS = src/openmp/kmeans_openmp.cpp \
+              src/openmp/main_openmp.cpp
+
 # Serial sources (if needed later)
 # SERIAL_SRCS = src/baseline/kmeans_serial.cpp \
 #               src/baseline/main_serial.cpp
-
-# OpenMP sources (if needed later)
-# OPENMP_SRCS = src/openmp/kmeans_openmp.cpp \
-#               src/openmp/main_openmp.cpp
 
 # =============================================================================
 # OBJECT FILES
@@ -105,8 +105,8 @@ COMMON_OBJS = $(COMMON_SRCS:src/%.cpp=$(OBJ_DIR)/%.o)
 # TARGET EXECUTABLES
 # =============================================================================
 
-TARGETS = kmeans_cuda
-# Add these later: kmeans_serial kmeans_openmp
+TARGETS = kmeans_cuda kmeans_openmp
+# Add later: kmeans_serial
 
 # Default target
 all: directories $(TARGETS)
@@ -191,7 +191,7 @@ directories:
 # Compile C++ files
 $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS_BASE) $(OPT_FLAGS) $(OPENMP_FLAGS) $(INCLUDES) -c $< -o $@
 
 # Compile CUDA files
 $(OBJ_DIR)/%.o: src/%.cu
