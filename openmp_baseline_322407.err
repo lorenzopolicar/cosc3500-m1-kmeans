@@ -1,0 +1,30 @@
+Loading compiler-rt version 2023.1.0
+In file included from src/openmp/../../include/kmeans_openmp.hpp:3,
+                 from src/openmp/kmeans_openmp.cpp:1:
+src/openmp/../../include/kmeans_common.hpp:68:23: warning: conversion from ‘double’ to ‘float’ changes value from ‘9.9999999999999995e-7’ to ‘9.99999997e-7f’ [-Wfloat-conversion]
+     float tolerance = 1e-6;      // Convergence tolerance
+                       ^~~~
+src/openmp/../../include/kmeans_common.hpp:115:103: warning: conversion from ‘double’ to ‘float’ changes value from ‘1.0000000000000001e-5’ to ‘9.99999975e-6f’ [-Wfloat-conversion]
+     bool validate_results(const KMeansData& result1, const KMeansData& result2, float tolerance = 1e-5);
+                                                                                                       ^
+In file included from src/openmp/../../include/kmeans_openmp.hpp:3,
+                 from src/openmp/main_openmp.cpp:1:
+src/openmp/../../include/kmeans_common.hpp:68:23: warning: conversion from ‘double’ to ‘float’ changes value from ‘9.9999999999999995e-7’ to ‘9.99999997e-7f’ [-Wfloat-conversion]
+     float tolerance = 1e-6;      // Convergence tolerance
+                       ^~~~
+src/openmp/../../include/kmeans_common.hpp:115:103: warning: conversion from ‘double’ to ‘float’ changes value from ‘1.0000000000000001e-5’ to ‘9.99999975e-6f’ [-Wfloat-conversion]
+     bool validate_results(const KMeansData& result1, const KMeansData& result2, float tolerance = 1e-5);
+                                                                                                       ^
+In file included from src/common/kmeans_common.cpp:1:
+src/common/../../include/kmeans_common.hpp:68:23: warning: conversion from ‘double’ to ‘float’ changes value from ‘9.9999999999999995e-7’ to ‘9.99999997e-7f’ [-Wfloat-conversion]
+     float tolerance = 1e-6;      // Convergence tolerance
+                       ^~~~
+src/common/../../include/kmeans_common.hpp:115:103: warning: conversion from ‘double’ to ‘float’ changes value from ‘1.0000000000000001e-5’ to ‘9.99999975e-6f’ [-Wfloat-conversion]
+     bool validate_results(const KMeansData& result1, const KMeansData& result2, float tolerance = 1e-5);
+                                                                                                       ^
+src/common/kmeans_common.cpp: In function ‘void KMeansUtils::generate_synthetic_data(KMeansData&, int)’:
+src/common/kmeans_common.cpp:99:25: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+         int cluster = i % data.K;  // Assign rough clusters for data generation
+                       ~~^~~~~~~~
+head: cannot open '/home/Student/s4698382/cosc3500/milestone-1/cosc3500-m1-kmeans/slurm-322407.out' for reading: No such file or directory
+slurmstepd: error: --task-epilog failed status=1

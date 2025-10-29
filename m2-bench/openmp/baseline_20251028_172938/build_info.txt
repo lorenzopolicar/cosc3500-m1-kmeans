@@ -1,0 +1,5 @@
+OpenMP Baseline Build Information
+Date: Tue Oct 28 17:29:38 AEST 2025
+Compiler: g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4)
+Git SHA: 67b9f2abe3be3cadaf1e2f9a46621015900c50cb
+SLURM Job ID: 322407

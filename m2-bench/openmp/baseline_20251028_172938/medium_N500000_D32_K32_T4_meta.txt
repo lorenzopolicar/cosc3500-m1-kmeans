@@ -1,0 +1,14 @@
+K-Means OpenMP Implementation Metadata
+======================================
+Date: Oct 28 2025 17:29:35
+Implementation: OpenMP
+
+Configuration:
+  N (points): 500000
+  D (dimensions): 32
+  K (clusters): 32
+  Max iterations: 15
+  Random seed: 42
+  OpenMP threads: 4
+  Warmup iterations: 3
+  Benchmark iterations: 5

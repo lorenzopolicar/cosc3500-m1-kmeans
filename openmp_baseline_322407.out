@@ -1,0 +1,2009 @@
+=== System Information ===
+r730-0.compute.eait.uq.edu.au
+Thread(s) per core:  1
+Core(s) per socket:  12
+Socket(s):           2
+Model name:          Intel(R) Xeon(R) CPU E5-2670 v3 @ 2.30GHz
+OpenMP Max Threads: 
+
+=== Git Information ===
+67b9f2abe3be3cadaf1e2f9a46621015900c50cb
+ D m2/kmeans_cuda
+?? m2-bench/cuda/baseline_20251026_184044/xlarge_N5000000_D128_K128.csv
+?? m2-bench/cuda/baseline_20251026_184044/xlarge_N5000000_D128_K128_inertia.txt
+?? m2-bench/cuda/baseline_20251026_184044/xlarge_N5000000_D128_K128_meta.txt
+?? m2/kmeans_openmp
+?? openmp_baseline_322407.err
+
+=== Building OpenMP Implementation ===
+rm -rf build
+rm -f kmeans_cuda kmeans_openmp
+rm -f kmeans_*_debug kmeans_*_prof
+rm -f *.o *.out *.txt
+rm -f gmon.out
+g++ -std=c++17 -Wall -Wextra -Wshadow -Wconversion -O3 -march=native -mtune=native -fopenmp -I../include -Iinclude -I/opt/local/stow/cuda-11.1/include -c src/openmp/kmeans_openmp.cpp -o build/openmp/kmeans_openmp.o
+g++ -std=c++17 -Wall -Wextra -Wshadow -Wconversion -O3 -march=native -mtune=native -fopenmp -I../include -Iinclude -I/opt/local/stow/cuda-11.1/include -c src/openmp/main_openmp.cpp -o build/openmp/main_openmp.o
+g++ -std=c++17 -Wall -Wextra -Wshadow -Wconversion -O3 -march=native -mtune=native -fopenmp -I../include -Iinclude -I/opt/local/stow/cuda-11.1/include -c src/common/kmeans_common.cpp -o build/common/kmeans_common.o
+g++ -std=c++17 -Wall -Wextra -Wshadow -Wconversion -O3 -march=native -mtune=native -fopenmp -I../include -Iinclude -I/opt/local/stow/cuda-11.1/include build/openmp/kmeans_openmp.o build/openmp/main_openmp.o build/common/kmeans_common.o -o kmeans_openmp -lm -lgomp
+Built OpenMP version: kmeans_openmp
+
+=== Running OpenMP Baseline Benchmarks ===
+
+=== Testing with 1 threads ===
+Test 1: Canonical (N=200000, D=16, K=8)
+=== OpenMP K-Means Configuration ===
+N: 200000 points
+D: 16 dimensions
+K: 8 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 1
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=19.357ms, update=1.337ms, inertia=7.888645e+06
+Iteration 2: assign=19.250ms, update=1.284ms, inertia=3.232168e+06
+Iteration 3: assign=19.198ms, update=1.326ms, inertia=2.770743e+06
+Iteration 4: assign=19.242ms, update=1.307ms, inertia=1.631905e+06
+Iteration 5: assign=19.364ms, update=1.282ms, inertia=1.631904e+06
+Iteration 6: assign=19.182ms, update=1.320ms, inertia=1.631904e+06
+Iteration 7: assign=19.219ms, update=1.310ms, inertia=1.631903e+06
+Iteration 8: assign=19.286ms, update=1.287ms, inertia=1.631903e+06
+Iteration 9: assign=19.213ms, update=1.279ms, inertia=1.631902e+06
+Iteration 10: assign=19.168ms, update=1.319ms, inertia=1.631902e+06
+Iteration 11: assign=19.248ms, update=1.308ms, inertia=1.631901e+06
+Iteration 12: assign=19.233ms, update=1.282ms, inertia=1.631901e+06
+Iteration 13: assign=19.212ms, update=1.278ms, inertia=1.631900e+06
+Iteration 14: assign=19.206ms, update=1.314ms, inertia=1.631900e+06
+Iteration 15: assign=19.264ms, update=1.300ms, inertia=1.631900e+06
+Iteration 16: assign=19.222ms, update=1.287ms, inertia=1.631899e+06
+Iteration 17: assign=19.186ms, update=1.283ms, inertia=1.631899e+06
+Iteration 18: assign=19.160ms, update=1.319ms, inertia=1.631898e+06
+Iteration 19: assign=19.205ms, update=1.318ms, inertia=1.631898e+06
+Iteration 20: assign=19.230ms, update=1.298ms, inertia=1.631898e+06
+  Warmup 1: 491.522 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=19.238ms, update=1.298ms, inertia=7.888645e+06
+Iteration 2: assign=19.187ms, update=1.316ms, inertia=3.232168e+06
+Iteration 3: assign=19.255ms, update=1.286ms, inertia=2.770743e+06
+Iteration 4: assign=19.193ms, update=1.280ms, inertia=1.631905e+06
+Iteration 5: assign=19.168ms, update=1.271ms, inertia=1.631904e+06
+Iteration 6: assign=19.175ms, update=1.311ms, inertia=1.631904e+06
+Iteration 7: assign=19.212ms, update=1.303ms, inertia=1.631903e+06
+Iteration 8: assign=19.231ms, update=1.284ms, inertia=1.631903e+06
+Iteration 9: assign=19.184ms, update=1.271ms, inertia=1.631902e+06
+Iteration 10: assign=19.173ms, update=1.297ms, inertia=1.631902e+06
+Iteration 11: assign=19.258ms, update=1.307ms, inertia=1.631901e+06
+Iteration 12: assign=19.231ms, update=1.278ms, inertia=1.631901e+06
+Iteration 13: assign=19.224ms, update=1.269ms, inertia=1.631900e+06
+Iteration 14: assign=19.205ms, update=1.266ms, inertia=1.631900e+06
+Iteration 15: assign=19.226ms, update=1.315ms, inertia=1.631900e+06
+Iteration 16: assign=19.273ms, update=1.278ms, inertia=1.631899e+06
+Iteration 17: assign=19.228ms, update=1.274ms, inertia=1.631899e+06
+Iteration 18: assign=19.210ms, update=1.269ms, inertia=1.631898e+06
+Iteration 19: assign=19.188ms, update=1.321ms, inertia=1.631898e+06
+Iteration 20: assign=19.221ms, update=1.289ms, inertia=1.631898e+06
+  Warmup 2: 490.729 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=19.283ms, update=1.305ms, inertia=7.888645e+06
+Iteration 2: assign=19.231ms, update=1.273ms, inertia=3.232168e+06
+Iteration 3: assign=19.204ms, update=1.270ms, inertia=2.770743e+06
+Iteration 4: assign=19.199ms, update=1.336ms, inertia=1.631905e+06
+Iteration 5: assign=19.246ms, update=1.283ms, inertia=1.631904e+06
+Iteration 6: assign=19.204ms, update=1.274ms, inertia=1.631904e+06
+Iteration 7: assign=19.182ms, update=1.269ms, inertia=1.631903e+06
+Iteration 8: assign=19.184ms, update=1.310ms, inertia=1.631903e+06
+Iteration 9: assign=19.228ms, update=1.294ms, inertia=1.631902e+06
+Iteration 10: assign=19.242ms, update=1.275ms, inertia=1.631902e+06
+Iteration 11: assign=19.198ms, update=1.265ms, inertia=1.631901e+06
+Iteration 12: assign=19.190ms, update=1.293ms, inertia=1.631901e+06
+Iteration 13: assign=19.224ms, update=1.306ms, inertia=1.631900e+06
+Iteration 14: assign=19.260ms, update=1.287ms, inertia=1.631900e+06
+Iteration 15: assign=19.222ms, update=1.271ms, inertia=1.631900e+06
+Iteration 16: assign=19.193ms, update=1.269ms, inertia=1.631899e+06
+Iteration 17: assign=19.188ms, update=1.318ms, inertia=1.631899e+06
+Iteration 18: assign=19.260ms, update=1.285ms, inertia=1.631898e+06
+Iteration 19: assign=19.202ms, update=1.289ms, inertia=1.631898e+06
+Iteration 20: assign=19.195ms, update=1.274ms, inertia=1.631898e+06
+  Warmup 3: 490.403 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 1 threads
+  Iteration  1: assign=19.272ms, update=1.338ms, inertia=7.888645e+06
+  Iteration  2: assign=19.233ms, update=1.304ms, inertia=3.232168e+06
+  Iteration  3: assign=19.226ms, update=1.281ms, inertia=2.770743e+06
+  Iteration  4: assign=19.191ms, update=1.275ms, inertia=1.631905e+06
+  Iteration  5: assign=19.199ms, update=1.307ms, inertia=1.631904e+06
+  Iteration  6: assign=19.248ms, update=1.304ms, inertia=1.631904e+06
+  Iteration  7: assign=19.237ms, update=1.279ms, inertia=1.631903e+06
+  Iteration  8: assign=19.176ms, update=1.278ms, inertia=1.631903e+06
+  Iteration  9: assign=19.206ms, update=1.303ms, inertia=1.631902e+06
+  Iteration 10: assign=19.231ms, update=1.313ms, inertia=1.631902e+06
+  Iteration 11: assign=19.266ms, update=1.279ms, inertia=1.631901e+06
+  Iteration 12: assign=19.224ms, update=1.269ms, inertia=1.631901e+06
+  Iteration 13: assign=19.209ms, update=1.299ms, inertia=1.631900e+06
+  Iteration 14: assign=19.261ms, update=1.301ms, inertia=1.631900e+06
+  Iteration 15: assign=19.274ms, update=1.285ms, inertia=1.631900e+06
+  Iteration 16: assign=19.208ms, update=1.274ms, inertia=1.631899e+06
+  Iteration 17: assign=19.196ms, update=1.313ms, inertia=1.631899e+06
+  Iteration 18: assign=19.242ms, update=1.304ms, inertia=1.631898e+06
+  Iteration 19: assign=19.246ms, update=1.282ms, inertia=1.631898e+06
+  Iteration 20: assign=19.284ms, update=1.284ms, inertia=1.631898e+06
+  Run 1: 490.965 ms, final inertia=1.631898e+06
+OpenMP configuration: 1 threads
+  Run 2: 493.420 ms, final inertia=1.631898e+06
+OpenMP configuration: 1 threads
+  Run 3: 495.791 ms, final inertia=1.631898e+06
+OpenMP configuration: 1 threads
+  Run 4: 491.447 ms, final inertia=1.631898e+06
+OpenMP configuration: 1 threads
+  Run 5: 491.245 ms, final inertia=1.631898e+06
+
+=== Performance Summary ===
+Median total time: 491.447 ms
+Median assign time: 19.253 ms
+Median update time: 1.294 ms
+MLUPS: 1.330e+03
+Median final inertia: 1.6318976790e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/canonical_N200000_D16_K8_T1.csv
+
+OpenMP K-Means completed successfully!
+Test 2: Stress (N=100000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 100000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 1
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=326.224ms, update=2.536ms, inertia=6.132062e+06
+Iteration 2: assign=325.852ms, update=2.294ms, inertia=2.757049e+06
+Iteration 3: assign=325.841ms, update=2.251ms, inertia=2.463796e+06
+Iteration 4: assign=325.821ms, update=2.320ms, inertia=2.463790e+06
+Iteration 5: assign=325.859ms, update=2.298ms, inertia=2.463786e+06
+Iteration 6: assign=325.924ms, update=2.336ms, inertia=2.463783e+06
+Iteration 7: assign=325.925ms, update=2.261ms, inertia=2.463781e+06
+Iteration 8: assign=325.785ms, update=2.271ms, inertia=2.463780e+06
+Iteration 9: assign=325.796ms, update=2.260ms, inertia=2.463779e+06
+Iteration 10: assign=325.797ms, update=2.288ms, inertia=2.463778e+06
+Iteration 11: assign=325.814ms, update=2.241ms, inertia=2.463777e+06
+Iteration 12: assign=326.011ms, update=2.318ms, inertia=2.463777e+06
+Iteration 13: assign=325.750ms, update=2.280ms, inertia=2.463776e+06
+Iteration 14: assign=325.796ms, update=2.290ms, inertia=2.463776e+06
+Iteration 15: assign=325.743ms, update=2.259ms, inertia=2.463776e+06
+Iteration 16: assign=325.732ms, update=2.290ms, inertia=2.463775e+06
+Iteration 17: assign=325.762ms, update=2.263ms, inertia=2.463775e+06
+Iteration 18: assign=325.849ms, update=2.261ms, inertia=2.463775e+06
+Iteration 19: assign=325.946ms, update=2.255ms, inertia=2.463775e+06
+Iteration 20: assign=326.020ms, update=2.276ms, inertia=2.463775e+06
+  Warmup 1: 6759.214 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=326.202ms, update=2.213ms, inertia=6.132062e+06
+Iteration 2: assign=325.922ms, update=2.078ms, inertia=2.757049e+06
+Iteration 3: assign=325.926ms, update=2.070ms, inertia=2.463796e+06
+Iteration 4: assign=326.043ms, update=2.115ms, inertia=2.463790e+06
+Iteration 5: assign=325.990ms, update=2.114ms, inertia=2.463786e+06
+Iteration 6: assign=325.938ms, update=2.072ms, inertia=2.463783e+06
+Iteration 7: assign=325.835ms, update=2.052ms, inertia=2.463781e+06
+Iteration 8: assign=325.938ms, update=2.075ms, inertia=2.463780e+06
+Iteration 9: assign=325.942ms, update=2.068ms, inertia=2.463779e+06
+Iteration 10: assign=326.064ms, update=2.128ms, inertia=2.463778e+06
+Iteration 11: assign=325.924ms, update=2.076ms, inertia=2.463777e+06
+Iteration 12: assign=325.982ms, update=2.068ms, inertia=2.463777e+06
+Iteration 13: assign=325.947ms, update=2.051ms, inertia=2.463776e+06
+Iteration 14: assign=325.971ms, update=2.129ms, inertia=2.463776e+06
+Iteration 15: assign=325.799ms, update=2.051ms, inertia=2.463776e+06
+Iteration 16: assign=326.060ms, update=2.066ms, inertia=2.463775e+06
+Iteration 17: assign=325.984ms, update=2.100ms, inertia=2.463775e+06
+Iteration 18: assign=325.937ms, update=2.076ms, inertia=2.463775e+06
+Iteration 19: assign=325.892ms, update=2.075ms, inertia=2.463775e+06
+Iteration 20: assign=325.870ms, update=2.078ms, inertia=2.463775e+06
+  Warmup 2: 6756.732 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=326.190ms, update=2.249ms, inertia=6.132062e+06
+Iteration 2: assign=325.905ms, update=2.082ms, inertia=2.757049e+06
+Iteration 3: assign=326.061ms, update=2.168ms, inertia=2.463796e+06
+Iteration 4: assign=325.863ms, update=2.081ms, inertia=2.463790e+06
+Iteration 5: assign=325.938ms, update=2.087ms, inertia=2.463786e+06
+Iteration 6: assign=325.923ms, update=2.060ms, inertia=2.463783e+06
+Iteration 7: assign=325.829ms, update=2.057ms, inertia=2.463781e+06
+Iteration 8: assign=326.037ms, update=2.058ms, inertia=2.463780e+06
+Iteration 9: assign=326.037ms, update=2.098ms, inertia=2.463779e+06
+Iteration 10: assign=325.838ms, update=2.066ms, inertia=2.463778e+06
+Iteration 11: assign=325.842ms, update=2.061ms, inertia=2.463777e+06
+Iteration 12: assign=325.861ms, update=2.098ms, inertia=2.463777e+06
+Iteration 13: assign=332.612ms, update=2.999ms, inertia=2.463776e+06
+Iteration 14: assign=326.749ms, update=3.179ms, inertia=2.463776e+06
+Iteration 15: assign=326.383ms, update=2.175ms, inertia=2.463776e+06
+Iteration 16: assign=326.032ms, update=2.135ms, inertia=2.463775e+06
+Iteration 17: assign=326.068ms, update=2.149ms, inertia=2.463775e+06
+Iteration 18: assign=326.923ms, update=3.025ms, inertia=2.463775e+06
+Iteration 19: assign=326.324ms, update=2.489ms, inertia=2.463775e+06
+Iteration 20: assign=327.034ms, update=2.951ms, inertia=2.463775e+06
+  Warmup 3: 6772.263 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 1 threads
+  Iteration  1: assign=326.597ms, update=2.276ms, inertia=6.132062e+06
+  Iteration  2: assign=326.265ms, update=2.276ms, inertia=2.757049e+06
+  Iteration  3: assign=326.010ms, update=2.132ms, inertia=2.463796e+06
+  Iteration  4: assign=325.877ms, update=2.114ms, inertia=2.463790e+06
+  Iteration  5: assign=325.814ms, update=2.108ms, inertia=2.463786e+06
+  Iteration  6: assign=325.984ms, update=2.107ms, inertia=2.463783e+06
+  Iteration  7: assign=326.842ms, update=2.807ms, inertia=2.463781e+06
+  Iteration  8: assign=325.928ms, update=2.140ms, inertia=2.463780e+06
+  Iteration  9: assign=325.906ms, update=2.110ms, inertia=2.463779e+06
+  Iteration 10: assign=325.824ms, update=2.101ms, inertia=2.463778e+06
+  Iteration 11: assign=325.773ms, update=2.090ms, inertia=2.463777e+06
+  Iteration 12: assign=325.948ms, update=2.116ms, inertia=2.463777e+06
+  Iteration 13: assign=325.857ms, update=2.195ms, inertia=2.463776e+06
+  Iteration 14: assign=325.906ms, update=2.095ms, inertia=2.463776e+06
+  Iteration 15: assign=325.798ms, update=2.088ms, inertia=2.463776e+06
+  Iteration 16: assign=325.754ms, update=2.094ms, inertia=2.463775e+06
+  Iteration 17: assign=325.803ms, update=2.085ms, inertia=2.463775e+06
+  Iteration 18: assign=325.857ms, update=2.075ms, inertia=2.463775e+06
+  Iteration 19: assign=325.905ms, update=2.112ms, inertia=2.463775e+06
+  Iteration 20: assign=325.749ms, update=2.069ms, inertia=2.463775e+06
+  Run 1: 6758.157 ms, final inertia=2.463775e+06
+OpenMP configuration: 1 threads
+  Run 2: 6758.719 ms, final inertia=2.463775e+06
+OpenMP configuration: 1 threads
+  Run 3: 6758.491 ms, final inertia=2.463775e+06
+OpenMP configuration: 1 threads
+  Run 4: 6759.618 ms, final inertia=2.463775e+06
+OpenMP configuration: 1 threads
+  Run 5: 6760.078 ms, final inertia=2.463775e+06
+
+=== Performance Summary ===
+Median total time: 6758.719 ms
+Median assign time: 326.028 ms
+Median update time: 2.098 ms
+MLUPS: 1.256e+03
+Median final inertia: 2.4637748521e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/stress_N100000_D64_K64_T1.csv
+
+OpenMP K-Means completed successfully!
+Test 3: Medium (N=500000, D=32, K=32)
+=== OpenMP K-Means Configuration ===
+N: 500000 points
+D: 32 dimensions
+K: 32 clusters
+Max iterations: 15
+Random seed: 42
+OpenMP threads: 1
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=403.092ms, update=7.708ms, inertia=1.224529e+07
+Iteration 2: assign=403.757ms, update=7.820ms, inertia=6.159988e+06
+Iteration 3: assign=403.750ms, update=7.584ms, inertia=6.159715e+06
+Iteration 4: assign=403.949ms, update=8.515ms, inertia=6.159704e+06
+Iteration 5: assign=403.759ms, update=7.740ms, inertia=6.159698e+06
+Iteration 6: assign=403.902ms, update=7.679ms, inertia=6.159694e+06
+Iteration 7: assign=403.705ms, update=7.842ms, inertia=6.159691e+06
+Iteration 8: assign=403.936ms, update=7.751ms, inertia=6.159689e+06
+Iteration 9: assign=404.049ms, update=8.110ms, inertia=6.159687e+06
+Iteration 10: assign=414.967ms, update=9.116ms, inertia=6.159686e+06
+Iteration 11: assign=404.680ms, update=9.106ms, inertia=6.159684e+06
+Iteration 12: assign=404.561ms, update=8.901ms, inertia=6.159682e+06
+Iteration 13: assign=406.242ms, update=7.793ms, inertia=6.159681e+06
+Iteration 14: assign=413.720ms, update=8.001ms, inertia=6.159680e+06
+Iteration 15: assign=403.893ms, update=7.652ms, inertia=6.159678e+06
+  Warmup 1: 6540.575 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=404.402ms, update=7.638ms, inertia=1.224529e+07
+Iteration 2: assign=404.345ms, update=7.724ms, inertia=6.159988e+06
+Iteration 3: assign=404.257ms, update=7.850ms, inertia=6.159715e+06
+Iteration 4: assign=404.248ms, update=7.763ms, inertia=6.159704e+06
+Iteration 5: assign=404.456ms, update=7.672ms, inertia=6.159698e+06
+Iteration 6: assign=404.361ms, update=7.922ms, inertia=6.159694e+06
+Iteration 7: assign=410.818ms, update=7.824ms, inertia=6.159691e+06
+Iteration 8: assign=404.160ms, update=7.716ms, inertia=6.159689e+06
+Iteration 9: assign=404.148ms, update=7.673ms, inertia=6.159687e+06
+Iteration 10: assign=404.312ms, update=7.828ms, inertia=6.159686e+06
+Iteration 11: assign=404.286ms, update=7.924ms, inertia=6.159684e+06
+Iteration 12: assign=404.433ms, update=7.638ms, inertia=6.159682e+06
+Iteration 13: assign=404.437ms, update=7.851ms, inertia=6.159681e+06
+Iteration 14: assign=404.398ms, update=7.693ms, inertia=6.159680e+06
+Iteration 15: assign=404.254ms, update=7.669ms, inertia=6.159678e+06
+  Warmup 2: 6523.424 ms
+OpenMP configuration: 1 threads
+Starting OpenMP (1 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=404.515ms, update=7.650ms, inertia=1.224529e+07
+Iteration 2: assign=404.990ms, update=8.367ms, inertia=6.159988e+06
+Iteration 3: assign=404.202ms, update=7.725ms, inertia=6.159715e+06
+Iteration 4: assign=404.325ms, update=7.633ms, inertia=6.159704e+06
+Iteration 5: assign=404.438ms, update=7.795ms, inertia=6.159698e+06
+Iteration 6: assign=404.291ms, update=7.805ms, inertia=6.159694e+06
+Iteration 7: assign=404.342ms, update=7.622ms, inertia=6.159691e+06
+Iteration 8: assign=404.374ms, update=7.840ms, inertia=6.159689e+06
+Iteration 9: assign=404.567ms, update=7.782ms, inertia=6.159687e+06
+Iteration 10: assign=404.599ms, update=7.654ms, inertia=6.159686e+06
+Iteration 11: assign=404.653ms, update=8.129ms, inertia=6.159684e+06
+Iteration 12: assign=404.421ms, update=7.787ms, inertia=6.159682e+06
+Iteration 13: assign=404.563ms, update=7.632ms, inertia=6.159681e+06
+Iteration 14: assign=404.314ms, update=7.751ms, inertia=6.159680e+06
+Iteration 15: assign=404.083ms, update=7.915ms, inertia=6.159678e+06
+  Warmup 3: 6518.310 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 1 threads
+  Iteration  1: assign=404.538ms, update=7.827ms, inertia=1.224529e+07
+  Iteration  2: assign=404.366ms, update=7.696ms, inertia=6.159988e+06
+  Iteration  3: assign=404.478ms, update=7.789ms, inertia=6.159715e+06
+  Iteration  4: assign=404.347ms, update=7.845ms, inertia=6.159704e+06
+  Iteration  5: assign=404.494ms, update=7.667ms, inertia=6.159698e+06
+  Iteration  6: assign=404.557ms, update=7.677ms, inertia=6.159694e+06
+  Iteration  7: assign=404.443ms, update=8.263ms, inertia=6.159691e+06
+  Iteration  8: assign=404.686ms, update=7.676ms, inertia=6.159689e+06
+  Iteration  9: assign=411.147ms, update=7.629ms, inertia=6.159687e+06
+  Iteration 10: assign=404.781ms, update=8.113ms, inertia=6.159686e+06
+  Iteration 11: assign=404.533ms, update=7.766ms, inertia=6.159684e+06
+  Iteration 12: assign=404.619ms, update=7.667ms, inertia=6.159682e+06
+  Iteration 13: assign=404.598ms, update=7.758ms, inertia=6.159681e+06
+  Iteration 14: assign=404.774ms, update=7.819ms, inertia=6.159680e+06
+  Iteration 15: assign=404.961ms, update=7.598ms, inertia=6.159678e+06
+  Run 1: 6527.802 ms, final inertia=6.159678e+06
+OpenMP configuration: 1 threads
+  Run 2: 6515.350 ms, final inertia=6.159678e+06
+OpenMP configuration: 1 threads
+  Run 3: 6515.215 ms, final inertia=6.159678e+06
+OpenMP configuration: 1 threads
+  Run 4: 6511.061 ms, final inertia=6.159678e+06
+OpenMP configuration: 1 threads
+  Run 5: 6512.610 ms, final inertia=6.159678e+06
+
+=== Performance Summary ===
+Median total time: 6515.215 ms
+Median assign time: 404.388 ms
+Median update time: 7.731 ms
+MLUPS: 1.266e+03
+Median final inertia: 6.1596784231e+06
+Iterations per run: 15
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/medium_N500000_D32_K32_T1.csv
+
+OpenMP K-Means completed successfully!
+
+=== Testing with 2 threads ===
+Test 1: Canonical (N=200000, D=16, K=8)
+=== OpenMP K-Means Configuration ===
+N: 200000 points
+D: 16 dimensions
+K: 8 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 2
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=9.627ms, update=3.254ms, inertia=7.888645e+06
+Iteration 2: assign=9.607ms, update=2.433ms, inertia=3.232168e+06
+Iteration 3: assign=9.613ms, update=2.384ms, inertia=2.770743e+06
+Iteration 4: assign=9.655ms, update=2.347ms, inertia=1.631905e+06
+Iteration 5: assign=9.641ms, update=2.501ms, inertia=1.631904e+06
+Iteration 6: assign=9.636ms, update=2.517ms, inertia=1.631904e+06
+Iteration 7: assign=9.797ms, update=4.094ms, inertia=1.631903e+06
+Iteration 8: assign=9.647ms, update=4.231ms, inertia=1.631903e+06
+Iteration 9: assign=9.655ms, update=4.467ms, inertia=1.631902e+06
+Iteration 10: assign=9.618ms, update=3.607ms, inertia=1.631902e+06
+Iteration 11: assign=9.631ms, update=3.680ms, inertia=1.631901e+06
+Iteration 12: assign=9.645ms, update=3.620ms, inertia=1.631901e+06
+Iteration 13: assign=9.602ms, update=3.700ms, inertia=1.631900e+06
+Iteration 14: assign=9.582ms, update=3.700ms, inertia=1.631900e+06
+Iteration 15: assign=9.581ms, update=3.597ms, inertia=1.631900e+06
+Iteration 16: assign=9.607ms, update=3.556ms, inertia=1.631899e+06
+Iteration 17: assign=9.644ms, update=3.565ms, inertia=1.631899e+06
+Iteration 18: assign=9.630ms, update=3.671ms, inertia=1.631898e+06
+Iteration 19: assign=9.640ms, update=3.678ms, inertia=1.631898e+06
+Iteration 20: assign=9.589ms, update=3.663ms, inertia=1.631898e+06
+  Warmup 1: 305.276 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=9.808ms, update=3.233ms, inertia=7.888645e+06
+Iteration 2: assign=9.600ms, update=3.202ms, inertia=3.232168e+06
+Iteration 3: assign=9.647ms, update=3.384ms, inertia=2.770743e+06
+Iteration 4: assign=9.641ms, update=3.168ms, inertia=1.631905e+06
+Iteration 5: assign=9.608ms, update=3.617ms, inertia=1.631904e+06
+Iteration 6: assign=9.634ms, update=4.829ms, inertia=1.631904e+06
+Iteration 7: assign=9.645ms, update=4.881ms, inertia=1.631903e+06
+Iteration 8: assign=9.552ms, update=4.722ms, inertia=1.631903e+06
+Iteration 9: assign=9.627ms, update=3.124ms, inertia=1.631902e+06
+Iteration 10: assign=9.576ms, update=5.528ms, inertia=1.631902e+06
+Iteration 11: assign=9.578ms, update=5.236ms, inertia=1.631901e+06
+Iteration 12: assign=9.643ms, update=5.357ms, inertia=1.631901e+06
+Iteration 13: assign=9.653ms, update=5.318ms, inertia=1.631900e+06
+Iteration 14: assign=9.634ms, update=5.307ms, inertia=1.631900e+06
+Iteration 15: assign=9.633ms, update=5.395ms, inertia=1.631900e+06
+Iteration 16: assign=9.632ms, update=4.744ms, inertia=1.631899e+06
+Iteration 17: assign=9.637ms, update=5.434ms, inertia=1.631899e+06
+Iteration 18: assign=9.655ms, update=5.284ms, inertia=1.631898e+06
+Iteration 19: assign=9.651ms, update=5.154ms, inertia=1.631898e+06
+Iteration 20: assign=9.594ms, update=5.202ms, inertia=1.631898e+06
+  Warmup 2: 329.094 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=9.728ms, update=4.820ms, inertia=7.888645e+06
+Iteration 2: assign=9.586ms, update=5.289ms, inertia=3.232168e+06
+Iteration 3: assign=9.595ms, update=5.405ms, inertia=2.770743e+06
+Iteration 4: assign=9.615ms, update=5.246ms, inertia=1.631905e+06
+Iteration 5: assign=9.645ms, update=3.569ms, inertia=1.631904e+06
+Iteration 6: assign=9.647ms, update=4.710ms, inertia=1.631904e+06
+Iteration 7: assign=9.584ms, update=4.961ms, inertia=1.631903e+06
+Iteration 8: assign=9.636ms, update=4.988ms, inertia=1.631903e+06
+Iteration 9: assign=9.603ms, update=5.257ms, inertia=1.631902e+06
+Iteration 10: assign=9.643ms, update=3.175ms, inertia=1.631902e+06
+Iteration 11: assign=9.632ms, update=3.438ms, inertia=1.631901e+06
+Iteration 12: assign=9.634ms, update=3.189ms, inertia=1.631901e+06
+Iteration 13: assign=9.555ms, update=3.237ms, inertia=1.631900e+06
+Iteration 14: assign=9.608ms, update=3.123ms, inertia=1.631900e+06
+Iteration 15: assign=9.646ms, update=3.335ms, inertia=1.631900e+06
+Iteration 16: assign=9.612ms, update=3.198ms, inertia=1.631899e+06
+Iteration 17: assign=9.561ms, update=3.383ms, inertia=1.631899e+06
+Iteration 18: assign=9.594ms, update=3.467ms, inertia=1.631898e+06
+Iteration 19: assign=9.589ms, update=3.197ms, inertia=1.631898e+06
+Iteration 20: assign=9.632ms, update=3.265ms, inertia=1.631898e+06
+  Warmup 3: 316.424 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 2 threads
+  Iteration  1: assign=9.642ms, update=3.375ms, inertia=7.888645e+06
+  Iteration  2: assign=9.583ms, update=3.292ms, inertia=3.232168e+06
+  Iteration  3: assign=9.620ms, update=3.214ms, inertia=2.770743e+06
+  Iteration  4: assign=9.649ms, update=3.257ms, inertia=1.631905e+06
+  Iteration  5: assign=9.626ms, update=3.423ms, inertia=1.631904e+06
+  Iteration  6: assign=10.266ms, update=3.035ms, inertia=1.631904e+06
+  Iteration  7: assign=9.648ms, update=5.316ms, inertia=1.631903e+06
+  Iteration  8: assign=9.660ms, update=5.360ms, inertia=1.631903e+06
+  Iteration  9: assign=9.652ms, update=3.069ms, inertia=1.631902e+06
+  Iteration 10: assign=9.572ms, update=4.854ms, inertia=1.631902e+06
+  Iteration 11: assign=9.621ms, update=4.640ms, inertia=1.631901e+06
+  Iteration 12: assign=9.640ms, update=4.984ms, inertia=1.631901e+06
+  Iteration 13: assign=9.564ms, update=4.841ms, inertia=1.631900e+06
+  Iteration 14: assign=9.638ms, update=4.898ms, inertia=1.631900e+06
+  Iteration 15: assign=9.617ms, update=3.506ms, inertia=1.631900e+06
+  Iteration 16: assign=9.597ms, update=4.779ms, inertia=1.631899e+06
+  Iteration 17: assign=9.599ms, update=4.958ms, inertia=1.631899e+06
+  Iteration 18: assign=9.657ms, update=3.941ms, inertia=1.631898e+06
+  Iteration 19: assign=9.580ms, update=3.957ms, inertia=1.631898e+06
+  Iteration 20: assign=9.657ms, update=4.007ms, inertia=1.631898e+06
+  Run 1: 319.837 ms, final inertia=1.631898e+06
+OpenMP configuration: 2 threads
+  Run 2: 320.300 ms, final inertia=1.631898e+06
+OpenMP configuration: 2 threads
+  Run 3: 329.776 ms, final inertia=1.631898e+06
+OpenMP configuration: 2 threads
+  Run 4: 315.746 ms, final inertia=1.631898e+06
+OpenMP configuration: 2 threads
+  Run 5: 321.944 ms, final inertia=1.631898e+06
+
+=== Performance Summary ===
+Median total time: 320.300 ms
+Median assign time: 9.619 ms
+Median update time: 4.007 ms
+MLUPS: 2.661e+03
+Median final inertia: 1.6318976790e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/canonical_N200000_D16_K8_T2.csv
+
+OpenMP K-Means completed successfully!
+Test 2: Stress (N=100000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 100000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 2
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=163.612ms, update=2.338ms, inertia=6.132062e+06
+Iteration 2: assign=163.169ms, update=2.133ms, inertia=2.757049e+06
+Iteration 3: assign=163.053ms, update=2.105ms, inertia=2.463796e+06
+Iteration 4: assign=163.117ms, update=2.122ms, inertia=2.463790e+06
+Iteration 5: assign=163.039ms, update=2.106ms, inertia=2.463786e+06
+Iteration 6: assign=163.897ms, update=3.944ms, inertia=2.463783e+06
+Iteration 7: assign=164.571ms, update=2.223ms, inertia=2.463781e+06
+Iteration 8: assign=164.689ms, update=2.128ms, inertia=2.463780e+06
+Iteration 9: assign=164.705ms, update=2.157ms, inertia=2.463779e+06
+Iteration 10: assign=164.634ms, update=2.110ms, inertia=2.463778e+06
+Iteration 11: assign=164.593ms, update=2.117ms, inertia=2.463777e+06
+Iteration 12: assign=164.669ms, update=2.136ms, inertia=2.463777e+06
+Iteration 13: assign=164.562ms, update=2.101ms, inertia=2.463776e+06
+Iteration 14: assign=164.634ms, update=2.129ms, inertia=2.463776e+06
+Iteration 15: assign=164.511ms, update=2.141ms, inertia=2.463776e+06
+Iteration 16: assign=164.595ms, update=2.136ms, inertia=2.463775e+06
+Iteration 17: assign=164.590ms, update=2.126ms, inertia=2.463775e+06
+Iteration 18: assign=164.818ms, update=2.321ms, inertia=2.463775e+06
+Iteration 19: assign=164.596ms, update=2.111ms, inertia=2.463775e+06
+Iteration 20: assign=164.684ms, update=2.124ms, inertia=2.463775e+06
+  Warmup 1: 3430.265 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=164.922ms, update=1.983ms, inertia=6.132062e+06
+Iteration 2: assign=164.618ms, update=2.061ms, inertia=2.757049e+06
+Iteration 3: assign=164.454ms, update=2.035ms, inertia=2.463796e+06
+Iteration 4: assign=164.575ms, update=2.071ms, inertia=2.463790e+06
+Iteration 5: assign=164.639ms, update=2.035ms, inertia=2.463786e+06
+Iteration 6: assign=164.544ms, update=2.076ms, inertia=2.463783e+06
+Iteration 7: assign=164.522ms, update=2.022ms, inertia=2.463781e+06
+Iteration 8: assign=164.563ms, update=2.063ms, inertia=2.463780e+06
+Iteration 9: assign=164.550ms, update=2.044ms, inertia=2.463779e+06
+Iteration 10: assign=164.545ms, update=2.068ms, inertia=2.463778e+06
+Iteration 11: assign=164.765ms, update=2.040ms, inertia=2.463777e+06
+Iteration 12: assign=164.591ms, update=2.063ms, inertia=2.463777e+06
+Iteration 13: assign=164.453ms, update=2.032ms, inertia=2.463776e+06
+Iteration 14: assign=164.645ms, update=2.071ms, inertia=2.463776e+06
+Iteration 15: assign=164.522ms, update=2.061ms, inertia=2.463776e+06
+Iteration 16: assign=164.564ms, update=2.078ms, inertia=2.463775e+06
+Iteration 17: assign=164.643ms, update=2.044ms, inertia=2.463775e+06
+Iteration 18: assign=164.522ms, update=2.095ms, inertia=2.463775e+06
+Iteration 19: assign=164.468ms, update=2.035ms, inertia=2.463775e+06
+Iteration 20: assign=164.513ms, update=2.047ms, inertia=2.463775e+06
+  Warmup 2: 3433.164 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=165.015ms, update=1.894ms, inertia=6.132062e+06
+Iteration 2: assign=164.593ms, update=2.059ms, inertia=2.757049e+06
+Iteration 3: assign=164.523ms, update=2.028ms, inertia=2.463796e+06
+Iteration 4: assign=164.519ms, update=2.054ms, inertia=2.463790e+06
+Iteration 5: assign=164.526ms, update=2.046ms, inertia=2.463786e+06
+Iteration 6: assign=164.510ms, update=2.065ms, inertia=2.463783e+06
+Iteration 7: assign=164.595ms, update=2.046ms, inertia=2.463781e+06
+Iteration 8: assign=164.573ms, update=2.035ms, inertia=2.463780e+06
+Iteration 9: assign=167.736ms, update=2.769ms, inertia=2.463779e+06
+Iteration 10: assign=170.061ms, update=2.315ms, inertia=2.463778e+06
+Iteration 11: assign=170.145ms, update=2.288ms, inertia=2.463777e+06
+Iteration 12: assign=165.022ms, update=2.167ms, inertia=2.463777e+06
+Iteration 13: assign=165.107ms, update=2.119ms, inertia=2.463776e+06
+Iteration 14: assign=164.670ms, update=2.060ms, inertia=2.463776e+06
+Iteration 15: assign=164.443ms, update=2.040ms, inertia=2.463776e+06
+Iteration 16: assign=164.575ms, update=2.055ms, inertia=2.463775e+06
+Iteration 17: assign=164.551ms, update=2.059ms, inertia=2.463775e+06
+Iteration 18: assign=164.633ms, update=2.052ms, inertia=2.463775e+06
+Iteration 19: assign=164.481ms, update=2.040ms, inertia=2.463775e+06
+Iteration 20: assign=164.703ms, update=2.059ms, inertia=2.463775e+06
+  Warmup 3: 3450.233 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 2 threads
+  Iteration  1: assign=164.885ms, update=1.912ms, inertia=6.132062e+06
+  Iteration  2: assign=164.495ms, update=2.040ms, inertia=2.757049e+06
+  Iteration  3: assign=164.563ms, update=2.042ms, inertia=2.463796e+06
+  Iteration  4: assign=164.574ms, update=2.044ms, inertia=2.463790e+06
+  Iteration  5: assign=164.494ms, update=2.046ms, inertia=2.463786e+06
+  Iteration  6: assign=164.602ms, update=2.054ms, inertia=2.463783e+06
+  Iteration  7: assign=164.546ms, update=2.036ms, inertia=2.463781e+06
+  Iteration  8: assign=164.574ms, update=2.055ms, inertia=2.463780e+06
+  Iteration  9: assign=164.492ms, update=2.039ms, inertia=2.463779e+06
+  Iteration 10: assign=164.646ms, update=2.040ms, inertia=2.463778e+06
+  Iteration 11: assign=164.497ms, update=2.057ms, inertia=2.463777e+06
+  Iteration 12: assign=164.618ms, update=2.062ms, inertia=2.463777e+06
+  Iteration 13: assign=164.525ms, update=2.061ms, inertia=2.463776e+06
+  Iteration 14: assign=164.610ms, update=2.047ms, inertia=2.463776e+06
+  Iteration 15: assign=164.508ms, update=2.034ms, inertia=2.463776e+06
+  Iteration 16: assign=164.579ms, update=2.076ms, inertia=2.463775e+06
+  Iteration 17: assign=164.534ms, update=2.045ms, inertia=2.463775e+06
+  Iteration 18: assign=164.483ms, update=2.057ms, inertia=2.463775e+06
+  Iteration 19: assign=164.554ms, update=2.042ms, inertia=2.463775e+06
+  Iteration 20: assign=164.557ms, update=2.043ms, inertia=2.463775e+06
+  Run 1: 3432.609 ms, final inertia=2.463775e+06
+OpenMP configuration: 2 threads
+  Run 2: 3432.076 ms, final inertia=2.463775e+06
+OpenMP configuration: 2 threads
+  Run 3: 3432.591 ms, final inertia=2.463775e+06
+OpenMP configuration: 2 threads
+  Run 4: 3433.424 ms, final inertia=2.463775e+06
+OpenMP configuration: 2 threads
+  Run 5: 3433.363 ms, final inertia=2.463775e+06
+
+=== Performance Summary ===
+Median total time: 3432.609 ms
+Median assign time: 164.557 ms
+Median update time: 2.050 ms
+MLUPS: 2.489e+03
+Median final inertia: 2.4637748521e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/stress_N100000_D64_K64_T2.csv
+
+OpenMP K-Means completed successfully!
+Test 3: Medium (N=500000, D=32, K=32)
+=== OpenMP K-Means Configuration ===
+N: 500000 points
+D: 32 dimensions
+K: 32 clusters
+Max iterations: 15
+Random seed: 42
+OpenMP threads: 2
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=214.953ms, update=5.263ms, inertia=1.224529e+07
+Iteration 2: assign=202.260ms, update=5.558ms, inertia=6.159988e+06
+Iteration 3: assign=203.817ms, update=5.462ms, inertia=6.159715e+06
+Iteration 4: assign=202.078ms, update=10.786ms, inertia=6.159704e+06
+Iteration 5: assign=205.580ms, update=11.704ms, inertia=6.159698e+06
+Iteration 6: assign=201.365ms, update=10.567ms, inertia=6.159694e+06
+Iteration 7: assign=201.398ms, update=10.593ms, inertia=6.159691e+06
+Iteration 8: assign=201.260ms, update=10.619ms, inertia=6.159689e+06
+Iteration 9: assign=201.275ms, update=10.609ms, inertia=6.159687e+06
+Iteration 10: assign=201.305ms, update=10.697ms, inertia=6.159686e+06
+Iteration 11: assign=201.698ms, update=10.732ms, inertia=6.159684e+06
+Iteration 12: assign=201.343ms, update=10.690ms, inertia=6.159682e+06
+Iteration 13: assign=201.303ms, update=10.630ms, inertia=6.159681e+06
+Iteration 14: assign=201.409ms, update=10.638ms, inertia=6.159680e+06
+Iteration 15: assign=201.352ms, update=10.410ms, inertia=6.159678e+06
+  Warmup 1: 3360.362 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=201.538ms, update=9.952ms, inertia=1.224529e+07
+Iteration 2: assign=201.350ms, update=10.507ms, inertia=6.159988e+06
+Iteration 3: assign=201.199ms, update=10.589ms, inertia=6.159715e+06
+Iteration 4: assign=201.147ms, update=10.702ms, inertia=6.159704e+06
+Iteration 5: assign=201.444ms, update=10.827ms, inertia=6.159698e+06
+Iteration 6: assign=201.292ms, update=10.679ms, inertia=6.159694e+06
+Iteration 7: assign=201.202ms, update=10.768ms, inertia=6.159691e+06
+Iteration 8: assign=201.178ms, update=10.630ms, inertia=6.159689e+06
+Iteration 9: assign=201.171ms, update=10.627ms, inertia=6.159687e+06
+Iteration 10: assign=201.486ms, update=10.784ms, inertia=6.159686e+06
+Iteration 11: assign=201.097ms, update=10.659ms, inertia=6.159684e+06
+Iteration 12: assign=201.145ms, update=10.720ms, inertia=6.159682e+06
+Iteration 13: assign=201.206ms, update=10.676ms, inertia=6.159681e+06
+Iteration 14: assign=201.499ms, update=10.771ms, inertia=6.159680e+06
+Iteration 15: assign=201.128ms, update=10.735ms, inertia=6.159678e+06
+  Warmup 2: 3352.074 ms
+OpenMP configuration: 2 threads
+Starting OpenMP (2 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=201.438ms, update=9.949ms, inertia=1.224529e+07
+Iteration 2: assign=201.321ms, update=10.509ms, inertia=6.159988e+06
+Iteration 3: assign=201.246ms, update=10.591ms, inertia=6.159715e+06
+Iteration 4: assign=201.155ms, update=10.617ms, inertia=6.159704e+06
+Iteration 5: assign=201.207ms, update=10.681ms, inertia=6.159698e+06
+Iteration 6: assign=201.273ms, update=10.593ms, inertia=6.159694e+06
+Iteration 7: assign=201.239ms, update=10.657ms, inertia=6.159691e+06
+Iteration 8: assign=205.790ms, update=9.490ms, inertia=6.159689e+06
+Iteration 9: assign=200.795ms, update=10.406ms, inertia=6.159687e+06
+Iteration 10: assign=200.716ms, update=10.417ms, inertia=6.159686e+06
+Iteration 11: assign=200.764ms, update=10.306ms, inertia=6.159684e+06
+Iteration 12: assign=200.814ms, update=10.500ms, inertia=6.159682e+06
+Iteration 13: assign=200.772ms, update=10.431ms, inertia=6.159681e+06
+Iteration 14: assign=200.756ms, update=10.375ms, inertia=6.159680e+06
+Iteration 15: assign=200.746ms, update=10.360ms, inertia=6.159678e+06
+  Warmup 3: 3348.477 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 2 threads
+  Iteration  1: assign=200.070ms, update=9.907ms, inertia=1.224529e+07
+  Iteration  2: assign=200.898ms, update=10.510ms, inertia=6.159988e+06
+  Iteration  3: assign=200.813ms, update=10.515ms, inertia=6.159715e+06
+  Iteration  4: assign=200.736ms, update=10.557ms, inertia=6.159704e+06
+  Iteration  5: assign=200.701ms, update=10.577ms, inertia=6.159698e+06
+  Iteration  6: assign=200.881ms, update=10.669ms, inertia=6.159694e+06
+  Iteration  7: assign=200.766ms, update=10.655ms, inertia=6.159691e+06
+  Iteration  8: assign=200.773ms, update=10.760ms, inertia=6.159689e+06
+  Iteration  9: assign=200.813ms, update=10.706ms, inertia=6.159687e+06
+  Iteration 10: assign=200.716ms, update=10.716ms, inertia=6.159686e+06
+  Iteration 11: assign=201.017ms, update=10.685ms, inertia=6.159684e+06
+  Iteration 12: assign=200.810ms, update=10.740ms, inertia=6.159682e+06
+  Iteration 13: assign=200.728ms, update=10.701ms, inertia=6.159681e+06
+  Iteration 14: assign=200.651ms, update=10.695ms, inertia=6.159680e+06
+  Iteration 15: assign=200.781ms, update=10.622ms, inertia=6.159678e+06
+  Run 1: 3342.953 ms, final inertia=6.159678e+06
+OpenMP configuration: 2 threads
+  Run 2: 3328.820 ms, final inertia=6.159678e+06
+OpenMP configuration: 2 threads
+  Run 3: 3329.116 ms, final inertia=6.159678e+06
+OpenMP configuration: 2 threads
+  Run 4: 3330.460 ms, final inertia=6.159678e+06
+OpenMP configuration: 2 threads
+  Run 5: 3330.210 ms, final inertia=6.159678e+06
+
+=== Performance Summary ===
+Median total time: 3330.210 ms
+Median assign time: 199.838 ms
+Median update time: 10.628 ms
+MLUPS: 2.562e+03
+Median final inertia: 6.1596784231e+06
+Iterations per run: 15
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/medium_N500000_D32_K32_T2.csv
+
+OpenMP K-Means completed successfully!
+
+=== Testing with 4 threads ===
+Test 1: Canonical (N=200000, D=16, K=8)
+=== OpenMP K-Means Configuration ===
+N: 200000 points
+D: 16 dimensions
+K: 8 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 4
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=5.183ms, update=1.866ms, inertia=7.888645e+06
+Iteration 2: assign=5.174ms, update=2.269ms, inertia=3.232168e+06
+Iteration 3: assign=5.212ms, update=2.289ms, inertia=2.770743e+06
+Iteration 4: assign=5.171ms, update=2.340ms, inertia=1.631905e+06
+Iteration 5: assign=5.217ms, update=2.335ms, inertia=1.631904e+06
+Iteration 6: assign=5.176ms, update=2.334ms, inertia=1.631904e+06
+Iteration 7: assign=5.164ms, update=2.318ms, inertia=1.631903e+06
+Iteration 8: assign=5.190ms, update=2.342ms, inertia=1.631903e+06
+Iteration 9: assign=5.191ms, update=2.186ms, inertia=1.631902e+06
+Iteration 10: assign=5.164ms, update=1.713ms, inertia=1.631902e+06
+Iteration 11: assign=5.185ms, update=1.718ms, inertia=1.631901e+06
+Iteration 12: assign=5.182ms, update=1.705ms, inertia=1.631901e+06
+Iteration 13: assign=5.163ms, update=1.684ms, inertia=1.631900e+06
+Iteration 14: assign=5.199ms, update=1.711ms, inertia=1.631900e+06
+Iteration 15: assign=5.199ms, update=1.695ms, inertia=1.631900e+06
+Iteration 16: assign=5.170ms, update=1.700ms, inertia=1.631899e+06
+Iteration 17: assign=5.192ms, update=2.335ms, inertia=1.631899e+06
+Iteration 18: assign=5.175ms, update=2.366ms, inertia=1.631898e+06
+Iteration 19: assign=5.182ms, update=2.330ms, inertia=1.631898e+06
+Iteration 20: assign=5.168ms, update=2.353ms, inertia=1.631898e+06
+  Warmup 1: 172.270 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=5.209ms, update=2.263ms, inertia=7.888645e+06
+Iteration 2: assign=5.175ms, update=2.564ms, inertia=3.232168e+06
+Iteration 3: assign=5.181ms, update=2.565ms, inertia=2.770743e+06
+Iteration 4: assign=5.160ms, update=2.465ms, inertia=1.631905e+06
+Iteration 5: assign=5.169ms, update=2.498ms, inertia=1.631904e+06
+Iteration 6: assign=5.178ms, update=2.459ms, inertia=1.631904e+06
+Iteration 7: assign=5.182ms, update=2.458ms, inertia=1.631903e+06
+Iteration 8: assign=5.177ms, update=2.530ms, inertia=1.631903e+06
+Iteration 9: assign=5.197ms, update=2.451ms, inertia=1.631902e+06
+Iteration 10: assign=5.185ms, update=1.742ms, inertia=1.631902e+06
+Iteration 11: assign=5.183ms, update=1.827ms, inertia=1.631901e+06
+Iteration 12: assign=5.198ms, update=1.795ms, inertia=1.631901e+06
+Iteration 13: assign=5.187ms, update=1.792ms, inertia=1.631900e+06
+Iteration 14: assign=5.185ms, update=1.803ms, inertia=1.631900e+06
+Iteration 15: assign=5.203ms, update=1.743ms, inertia=1.631900e+06
+Iteration 16: assign=5.194ms, update=1.752ms, inertia=1.631899e+06
+Iteration 17: assign=5.168ms, update=2.440ms, inertia=1.631899e+06
+Iteration 18: assign=5.186ms, update=2.230ms, inertia=1.631898e+06
+Iteration 19: assign=5.211ms, update=2.180ms, inertia=1.631898e+06
+Iteration 20: assign=5.160ms, update=2.222ms, inertia=1.631898e+06
+  Warmup 2: 174.209 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=5.222ms, update=2.052ms, inertia=7.888645e+06
+Iteration 2: assign=5.168ms, update=2.245ms, inertia=3.232168e+06
+Iteration 3: assign=5.215ms, update=2.260ms, inertia=2.770743e+06
+Iteration 4: assign=5.185ms, update=2.215ms, inertia=1.631905e+06
+Iteration 5: assign=5.191ms, update=2.217ms, inertia=1.631904e+06
+Iteration 6: assign=5.184ms, update=2.198ms, inertia=1.631904e+06
+Iteration 7: assign=5.178ms, update=2.179ms, inertia=1.631903e+06
+Iteration 8: assign=5.176ms, update=2.203ms, inertia=1.631903e+06
+Iteration 9: assign=5.192ms, update=2.433ms, inertia=1.631902e+06
+Iteration 10: assign=5.191ms, update=1.836ms, inertia=1.631902e+06
+Iteration 11: assign=5.187ms, update=1.857ms, inertia=1.631901e+06
+Iteration 12: assign=5.196ms, update=1.839ms, inertia=1.631901e+06
+Iteration 13: assign=5.207ms, update=1.799ms, inertia=1.631900e+06
+Iteration 14: assign=5.174ms, update=1.809ms, inertia=1.631900e+06
+Iteration 15: assign=5.162ms, update=1.789ms, inertia=1.631900e+06
+Iteration 16: assign=5.202ms, update=1.833ms, inertia=1.631899e+06
+Iteration 17: assign=5.174ms, update=2.210ms, inertia=1.631899e+06
+Iteration 18: assign=5.160ms, update=2.528ms, inertia=1.631898e+06
+Iteration 19: assign=5.182ms, update=2.504ms, inertia=1.631898e+06
+Iteration 20: assign=5.177ms, update=2.548ms, inertia=1.631898e+06
+  Warmup 3: 172.526 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 4 threads
+  Iteration  1: assign=5.191ms, update=2.278ms, inertia=7.888645e+06
+  Iteration  2: assign=5.185ms, update=2.479ms, inertia=3.232168e+06
+  Iteration  3: assign=5.186ms, update=2.452ms, inertia=2.770743e+06
+  Iteration  4: assign=5.217ms, update=2.493ms, inertia=1.631905e+06
+  Iteration  5: assign=5.180ms, update=2.484ms, inertia=1.631904e+06
+  Iteration  6: assign=5.155ms, update=2.574ms, inertia=1.631904e+06
+  Iteration  7: assign=5.190ms, update=2.449ms, inertia=1.631903e+06
+  Iteration  8: assign=5.236ms, update=2.508ms, inertia=1.631903e+06
+  Iteration  9: assign=5.169ms, update=2.578ms, inertia=1.631902e+06
+  Iteration 10: assign=5.178ms, update=2.409ms, inertia=1.631902e+06
+  Iteration 11: assign=5.206ms, update=2.464ms, inertia=1.631901e+06
+  Iteration 12: assign=5.174ms, update=2.486ms, inertia=1.631901e+06
+  Iteration 13: assign=5.175ms, update=2.483ms, inertia=1.631900e+06
+  Iteration 14: assign=5.184ms, update=2.379ms, inertia=1.631900e+06
+  Iteration 15: assign=5.158ms, update=2.513ms, inertia=1.631900e+06
+  Iteration 16: assign=5.172ms, update=2.474ms, inertia=1.631899e+06
+  Iteration 17: assign=5.174ms, update=2.450ms, inertia=1.631899e+06
+  Iteration 18: assign=5.163ms, update=1.775ms, inertia=1.631898e+06
+  Iteration 19: assign=5.175ms, update=1.809ms, inertia=1.631898e+06
+  Iteration 20: assign=5.183ms, update=1.826ms, inertia=1.631898e+06
+  Run 1: 177.281 ms, final inertia=1.631898e+06
+OpenMP configuration: 4 threads
+  Run 2: 172.888 ms, final inertia=1.631898e+06
+OpenMP configuration: 4 threads
+  Run 3: 170.882 ms, final inertia=1.631898e+06
+OpenMP configuration: 4 threads
+  Run 4: 163.459 ms, final inertia=1.631898e+06
+OpenMP configuration: 4 threads
+  Run 5: 168.879 ms, final inertia=1.631898e+06
+
+=== Performance Summary ===
+Median total time: 170.882 ms
+Median assign time: 5.181 ms
+Median update time: 2.077 ms
+MLUPS: 4.941e+03
+Median final inertia: 1.6318976790e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/canonical_N200000_D16_K8_T4.csv
+
+OpenMP K-Means completed successfully!
+Test 2: Stress (N=100000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 100000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 4
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=87.786ms, update=0.984ms, inertia=6.132062e+06
+Iteration 2: assign=87.747ms, update=0.878ms, inertia=2.757049e+06
+Iteration 3: assign=87.046ms, update=1.179ms, inertia=2.463796e+06
+Iteration 4: assign=84.894ms, update=1.142ms, inertia=2.463790e+06
+Iteration 5: assign=82.187ms, update=1.175ms, inertia=2.463786e+06
+Iteration 6: assign=82.203ms, update=1.189ms, inertia=2.463783e+06
+Iteration 7: assign=82.182ms, update=1.234ms, inertia=2.463781e+06
+Iteration 8: assign=82.220ms, update=1.236ms, inertia=2.463780e+06
+Iteration 9: assign=82.145ms, update=1.238ms, inertia=2.463779e+06
+Iteration 10: assign=82.168ms, update=1.237ms, inertia=2.463778e+06
+Iteration 11: assign=82.888ms, update=1.176ms, inertia=2.463777e+06
+Iteration 12: assign=83.218ms, update=2.458ms, inertia=2.463777e+06
+Iteration 13: assign=82.166ms, update=1.191ms, inertia=2.463776e+06
+Iteration 14: assign=82.168ms, update=1.199ms, inertia=2.463776e+06
+Iteration 15: assign=82.173ms, update=1.210ms, inertia=2.463776e+06
+Iteration 16: assign=82.200ms, update=1.234ms, inertia=2.463775e+06
+Iteration 17: assign=82.191ms, update=1.229ms, inertia=2.463775e+06
+Iteration 18: assign=82.174ms, update=1.249ms, inertia=2.463775e+06
+Iteration 19: assign=82.159ms, update=1.240ms, inertia=2.463775e+06
+Iteration 20: assign=82.181ms, update=1.204ms, inertia=2.463775e+06
+  Warmup 1: 1742.335 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=82.713ms, update=1.180ms, inertia=6.132062e+06
+Iteration 2: assign=82.678ms, update=1.130ms, inertia=2.757049e+06
+Iteration 3: assign=82.388ms, update=1.146ms, inertia=2.463796e+06
+Iteration 4: assign=82.472ms, update=1.194ms, inertia=2.463790e+06
+Iteration 5: assign=82.329ms, update=1.140ms, inertia=2.463786e+06
+Iteration 6: assign=82.416ms, update=1.198ms, inertia=2.463783e+06
+Iteration 7: assign=82.287ms, update=1.189ms, inertia=2.463781e+06
+Iteration 8: assign=82.348ms, update=1.168ms, inertia=2.463780e+06
+Iteration 9: assign=82.429ms, update=1.176ms, inertia=2.463779e+06
+Iteration 10: assign=82.352ms, update=1.187ms, inertia=2.463778e+06
+Iteration 11: assign=82.451ms, update=1.164ms, inertia=2.463777e+06
+Iteration 12: assign=82.406ms, update=1.166ms, inertia=2.463777e+06
+Iteration 13: assign=82.687ms, update=1.130ms, inertia=2.463776e+06
+Iteration 14: assign=82.412ms, update=1.122ms, inertia=2.463776e+06
+Iteration 15: assign=82.458ms, update=1.127ms, inertia=2.463776e+06
+Iteration 16: assign=84.189ms, update=1.221ms, inertia=2.463775e+06
+Iteration 17: assign=82.458ms, update=1.140ms, inertia=2.463775e+06
+Iteration 18: assign=82.393ms, update=1.121ms, inertia=2.463775e+06
+Iteration 19: assign=82.337ms, update=1.128ms, inertia=2.463775e+06
+Iteration 20: assign=82.349ms, update=1.131ms, inertia=2.463775e+06
+  Warmup 2: 1726.374 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=82.897ms, update=1.142ms, inertia=6.132062e+06
+Iteration 2: assign=82.321ms, update=1.110ms, inertia=2.757049e+06
+Iteration 3: assign=82.375ms, update=1.117ms, inertia=2.463796e+06
+Iteration 4: assign=82.439ms, update=1.126ms, inertia=2.463790e+06
+Iteration 5: assign=82.360ms, update=1.123ms, inertia=2.463786e+06
+Iteration 6: assign=82.903ms, update=1.164ms, inertia=2.463783e+06
+Iteration 7: assign=82.393ms, update=1.159ms, inertia=2.463781e+06
+Iteration 8: assign=82.339ms, update=1.190ms, inertia=2.463780e+06
+Iteration 9: assign=82.405ms, update=1.152ms, inertia=2.463779e+06
+Iteration 10: assign=82.314ms, update=1.201ms, inertia=2.463778e+06
+Iteration 11: assign=82.348ms, update=1.172ms, inertia=2.463777e+06
+Iteration 12: assign=82.279ms, update=1.188ms, inertia=2.463777e+06
+Iteration 13: assign=82.368ms, update=1.177ms, inertia=2.463776e+06
+Iteration 14: assign=82.317ms, update=1.200ms, inertia=2.463776e+06
+Iteration 15: assign=82.311ms, update=1.183ms, inertia=2.463776e+06
+Iteration 16: assign=82.356ms, update=1.181ms, inertia=2.463775e+06
+Iteration 17: assign=82.382ms, update=1.180ms, inertia=2.463775e+06
+Iteration 18: assign=82.361ms, update=1.178ms, inertia=2.463775e+06
+Iteration 19: assign=82.582ms, update=1.194ms, inertia=2.463775e+06
+Iteration 20: assign=82.453ms, update=1.133ms, inertia=2.463775e+06
+  Warmup 3: 1724.245 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 4 threads
+  Iteration  1: assign=82.503ms, update=1.129ms, inertia=6.132062e+06
+  Iteration  2: assign=82.295ms, update=1.121ms, inertia=2.757049e+06
+  Iteration  3: assign=82.264ms, update=1.143ms, inertia=2.463796e+06
+  Iteration  4: assign=82.305ms, update=1.125ms, inertia=2.463790e+06
+  Iteration  5: assign=82.353ms, update=1.121ms, inertia=2.463786e+06
+  Iteration  6: assign=82.296ms, update=1.131ms, inertia=2.463783e+06
+  Iteration  7: assign=82.570ms, update=1.139ms, inertia=2.463781e+06
+  Iteration  8: assign=82.317ms, update=1.124ms, inertia=2.463780e+06
+  Iteration  9: assign=82.322ms, update=1.127ms, inertia=2.463779e+06
+  Iteration 10: assign=82.410ms, update=1.130ms, inertia=2.463778e+06
+  Iteration 11: assign=82.369ms, update=1.120ms, inertia=2.463777e+06
+  Iteration 12: assign=82.415ms, update=1.129ms, inertia=2.463777e+06
+  Iteration 13: assign=82.375ms, update=1.136ms, inertia=2.463776e+06
+  Iteration 14: assign=82.390ms, update=1.141ms, inertia=2.463776e+06
+  Iteration 15: assign=82.399ms, update=1.133ms, inertia=2.463776e+06
+  Iteration 16: assign=82.388ms, update=1.177ms, inertia=2.463775e+06
+  Iteration 17: assign=82.364ms, update=1.162ms, inertia=2.463775e+06
+  Iteration 18: assign=82.344ms, update=1.191ms, inertia=2.463775e+06
+  Iteration 19: assign=82.362ms, update=1.174ms, inertia=2.463775e+06
+  Iteration 20: assign=82.339ms, update=1.195ms, inertia=2.463775e+06
+  Run 1: 1722.407 ms, final inertia=2.463775e+06
+OpenMP configuration: 4 threads
+  Run 2: 1723.472 ms, final inertia=2.463775e+06
+OpenMP configuration: 4 threads
+  Run 3: 1724.119 ms, final inertia=2.463775e+06
+OpenMP configuration: 4 threads
+  Run 4: 1724.288 ms, final inertia=2.463775e+06
+OpenMP configuration: 4 threads
+  Run 5: 1752.299 ms, final inertia=2.463775e+06
+
+=== Performance Summary ===
+Median total time: 1724.119 ms
+Median assign time: 82.364 ms
+Median update time: 1.140 ms
+MLUPS: 4.973e+03
+Median final inertia: 2.4637748521e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/stress_N100000_D64_K64_T4.csv
+
+OpenMP K-Means completed successfully!
+Test 3: Medium (N=500000, D=32, K=32)
+=== OpenMP K-Means Configuration ===
+N: 500000 points
+D: 32 dimensions
+K: 32 clusters
+Max iterations: 15
+Random seed: 42
+OpenMP threads: 4
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=108.278ms, update=6.037ms, inertia=1.224529e+07
+Iteration 2: assign=104.559ms, update=6.405ms, inertia=6.159988e+06
+Iteration 3: assign=100.688ms, update=6.598ms, inertia=6.159715e+06
+Iteration 4: assign=100.641ms, update=6.546ms, inertia=6.159704e+06
+Iteration 5: assign=100.710ms, update=6.649ms, inertia=6.159698e+06
+Iteration 6: assign=100.683ms, update=6.614ms, inertia=6.159694e+06
+Iteration 7: assign=100.649ms, update=6.584ms, inertia=6.159691e+06
+Iteration 8: assign=100.562ms, update=6.603ms, inertia=6.159689e+06
+Iteration 9: assign=100.705ms, update=8.441ms, inertia=6.159687e+06
+Iteration 10: assign=100.454ms, update=6.577ms, inertia=6.159686e+06
+Iteration 11: assign=100.391ms, update=6.641ms, inertia=6.159684e+06
+Iteration 12: assign=100.354ms, update=6.573ms, inertia=6.159682e+06
+Iteration 13: assign=100.393ms, update=6.563ms, inertia=6.159681e+06
+Iteration 14: assign=100.514ms, update=6.595ms, inertia=6.159680e+06
+Iteration 15: assign=100.605ms, update=6.583ms, inertia=6.159678e+06
+  Warmup 1: 1719.979 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=100.531ms, update=5.933ms, inertia=1.224529e+07
+Iteration 2: assign=100.414ms, update=6.442ms, inertia=6.159988e+06
+Iteration 3: assign=100.468ms, update=6.500ms, inertia=6.159715e+06
+Iteration 4: assign=100.386ms, update=6.533ms, inertia=6.159704e+06
+Iteration 5: assign=100.397ms, update=6.470ms, inertia=6.159698e+06
+Iteration 6: assign=100.395ms, update=6.551ms, inertia=6.159694e+06
+Iteration 7: assign=100.398ms, update=6.532ms, inertia=6.159691e+06
+Iteration 8: assign=100.476ms, update=6.543ms, inertia=6.159689e+06
+Iteration 9: assign=100.342ms, update=6.572ms, inertia=6.159687e+06
+Iteration 10: assign=100.353ms, update=6.530ms, inertia=6.159686e+06
+Iteration 11: assign=100.455ms, update=6.523ms, inertia=6.159684e+06
+Iteration 12: assign=100.492ms, update=9.739ms, inertia=6.159682e+06
+Iteration 13: assign=100.526ms, update=6.615ms, inertia=6.159681e+06
+Iteration 14: assign=100.363ms, update=6.625ms, inertia=6.159680e+06
+Iteration 15: assign=100.367ms, update=6.562ms, inertia=6.159678e+06
+  Warmup 2: 1702.307 ms
+OpenMP configuration: 4 threads
+Starting OpenMP (4 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=100.089ms, update=5.828ms, inertia=1.224529e+07
+Iteration 2: assign=100.620ms, update=6.463ms, inertia=6.159988e+06
+Iteration 3: assign=100.368ms, update=6.477ms, inertia=6.159715e+06
+Iteration 4: assign=100.351ms, update=6.490ms, inertia=6.159704e+06
+Iteration 5: assign=100.346ms, update=6.544ms, inertia=6.159698e+06
+Iteration 6: assign=100.303ms, update=6.590ms, inertia=6.159694e+06
+Iteration 7: assign=100.451ms, update=6.534ms, inertia=6.159691e+06
+Iteration 8: assign=100.336ms, update=6.572ms, inertia=6.159689e+06
+Iteration 9: assign=100.344ms, update=6.544ms, inertia=6.159687e+06
+Iteration 10: assign=100.426ms, update=6.497ms, inertia=6.159686e+06
+Iteration 11: assign=100.444ms, update=6.551ms, inertia=6.159684e+06
+Iteration 12: assign=100.994ms, update=6.452ms, inertia=6.159682e+06
+Iteration 13: assign=100.428ms, update=6.496ms, inertia=6.159681e+06
+Iteration 14: assign=100.345ms, update=6.525ms, inertia=6.159680e+06
+Iteration 15: assign=100.404ms, update=6.492ms, inertia=6.159678e+06
+  Warmup 3: 1698.735 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 4 threads
+  Iteration  1: assign=100.042ms, update=5.916ms, inertia=1.224529e+07
+  Iteration  2: assign=100.381ms, update=6.497ms, inertia=6.159988e+06
+  Iteration  3: assign=100.390ms, update=6.490ms, inertia=6.159715e+06
+  Iteration  4: assign=100.639ms, update=6.554ms, inertia=6.159704e+06
+  Iteration  5: assign=100.465ms, update=6.535ms, inertia=6.159698e+06
+  Iteration  6: assign=100.339ms, update=6.469ms, inertia=6.159694e+06
+  Iteration  7: assign=100.296ms, update=6.578ms, inertia=6.159691e+06
+  Iteration  8: assign=100.389ms, update=6.562ms, inertia=6.159689e+06
+  Iteration  9: assign=100.446ms, update=6.466ms, inertia=6.159687e+06
+  Iteration 10: assign=100.343ms, update=6.563ms, inertia=6.159686e+06
+  Iteration 11: assign=100.326ms, update=6.530ms, inertia=6.159684e+06
+  Iteration 12: assign=100.300ms, update=6.482ms, inertia=6.159682e+06
+  Iteration 13: assign=100.412ms, update=6.510ms, inertia=6.159681e+06
+  Iteration 14: assign=100.385ms, update=6.607ms, inertia=6.159680e+06
+  Iteration 15: assign=100.406ms, update=6.508ms, inertia=6.159678e+06
+  Run 1: 1698.121 ms, final inertia=6.159678e+06
+OpenMP configuration: 4 threads
+  Run 2: 1696.371 ms, final inertia=6.159678e+06
+OpenMP configuration: 4 threads
+  Run 3: 1689.387 ms, final inertia=6.159678e+06
+OpenMP configuration: 4 threads
+  Run 4: 1689.092 ms, final inertia=6.159678e+06
+OpenMP configuration: 4 threads
+  Run 5: 1693.634 ms, final inertia=6.159678e+06
+
+=== Performance Summary ===
+Median total time: 1693.634 ms
+Median assign time: 99.795 ms
+Median update time: 6.516 ms
+MLUPS: 5.130e+03
+Median final inertia: 6.1596784231e+06
+Iterations per run: 15
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/medium_N500000_D32_K32_T4.csv
+
+OpenMP K-Means completed successfully!
+
+=== Testing with 8 threads ===
+Test 1: Canonical (N=200000, D=16, K=8)
+=== OpenMP K-Means Configuration ===
+N: 200000 points
+D: 16 dimensions
+K: 8 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 8
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=2.691ms, update=2.457ms, inertia=7.888645e+06
+Iteration 2: assign=3.080ms, update=2.463ms, inertia=3.232168e+06
+Iteration 3: assign=2.686ms, update=2.510ms, inertia=2.770743e+06
+Iteration 4: assign=2.670ms, update=2.379ms, inertia=1.631905e+06
+Iteration 5: assign=2.667ms, update=2.329ms, inertia=1.631904e+06
+Iteration 6: assign=2.699ms, update=2.343ms, inertia=1.631904e+06
+Iteration 7: assign=2.667ms, update=2.316ms, inertia=1.631903e+06
+Iteration 8: assign=2.666ms, update=2.401ms, inertia=1.631903e+06
+Iteration 9: assign=2.686ms, update=2.391ms, inertia=1.631902e+06
+Iteration 10: assign=2.695ms, update=2.410ms, inertia=1.631902e+06
+Iteration 11: assign=2.699ms, update=2.293ms, inertia=1.631901e+06
+Iteration 12: assign=2.660ms, update=2.357ms, inertia=1.631901e+06
+Iteration 13: assign=2.666ms, update=2.322ms, inertia=1.631900e+06
+Iteration 14: assign=2.661ms, update=2.430ms, inertia=1.631900e+06
+Iteration 15: assign=2.698ms, update=2.306ms, inertia=1.631900e+06
+Iteration 16: assign=2.665ms, update=2.276ms, inertia=1.631899e+06
+Iteration 17: assign=2.671ms, update=2.383ms, inertia=1.631899e+06
+Iteration 18: assign=2.675ms, update=2.940ms, inertia=1.631898e+06
+Iteration 19: assign=2.704ms, update=2.718ms, inertia=1.631898e+06
+Iteration 20: assign=2.711ms, update=2.833ms, inertia=1.631898e+06
+  Warmup 1: 119.987 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=2.693ms, update=2.172ms, inertia=7.888645e+06
+Iteration 2: assign=2.714ms, update=2.436ms, inertia=3.232168e+06
+Iteration 3: assign=2.702ms, update=2.353ms, inertia=2.770743e+06
+Iteration 4: assign=2.653ms, update=2.281ms, inertia=1.631905e+06
+Iteration 5: assign=2.665ms, update=2.307ms, inertia=1.631904e+06
+Iteration 6: assign=2.660ms, update=2.338ms, inertia=1.631904e+06
+Iteration 7: assign=2.708ms, update=2.338ms, inertia=1.631903e+06
+Iteration 8: assign=2.683ms, update=2.243ms, inertia=1.631903e+06
+Iteration 9: assign=2.668ms, update=2.235ms, inertia=1.631902e+06
+Iteration 10: assign=2.673ms, update=2.247ms, inertia=1.631902e+06
+Iteration 11: assign=2.698ms, update=2.300ms, inertia=1.631901e+06
+Iteration 12: assign=2.685ms, update=2.300ms, inertia=1.631901e+06
+Iteration 13: assign=2.688ms, update=2.242ms, inertia=1.631900e+06
+Iteration 14: assign=2.665ms, update=2.293ms, inertia=1.631900e+06
+Iteration 15: assign=2.676ms, update=2.303ms, inertia=1.631900e+06
+Iteration 16: assign=2.695ms, update=2.287ms, inertia=1.631899e+06
+Iteration 17: assign=2.974ms, update=2.327ms, inertia=1.631899e+06
+Iteration 18: assign=2.678ms, update=2.390ms, inertia=1.631898e+06
+Iteration 19: assign=2.682ms, update=2.420ms, inertia=1.631898e+06
+Iteration 20: assign=2.687ms, update=2.435ms, inertia=1.631898e+06
+  Warmup 2: 116.790 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=2.707ms, update=2.201ms, inertia=7.888645e+06
+Iteration 2: assign=2.659ms, update=2.334ms, inertia=3.232168e+06
+Iteration 3: assign=2.693ms, update=2.346ms, inertia=2.770743e+06
+Iteration 4: assign=2.697ms, update=2.744ms, inertia=1.631905e+06
+Iteration 5: assign=2.681ms, update=2.752ms, inertia=1.631904e+06
+Iteration 6: assign=2.675ms, update=2.700ms, inertia=1.631904e+06
+Iteration 7: assign=2.653ms, update=2.731ms, inertia=1.631903e+06
+Iteration 8: assign=2.663ms, update=2.766ms, inertia=1.631903e+06
+Iteration 9: assign=2.667ms, update=2.665ms, inertia=1.631902e+06
+Iteration 10: assign=2.655ms, update=2.659ms, inertia=1.631902e+06
+Iteration 11: assign=2.657ms, update=2.648ms, inertia=1.631901e+06
+Iteration 12: assign=2.681ms, update=2.739ms, inertia=1.631901e+06
+Iteration 13: assign=2.693ms, update=2.745ms, inertia=1.631900e+06
+Iteration 14: assign=2.674ms, update=2.765ms, inertia=1.631900e+06
+Iteration 15: assign=2.666ms, update=2.664ms, inertia=1.631900e+06
+Iteration 16: assign=2.683ms, update=2.721ms, inertia=1.631899e+06
+Iteration 17: assign=2.693ms, update=3.273ms, inertia=1.631899e+06
+Iteration 18: assign=2.681ms, update=2.447ms, inertia=1.631898e+06
+Iteration 19: assign=2.671ms, update=2.421ms, inertia=1.631898e+06
+Iteration 20: assign=2.650ms, update=2.447ms, inertia=1.631898e+06
+  Warmup 3: 122.823 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 8 threads
+  Iteration  1: assign=2.834ms, update=2.452ms, inertia=7.888645e+06
+  Iteration  2: assign=2.650ms, update=2.819ms, inertia=3.232168e+06
+  Iteration  3: assign=2.601ms, update=2.829ms, inertia=2.770743e+06
+  Iteration  4: assign=2.618ms, update=2.739ms, inertia=1.631905e+06
+  Iteration  5: assign=2.631ms, update=2.730ms, inertia=1.631904e+06
+  Iteration  6: assign=2.622ms, update=2.680ms, inertia=1.631904e+06
+  Iteration  7: assign=2.621ms, update=2.772ms, inertia=1.631903e+06
+  Iteration  8: assign=2.623ms, update=2.738ms, inertia=1.631903e+06
+  Iteration  9: assign=2.641ms, update=2.730ms, inertia=1.631902e+06
+  Iteration 10: assign=2.639ms, update=2.778ms, inertia=1.631902e+06
+  Iteration 11: assign=2.616ms, update=2.761ms, inertia=1.631901e+06
+  Iteration 12: assign=2.606ms, update=2.720ms, inertia=1.631901e+06
+  Iteration 13: assign=2.612ms, update=2.716ms, inertia=1.631900e+06
+  Iteration 14: assign=2.609ms, update=2.740ms, inertia=1.631900e+06
+  Iteration 15: assign=2.620ms, update=2.754ms, inertia=1.631900e+06
+  Iteration 16: assign=2.617ms, update=2.731ms, inertia=1.631899e+06
+  Iteration 17: assign=2.625ms, update=2.908ms, inertia=1.631899e+06
+  Iteration 18: assign=2.630ms, update=3.110ms, inertia=1.631898e+06
+  Iteration 19: assign=2.626ms, update=3.119ms, inertia=1.631898e+06
+  Iteration 20: assign=2.605ms, update=3.048ms, inertia=1.631898e+06
+  Run 1: 124.993 ms, final inertia=1.631898e+06
+OpenMP configuration: 8 threads
+  Run 2: 124.320 ms, final inertia=1.631898e+06
+OpenMP configuration: 8 threads
+  Run 3: 124.695 ms, final inertia=1.631898e+06
+OpenMP configuration: 8 threads
+  Run 4: 124.708 ms, final inertia=1.631898e+06
+OpenMP configuration: 8 threads
+  Run 5: 124.852 ms, final inertia=1.631898e+06
+
+=== Performance Summary ===
+Median total time: 124.708 ms
+Median assign time: 2.623 ms
+Median update time: 2.757 ms
+MLUPS: 9.760e+03
+Median final inertia: 1.6318976790e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/canonical_N200000_D16_K8_T8.csv
+
+OpenMP K-Means completed successfully!
+Test 2: Stress (N=100000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 100000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 8
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=45.674ms, update=0.935ms, inertia=6.132062e+06
+Iteration 2: assign=45.591ms, update=0.774ms, inertia=2.757049e+06
+Iteration 3: assign=45.521ms, update=0.764ms, inertia=2.463796e+06
+Iteration 4: assign=45.438ms, update=0.822ms, inertia=2.463790e+06
+Iteration 5: assign=45.464ms, update=0.804ms, inertia=2.463786e+06
+Iteration 6: assign=44.347ms, update=0.960ms, inertia=2.463783e+06
+Iteration 7: assign=44.267ms, update=0.951ms, inertia=2.463781e+06
+Iteration 8: assign=44.236ms, update=0.943ms, inertia=2.463780e+06
+Iteration 9: assign=44.246ms, update=0.804ms, inertia=2.463779e+06
+Iteration 10: assign=44.214ms, update=0.663ms, inertia=2.463778e+06
+Iteration 11: assign=44.277ms, update=0.658ms, inertia=2.463777e+06
+Iteration 12: assign=44.266ms, update=0.670ms, inertia=2.463777e+06
+Iteration 13: assign=44.235ms, update=0.672ms, inertia=2.463776e+06
+Iteration 14: assign=44.542ms, update=0.664ms, inertia=2.463776e+06
+Iteration 15: assign=44.258ms, update=0.672ms, inertia=2.463776e+06
+Iteration 16: assign=44.229ms, update=0.673ms, inertia=2.463775e+06
+Iteration 17: assign=44.312ms, update=0.665ms, inertia=2.463775e+06
+Iteration 18: assign=44.243ms, update=0.668ms, inertia=2.463775e+06
+Iteration 19: assign=44.216ms, update=0.677ms, inertia=2.463775e+06
+Iteration 20: assign=44.229ms, update=0.678ms, inertia=2.463775e+06
+  Warmup 1: 937.584 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=44.573ms, update=0.674ms, inertia=6.132062e+06
+Iteration 2: assign=45.403ms, update=1.718ms, inertia=2.757049e+06
+Iteration 3: assign=44.256ms, update=0.609ms, inertia=2.463796e+06
+Iteration 4: assign=44.262ms, update=0.614ms, inertia=2.463790e+06
+Iteration 5: assign=44.349ms, update=0.613ms, inertia=2.463786e+06
+Iteration 6: assign=44.257ms, update=0.614ms, inertia=2.463783e+06
+Iteration 7: assign=44.256ms, update=0.607ms, inertia=2.463781e+06
+Iteration 8: assign=44.257ms, update=0.611ms, inertia=2.463780e+06
+Iteration 9: assign=44.315ms, update=0.609ms, inertia=2.463779e+06
+Iteration 10: assign=44.290ms, update=0.627ms, inertia=2.463778e+06
+Iteration 11: assign=44.254ms, update=0.615ms, inertia=2.463777e+06
+Iteration 12: assign=44.256ms, update=0.612ms, inertia=2.463777e+06
+Iteration 13: assign=44.332ms, update=0.605ms, inertia=2.463776e+06
+Iteration 14: assign=44.295ms, update=0.631ms, inertia=2.463776e+06
+Iteration 15: assign=44.279ms, update=0.628ms, inertia=2.463776e+06
+Iteration 16: assign=44.266ms, update=0.621ms, inertia=2.463775e+06
+Iteration 17: assign=44.315ms, update=0.603ms, inertia=2.463775e+06
+Iteration 18: assign=44.289ms, update=0.617ms, inertia=2.463775e+06
+Iteration 19: assign=44.234ms, update=0.610ms, inertia=2.463775e+06
+Iteration 20: assign=44.572ms, update=0.606ms, inertia=2.463775e+06
+  Warmup 2: 931.084 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=44.409ms, update=0.588ms, inertia=6.132062e+06
+Iteration 2: assign=44.307ms, update=0.617ms, inertia=2.757049e+06
+Iteration 3: assign=44.258ms, update=0.633ms, inertia=2.463796e+06
+Iteration 4: assign=44.309ms, update=0.603ms, inertia=2.463790e+06
+Iteration 5: assign=44.338ms, update=0.611ms, inertia=2.463786e+06
+Iteration 6: assign=44.274ms, update=0.615ms, inertia=2.463783e+06
+Iteration 7: assign=44.267ms, update=0.622ms, inertia=2.463781e+06
+Iteration 8: assign=44.329ms, update=0.611ms, inertia=2.463780e+06
+Iteration 9: assign=44.864ms, update=0.656ms, inertia=2.463779e+06
+Iteration 10: assign=46.006ms, update=0.679ms, inertia=2.463778e+06
+Iteration 11: assign=46.145ms, update=0.786ms, inertia=2.463777e+06
+Iteration 12: assign=46.068ms, update=0.722ms, inertia=2.463777e+06
+Iteration 13: assign=45.814ms, update=0.665ms, inertia=2.463776e+06
+Iteration 14: assign=45.873ms, update=0.667ms, inertia=2.463776e+06
+Iteration 15: assign=45.727ms, update=0.650ms, inertia=2.463776e+06
+Iteration 16: assign=45.861ms, update=0.641ms, inertia=2.463775e+06
+Iteration 17: assign=45.764ms, update=0.664ms, inertia=2.463775e+06
+Iteration 18: assign=45.761ms, update=0.665ms, inertia=2.463775e+06
+Iteration 19: assign=45.945ms, update=0.634ms, inertia=2.463775e+06
+Iteration 20: assign=45.941ms, update=0.618ms, inertia=2.463775e+06
+  Warmup 3: 947.654 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 8 threads
+  Iteration  1: assign=46.019ms, update=0.609ms, inertia=6.132062e+06
+  Iteration  2: assign=45.735ms, update=0.633ms, inertia=2.757049e+06
+  Iteration  3: assign=45.727ms, update=0.624ms, inertia=2.463796e+06
+  Iteration  4: assign=45.731ms, update=0.609ms, inertia=2.463790e+06
+  Iteration  5: assign=45.864ms, update=1.159ms, inertia=2.463786e+06
+  Iteration  6: assign=45.922ms, update=0.628ms, inertia=2.463783e+06
+  Iteration  7: assign=45.706ms, update=0.609ms, inertia=2.463781e+06
+  Iteration  8: assign=45.762ms, update=0.611ms, inertia=2.463780e+06
+  Iteration  9: assign=45.705ms, update=0.628ms, inertia=2.463779e+06
+  Iteration 10: assign=45.735ms, update=0.614ms, inertia=2.463778e+06
+  Iteration 11: assign=45.884ms, update=0.617ms, inertia=2.463777e+06
+  Iteration 12: assign=45.605ms, update=0.641ms, inertia=2.463777e+06
+  Iteration 13: assign=45.960ms, update=0.615ms, inertia=2.463776e+06
+  Iteration 14: assign=45.630ms, update=0.606ms, inertia=2.463776e+06
+  Iteration 15: assign=45.668ms, update=0.610ms, inertia=2.463776e+06
+  Iteration 16: assign=45.665ms, update=0.609ms, inertia=2.463775e+06
+  Iteration 17: assign=45.750ms, update=0.616ms, inertia=2.463775e+06
+  Iteration 18: assign=45.716ms, update=0.598ms, inertia=2.463775e+06
+  Iteration 19: assign=45.734ms, update=0.618ms, inertia=2.463775e+06
+  Iteration 20: assign=45.721ms, update=0.616ms, inertia=2.463775e+06
+  Run 1: 958.408 ms, final inertia=2.463775e+06
+OpenMP configuration: 8 threads
+  Run 2: 956.230 ms, final inertia=2.463775e+06
+OpenMP configuration: 8 threads
+  Run 3: 935.612 ms, final inertia=2.463775e+06
+OpenMP configuration: 8 threads
+  Run 4: 928.361 ms, final inertia=2.463775e+06
+OpenMP configuration: 8 threads
+  Run 5: 929.248 ms, final inertia=2.463775e+06
+
+=== Performance Summary ===
+Median total time: 935.612 ms
+Median assign time: 44.317 ms
+Median update time: 0.616 ms
+MLUPS: 9.242e+03
+Median final inertia: 2.4637748521e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/stress_N100000_D64_K64_T8.csv
+
+OpenMP K-Means completed successfully!
+Test 3: Medium (N=500000, D=32, K=32)
+=== OpenMP K-Means Configuration ===
+N: 500000 points
+D: 32 dimensions
+K: 32 clusters
+Max iterations: 15
+Random seed: 42
+OpenMP threads: 8
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=55.826ms, update=3.415ms, inertia=1.224529e+07
+Iteration 2: assign=55.900ms, update=3.651ms, inertia=6.159988e+06
+Iteration 3: assign=55.690ms, update=3.727ms, inertia=6.159715e+06
+Iteration 4: assign=55.582ms, update=3.714ms, inertia=6.159704e+06
+Iteration 5: assign=54.253ms, update=3.602ms, inertia=6.159698e+06
+Iteration 6: assign=54.114ms, update=3.650ms, inertia=6.159694e+06
+Iteration 7: assign=54.093ms, update=3.591ms, inertia=6.159691e+06
+Iteration 8: assign=54.206ms, update=3.604ms, inertia=6.159689e+06
+Iteration 9: assign=54.161ms, update=3.611ms, inertia=6.159687e+06
+Iteration 10: assign=54.143ms, update=3.629ms, inertia=6.159686e+06
+Iteration 11: assign=54.129ms, update=3.647ms, inertia=6.159684e+06
+Iteration 12: assign=54.304ms, update=3.605ms, inertia=6.159682e+06
+Iteration 13: assign=54.123ms, update=3.626ms, inertia=6.159681e+06
+Iteration 14: assign=54.113ms, update=3.599ms, inertia=6.159680e+06
+Iteration 15: assign=54.120ms, update=3.619ms, inertia=6.159678e+06
+  Warmup 1: 935.037 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=53.840ms, update=3.292ms, inertia=1.224529e+07
+Iteration 2: assign=55.341ms, update=4.051ms, inertia=6.159988e+06
+Iteration 3: assign=53.947ms, update=3.366ms, inertia=6.159715e+06
+Iteration 4: assign=53.991ms, update=3.389ms, inertia=6.159704e+06
+Iteration 5: assign=53.953ms, update=3.416ms, inertia=6.159698e+06
+Iteration 6: assign=54.166ms, update=3.374ms, inertia=6.159694e+06
+Iteration 7: assign=53.965ms, update=3.351ms, inertia=6.159691e+06
+Iteration 8: assign=53.905ms, update=3.383ms, inertia=6.159689e+06
+Iteration 9: assign=53.946ms, update=3.442ms, inertia=6.159687e+06
+Iteration 10: assign=53.953ms, update=3.365ms, inertia=6.159686e+06
+Iteration 11: assign=53.951ms, update=3.361ms, inertia=6.159684e+06
+Iteration 12: assign=53.933ms, update=3.438ms, inertia=6.159682e+06
+Iteration 13: assign=53.978ms, update=3.373ms, inertia=6.159681e+06
+Iteration 14: assign=53.918ms, update=3.413ms, inertia=6.159680e+06
+Iteration 15: assign=53.898ms, update=3.405ms, inertia=6.159678e+06
+  Warmup 2: 922.910 ms
+OpenMP configuration: 8 threads
+Starting OpenMP (8 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=53.856ms, update=3.040ms, inertia=1.224529e+07
+Iteration 2: assign=53.930ms, update=3.375ms, inertia=6.159988e+06
+Iteration 3: assign=53.872ms, update=3.452ms, inertia=6.159715e+06
+Iteration 4: assign=53.939ms, update=3.375ms, inertia=6.159704e+06
+Iteration 5: assign=53.923ms, update=3.403ms, inertia=6.159698e+06
+Iteration 6: assign=54.025ms, update=3.366ms, inertia=6.159694e+06
+Iteration 7: assign=53.889ms, update=3.403ms, inertia=6.159691e+06
+Iteration 8: assign=53.950ms, update=3.384ms, inertia=6.159689e+06
+Iteration 9: assign=53.950ms, update=3.363ms, inertia=6.159687e+06
+Iteration 10: assign=53.970ms, update=3.425ms, inertia=6.159686e+06
+Iteration 11: assign=53.911ms, update=3.431ms, inertia=6.159684e+06
+Iteration 12: assign=53.945ms, update=3.335ms, inertia=6.159682e+06
+Iteration 13: assign=53.892ms, update=3.390ms, inertia=6.159681e+06
+Iteration 14: assign=54.201ms, update=3.338ms, inertia=6.159680e+06
+Iteration 15: assign=53.910ms, update=3.407ms, inertia=6.159678e+06
+  Warmup 3: 920.388 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 8 threads
+  Iteration  1: assign=53.934ms, update=3.095ms, inertia=1.224529e+07
+  Iteration  2: assign=54.212ms, update=3.358ms, inertia=6.159988e+06
+  Iteration  3: assign=53.919ms, update=3.406ms, inertia=6.159715e+06
+  Iteration  4: assign=53.982ms, update=6.961ms, inertia=6.159704e+06
+  Iteration  5: assign=54.437ms, update=3.427ms, inertia=6.159698e+06
+  Iteration  6: assign=54.220ms, update=3.365ms, inertia=6.159694e+06
+  Iteration  7: assign=54.129ms, update=3.457ms, inertia=6.159691e+06
+  Iteration  8: assign=54.117ms, update=3.434ms, inertia=6.159689e+06
+  Iteration  9: assign=54.149ms, update=3.440ms, inertia=6.159687e+06
+  Iteration 10: assign=54.209ms, update=3.455ms, inertia=6.159686e+06
+  Iteration 11: assign=54.156ms, update=3.430ms, inertia=6.159684e+06
+  Iteration 12: assign=54.160ms, update=3.434ms, inertia=6.159682e+06
+  Iteration 13: assign=54.086ms, update=3.406ms, inertia=6.159681e+06
+  Iteration 14: assign=54.130ms, update=3.438ms, inertia=6.159680e+06
+  Iteration 15: assign=54.143ms, update=3.428ms, inertia=6.159678e+06
+  Run 1: 930.203 ms, final inertia=6.159678e+06
+OpenMP configuration: 8 threads
+  Run 2: 915.886 ms, final inertia=6.159678e+06
+OpenMP configuration: 8 threads
+  Run 3: 916.266 ms, final inertia=6.159678e+06
+OpenMP configuration: 8 threads
+  Run 4: 919.387 ms, final inertia=6.159678e+06
+OpenMP configuration: 8 threads
+  Run 5: 916.395 ms, final inertia=6.159678e+06
+
+=== Performance Summary ===
+Median total time: 916.395 ms
+Median assign time: 53.691 ms
+Median update time: 3.402 ms
+MLUPS: 9.536e+03
+Median final inertia: 6.1596784231e+06
+Iterations per run: 15
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/medium_N500000_D32_K32_T8.csv
+
+OpenMP K-Means completed successfully!
+
+=== Testing with 16 threads ===
+Test 1: Canonical (N=200000, D=16, K=8)
+=== OpenMP K-Means Configuration ===
+N: 200000 points
+D: 16 dimensions
+K: 8 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 16
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=4.954ms, update=1.645ms, inertia=7.888645e+06
+Iteration 2: assign=1.340ms, update=1.641ms, inertia=3.232168e+06
+Iteration 3: assign=1.344ms, update=1.670ms, inertia=2.770743e+06
+Iteration 4: assign=1.369ms, update=1.593ms, inertia=1.631905e+06
+Iteration 5: assign=1.355ms, update=1.631ms, inertia=1.631904e+06
+Iteration 6: assign=1.344ms, update=1.590ms, inertia=1.631904e+06
+Iteration 7: assign=1.344ms, update=1.621ms, inertia=1.631903e+06
+Iteration 8: assign=1.360ms, update=1.591ms, inertia=1.631903e+06
+Iteration 9: assign=1.366ms, update=1.606ms, inertia=1.631902e+06
+Iteration 10: assign=1.341ms, update=1.584ms, inertia=1.631902e+06
+Iteration 11: assign=1.342ms, update=1.649ms, inertia=1.631901e+06
+Iteration 12: assign=1.358ms, update=1.609ms, inertia=1.631901e+06
+Iteration 13: assign=1.360ms, update=1.618ms, inertia=1.631900e+06
+Iteration 14: assign=1.344ms, update=1.622ms, inertia=1.631900e+06
+Iteration 15: assign=1.344ms, update=1.613ms, inertia=1.631900e+06
+Iteration 16: assign=1.364ms, update=1.581ms, inertia=1.631899e+06
+Iteration 17: assign=1.347ms, update=1.623ms, inertia=1.631899e+06
+Iteration 18: assign=1.338ms, update=1.598ms, inertia=1.631898e+06
+Iteration 19: assign=1.345ms, update=1.606ms, inertia=1.631898e+06
+Iteration 20: assign=1.357ms, update=1.630ms, inertia=1.631898e+06
+  Warmup 1: 78.409 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=1.379ms, update=1.681ms, inertia=7.888645e+06
+Iteration 2: assign=1.344ms, update=1.923ms, inertia=3.232168e+06
+Iteration 3: assign=1.365ms, update=2.033ms, inertia=2.770743e+06
+Iteration 4: assign=1.345ms, update=2.048ms, inertia=1.631905e+06
+Iteration 5: assign=1.356ms, update=2.016ms, inertia=1.631904e+06
+Iteration 6: assign=1.369ms, update=2.037ms, inertia=1.631904e+06
+Iteration 7: assign=1.343ms, update=2.019ms, inertia=1.631903e+06
+Iteration 8: assign=1.350ms, update=1.907ms, inertia=1.631903e+06
+Iteration 9: assign=1.369ms, update=1.900ms, inertia=1.631902e+06
+Iteration 10: assign=1.343ms, update=2.051ms, inertia=1.631902e+06
+Iteration 11: assign=1.355ms, update=2.048ms, inertia=1.631901e+06
+Iteration 12: assign=1.342ms, update=2.016ms, inertia=1.631901e+06
+Iteration 13: assign=1.349ms, update=1.909ms, inertia=1.631900e+06
+Iteration 14: assign=1.367ms, update=2.004ms, inertia=1.631900e+06
+Iteration 15: assign=1.345ms, update=1.885ms, inertia=1.631900e+06
+Iteration 16: assign=1.364ms, update=2.034ms, inertia=1.631899e+06
+Iteration 17: assign=1.340ms, update=1.922ms, inertia=1.631899e+06
+Iteration 18: assign=1.359ms, update=1.936ms, inertia=1.631898e+06
+Iteration 19: assign=1.370ms, update=2.097ms, inertia=1.631898e+06
+Iteration 20: assign=1.344ms, update=1.888ms, inertia=1.631898e+06
+  Warmup 2: 78.110 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=200000, D=16, K=8
+Iteration 1: assign=1.351ms, update=1.735ms, inertia=7.888645e+06
+Iteration 2: assign=1.368ms, update=1.801ms, inertia=3.232168e+06
+Iteration 3: assign=1.342ms, update=1.919ms, inertia=2.770743e+06
+Iteration 4: assign=1.358ms, update=1.973ms, inertia=1.631905e+06
+Iteration 5: assign=1.348ms, update=2.071ms, inertia=1.631904e+06
+Iteration 6: assign=1.687ms, update=1.954ms, inertia=1.631904e+06
+Iteration 7: assign=1.354ms, update=1.949ms, inertia=1.631903e+06
+Iteration 8: assign=1.374ms, update=1.836ms, inertia=1.631903e+06
+Iteration 9: assign=1.339ms, update=1.999ms, inertia=1.631902e+06
+Iteration 10: assign=1.356ms, update=1.922ms, inertia=1.631902e+06
+Iteration 11: assign=1.342ms, update=1.950ms, inertia=1.631901e+06
+Iteration 12: assign=1.363ms, update=1.915ms, inertia=1.631901e+06
+Iteration 13: assign=1.343ms, update=2.035ms, inertia=1.631900e+06
+Iteration 14: assign=1.352ms, update=1.989ms, inertia=1.631900e+06
+Iteration 15: assign=1.361ms, update=1.964ms, inertia=1.631900e+06
+Iteration 16: assign=1.340ms, update=2.011ms, inertia=1.631899e+06
+Iteration 17: assign=1.361ms, update=2.077ms, inertia=1.631899e+06
+Iteration 18: assign=1.369ms, update=1.877ms, inertia=1.631898e+06
+Iteration 19: assign=1.356ms, update=1.902ms, inertia=1.631898e+06
+Iteration 20: assign=1.362ms, update=2.025ms, inertia=1.631898e+06
+  Warmup 3: 77.617 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 16 threads
+  Iteration  1: assign=1.375ms, update=1.512ms, inertia=7.888645e+06
+  Iteration  2: assign=1.353ms, update=1.863ms, inertia=3.232168e+06
+  Iteration  3: assign=1.342ms, update=2.032ms, inertia=2.770743e+06
+  Iteration  4: assign=1.350ms, update=2.028ms, inertia=1.631905e+06
+  Iteration  5: assign=1.360ms, update=2.001ms, inertia=1.631904e+06
+  Iteration  6: assign=1.343ms, update=1.974ms, inertia=1.631904e+06
+  Iteration  7: assign=1.352ms, update=1.949ms, inertia=1.631903e+06
+  Iteration  8: assign=1.367ms, update=1.922ms, inertia=1.631903e+06
+  Iteration  9: assign=1.341ms, update=1.998ms, inertia=1.631902e+06
+  Iteration 10: assign=1.357ms, update=1.915ms, inertia=1.631902e+06
+  Iteration 11: assign=1.345ms, update=2.016ms, inertia=1.631901e+06
+  Iteration 12: assign=1.355ms, update=1.909ms, inertia=1.631901e+06
+  Iteration 13: assign=1.345ms, update=1.949ms, inertia=1.631900e+06
+  Iteration 14: assign=1.354ms, update=1.989ms, inertia=1.631900e+06
+  Iteration 15: assign=1.365ms, update=2.121ms, inertia=1.631900e+06
+  Iteration 16: assign=1.343ms, update=1.998ms, inertia=1.631899e+06
+  Iteration 17: assign=1.351ms, update=1.895ms, inertia=1.631899e+06
+  Iteration 18: assign=1.369ms, update=1.952ms, inertia=1.631898e+06
+  Iteration 19: assign=1.346ms, update=1.918ms, inertia=1.631898e+06
+  Iteration 20: assign=1.370ms, update=1.881ms, inertia=1.631898e+06
+  Run 1: 77.152 ms, final inertia=1.631898e+06
+OpenMP configuration: 16 threads
+  Run 2: 77.704 ms, final inertia=1.631898e+06
+OpenMP configuration: 16 threads
+  Run 3: 76.710 ms, final inertia=1.631898e+06
+OpenMP configuration: 16 threads
+  Run 4: 77.268 ms, final inertia=1.631898e+06
+OpenMP configuration: 16 threads
+  Run 5: 77.654 ms, final inertia=1.631898e+06
+
+=== Performance Summary ===
+Median total time: 77.268 ms
+Median assign time: 1.354 ms
+Median update time: 1.952 ms
+MLUPS: 1.890e+04
+Median final inertia: 1.6318976790e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/canonical_N200000_D16_K8_T16.csv
+
+OpenMP K-Means completed successfully!
+Test 2: Stress (N=100000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 100000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 20
+Random seed: 42
+OpenMP threads: 16
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=37.475ms, update=4.098ms, inertia=6.132062e+06
+Iteration 2: assign=22.882ms, update=0.628ms, inertia=2.757049e+06
+Iteration 3: assign=22.869ms, update=0.412ms, inertia=2.463796e+06
+Iteration 4: assign=22.820ms, update=0.599ms, inertia=2.463790e+06
+Iteration 5: assign=22.857ms, update=0.582ms, inertia=2.463786e+06
+Iteration 6: assign=22.828ms, update=0.549ms, inertia=2.463783e+06
+Iteration 7: assign=22.849ms, update=0.567ms, inertia=2.463781e+06
+Iteration 8: assign=22.826ms, update=0.559ms, inertia=2.463780e+06
+Iteration 9: assign=22.819ms, update=0.569ms, inertia=2.463779e+06
+Iteration 10: assign=22.847ms, update=0.388ms, inertia=2.463778e+06
+Iteration 11: assign=22.819ms, update=0.392ms, inertia=2.463777e+06
+Iteration 12: assign=22.817ms, update=0.401ms, inertia=2.463777e+06
+Iteration 13: assign=22.888ms, update=0.398ms, inertia=2.463776e+06
+Iteration 14: assign=22.817ms, update=0.391ms, inertia=2.463776e+06
+Iteration 15: assign=22.859ms, update=0.398ms, inertia=2.463776e+06
+Iteration 16: assign=22.824ms, update=0.395ms, inertia=2.463775e+06
+Iteration 17: assign=22.835ms, update=0.395ms, inertia=2.463775e+06
+Iteration 18: assign=22.841ms, update=0.732ms, inertia=2.463775e+06
+Iteration 19: assign=22.818ms, update=0.542ms, inertia=2.463775e+06
+Iteration 20: assign=22.824ms, update=0.545ms, inertia=2.463775e+06
+  Warmup 1: 505.849 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=22.938ms, update=0.651ms, inertia=6.132062e+06
+Iteration 2: assign=22.838ms, update=0.560ms, inertia=2.757049e+06
+Iteration 3: assign=22.877ms, update=0.552ms, inertia=2.463796e+06
+Iteration 4: assign=22.865ms, update=0.572ms, inertia=2.463790e+06
+Iteration 5: assign=22.843ms, update=0.540ms, inertia=2.463786e+06
+Iteration 6: assign=22.833ms, update=0.547ms, inertia=2.463783e+06
+Iteration 7: assign=23.194ms, update=0.560ms, inertia=2.463781e+06
+Iteration 8: assign=22.806ms, update=0.548ms, inertia=2.463780e+06
+Iteration 9: assign=22.801ms, update=0.543ms, inertia=2.463779e+06
+Iteration 10: assign=22.835ms, update=0.531ms, inertia=2.463778e+06
+Iteration 11: assign=22.835ms, update=0.534ms, inertia=2.463777e+06
+Iteration 12: assign=23.281ms, update=0.542ms, inertia=2.463777e+06
+Iteration 13: assign=22.888ms, update=0.552ms, inertia=2.463776e+06
+Iteration 14: assign=22.844ms, update=0.563ms, inertia=2.463776e+06
+Iteration 15: assign=23.076ms, update=0.555ms, inertia=2.463776e+06
+Iteration 16: assign=22.823ms, update=0.529ms, inertia=2.463775e+06
+Iteration 17: assign=22.814ms, update=0.552ms, inertia=2.463775e+06
+Iteration 18: assign=22.816ms, update=0.556ms, inertia=2.463775e+06
+Iteration 19: assign=22.815ms, update=0.550ms, inertia=2.463775e+06
+Iteration 20: assign=22.813ms, update=0.543ms, inertia=2.463775e+06
+  Warmup 2: 486.141 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=100000, D=64, K=64
+Iteration 1: assign=22.897ms, update=0.578ms, inertia=6.132062e+06
+Iteration 2: assign=23.353ms, update=0.869ms, inertia=2.757049e+06
+Iteration 3: assign=23.237ms, update=0.532ms, inertia=2.463796e+06
+Iteration 4: assign=22.833ms, update=0.555ms, inertia=2.463790e+06
+Iteration 5: assign=22.818ms, update=0.524ms, inertia=2.463786e+06
+Iteration 6: assign=22.824ms, update=0.544ms, inertia=2.463783e+06
+Iteration 7: assign=22.817ms, update=0.540ms, inertia=2.463781e+06
+Iteration 8: assign=22.831ms, update=0.532ms, inertia=2.463780e+06
+Iteration 9: assign=22.800ms, update=0.549ms, inertia=2.463779e+06
+Iteration 10: assign=22.805ms, update=0.548ms, inertia=2.463778e+06
+Iteration 11: assign=22.808ms, update=0.532ms, inertia=2.463777e+06
+Iteration 12: assign=23.073ms, update=0.543ms, inertia=2.463777e+06
+Iteration 13: assign=22.848ms, update=0.537ms, inertia=2.463776e+06
+Iteration 14: assign=22.870ms, update=0.532ms, inertia=2.463776e+06
+Iteration 15: assign=22.826ms, update=0.535ms, inertia=2.463776e+06
+Iteration 16: assign=22.833ms, update=0.544ms, inertia=2.463775e+06
+Iteration 17: assign=23.127ms, update=0.534ms, inertia=2.463775e+06
+Iteration 18: assign=22.799ms, update=0.553ms, inertia=2.463775e+06
+Iteration 19: assign=22.831ms, update=0.559ms, inertia=2.463775e+06
+Iteration 20: assign=22.851ms, update=0.520ms, inertia=2.463775e+06
+  Warmup 3: 486.282 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 16 threads
+  Iteration  1: assign=22.937ms, update=0.554ms, inertia=6.132062e+06
+  Iteration  2: assign=22.892ms, update=0.534ms, inertia=2.757049e+06
+  Iteration  3: assign=22.846ms, update=0.573ms, inertia=2.463796e+06
+  Iteration  4: assign=22.856ms, update=0.551ms, inertia=2.463790e+06
+  Iteration  5: assign=22.834ms, update=0.579ms, inertia=2.463786e+06
+  Iteration  6: assign=22.841ms, update=0.553ms, inertia=2.463783e+06
+  Iteration  7: assign=22.806ms, update=0.559ms, inertia=2.463781e+06
+  Iteration  8: assign=22.820ms, update=0.534ms, inertia=2.463780e+06
+  Iteration  9: assign=23.185ms, update=0.556ms, inertia=2.463779e+06
+  Iteration 10: assign=22.813ms, update=0.547ms, inertia=2.463778e+06
+  Iteration 11: assign=22.812ms, update=0.539ms, inertia=2.463777e+06
+  Iteration 12: assign=22.817ms, update=0.552ms, inertia=2.463777e+06
+  Iteration 13: assign=22.821ms, update=0.549ms, inertia=2.463776e+06
+  Iteration 14: assign=22.822ms, update=0.546ms, inertia=2.463776e+06
+  Iteration 15: assign=22.826ms, update=0.523ms, inertia=2.463776e+06
+  Iteration 16: assign=22.814ms, update=0.538ms, inertia=2.463775e+06
+  Iteration 17: assign=22.841ms, update=0.528ms, inertia=2.463775e+06
+  Iteration 18: assign=22.869ms, update=0.549ms, inertia=2.463775e+06
+  Iteration 19: assign=22.834ms, update=0.543ms, inertia=2.463775e+06
+  Iteration 20: assign=22.837ms, update=0.550ms, inertia=2.463775e+06
+  Run 1: 485.440 ms, final inertia=2.463775e+06
+OpenMP configuration: 16 threads
+  Run 2: 485.358 ms, final inertia=2.463775e+06
+OpenMP configuration: 16 threads
+  Run 3: 485.229 ms, final inertia=2.463775e+06
+OpenMP configuration: 16 threads
+  Run 4: 483.301 ms, final inertia=2.463775e+06
+OpenMP configuration: 16 threads
+  Run 5: 483.594 ms, final inertia=2.463775e+06
+
+=== Performance Summary ===
+Median total time: 485.229 ms
+Median assign time: 22.834 ms
+Median update time: 0.545 ms
+MLUPS: 1.794e+04
+Median final inertia: 2.4637748521e+06
+Iterations per run: 20
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/stress_N100000_D64_K64_T16.csv
+
+OpenMP K-Means completed successfully!
+Test 3: Medium (N=500000, D=32, K=32)
+=== OpenMP K-Means Configuration ===
+N: 500000 points
+D: 32 dimensions
+K: 32 clusters
+Max iterations: 15
+Random seed: 42
+OpenMP threads: 16
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=35.441ms, update=2.470ms, inertia=1.224529e+07
+Iteration 2: assign=27.951ms, update=2.256ms, inertia=6.159988e+06
+Iteration 3: assign=27.935ms, update=2.140ms, inertia=6.159715e+06
+Iteration 4: assign=28.224ms, update=2.012ms, inertia=6.159704e+06
+Iteration 5: assign=27.954ms, update=1.260ms, inertia=6.159698e+06
+Iteration 6: assign=27.892ms, update=2.707ms, inertia=6.159694e+06
+Iteration 7: assign=27.899ms, update=2.684ms, inertia=6.159691e+06
+Iteration 8: assign=27.905ms, update=2.745ms, inertia=6.159689e+06
+Iteration 9: assign=27.958ms, update=2.767ms, inertia=6.159687e+06
+Iteration 10: assign=27.892ms, update=2.665ms, inertia=6.159686e+06
+Iteration 11: assign=28.042ms, update=2.706ms, inertia=6.159684e+06
+Iteration 12: assign=27.883ms, update=2.743ms, inertia=6.159682e+06
+Iteration 13: assign=27.949ms, update=2.728ms, inertia=6.159681e+06
+Iteration 14: assign=27.914ms, update=2.719ms, inertia=6.159680e+06
+Iteration 15: assign=27.911ms, update=2.637ms, inertia=6.159678e+06
+  Warmup 1: 509.252 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=28.156ms, update=2.687ms, inertia=1.224529e+07
+Iteration 2: assign=27.846ms, update=2.710ms, inertia=6.159988e+06
+Iteration 3: assign=27.784ms, update=2.779ms, inertia=6.159715e+06
+Iteration 4: assign=27.745ms, update=2.775ms, inertia=6.159704e+06
+Iteration 5: assign=27.837ms, update=2.753ms, inertia=6.159698e+06
+Iteration 6: assign=27.764ms, update=2.721ms, inertia=6.159694e+06
+Iteration 7: assign=28.013ms, update=2.741ms, inertia=6.159691e+06
+Iteration 8: assign=27.769ms, update=2.788ms, inertia=6.159689e+06
+Iteration 9: assign=27.724ms, update=2.789ms, inertia=6.159687e+06
+Iteration 10: assign=27.778ms, update=2.732ms, inertia=6.159686e+06
+Iteration 11: assign=27.753ms, update=2.906ms, inertia=6.159684e+06
+Iteration 12: assign=27.803ms, update=2.785ms, inertia=6.159682e+06
+Iteration 13: assign=27.787ms, update=2.674ms, inertia=6.159681e+06
+Iteration 14: assign=27.999ms, update=2.732ms, inertia=6.159680e+06
+Iteration 15: assign=27.832ms, update=2.662ms, inertia=6.159678e+06
+  Warmup 2: 500.727 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=500000, D=32, K=32
+Iteration 1: assign=27.754ms, update=2.603ms, inertia=1.224529e+07
+Iteration 2: assign=32.097ms, update=2.895ms, inertia=6.159988e+06
+Iteration 3: assign=27.860ms, update=2.694ms, inertia=6.159715e+06
+Iteration 4: assign=28.156ms, update=2.821ms, inertia=6.159704e+06
+Iteration 5: assign=27.851ms, update=2.755ms, inertia=6.159698e+06
+Iteration 6: assign=27.825ms, update=2.764ms, inertia=6.159694e+06
+Iteration 7: assign=27.849ms, update=2.691ms, inertia=6.159691e+06
+Iteration 8: assign=27.827ms, update=2.781ms, inertia=6.159689e+06
+Iteration 9: assign=27.853ms, update=2.804ms, inertia=6.159687e+06
+Iteration 10: assign=28.041ms, update=2.669ms, inertia=6.159686e+06
+Iteration 11: assign=27.916ms, update=2.747ms, inertia=6.159684e+06
+Iteration 12: assign=27.931ms, update=2.767ms, inertia=6.159682e+06
+Iteration 13: assign=27.922ms, update=2.740ms, inertia=6.159681e+06
+Iteration 14: assign=27.880ms, update=2.722ms, inertia=6.159680e+06
+Iteration 15: assign=27.925ms, update=2.734ms, inertia=6.159678e+06
+  Warmup 3: 505.672 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 16 threads
+  Iteration  1: assign=27.775ms, update=2.753ms, inertia=1.224529e+07
+  Iteration  2: assign=27.876ms, update=2.804ms, inertia=6.159988e+06
+  Iteration  3: assign=27.863ms, update=2.755ms, inertia=6.159715e+06
+  Iteration  4: assign=27.862ms, update=2.756ms, inertia=6.159704e+06
+  Iteration  5: assign=27.841ms, update=2.799ms, inertia=6.159698e+06
+  Iteration  6: assign=27.798ms, update=2.679ms, inertia=6.159694e+06
+  Iteration  7: assign=28.061ms, update=2.779ms, inertia=6.159691e+06
+  Iteration  8: assign=27.806ms, update=2.742ms, inertia=6.159689e+06
+  Iteration  9: assign=27.771ms, update=2.729ms, inertia=6.159687e+06
+  Iteration 10: assign=27.797ms, update=2.815ms, inertia=6.159686e+06
+  Iteration 11: assign=27.761ms, update=2.752ms, inertia=6.159684e+06
+  Iteration 12: assign=27.823ms, update=2.690ms, inertia=6.159682e+06
+  Iteration 13: assign=28.053ms, update=2.751ms, inertia=6.159681e+06
+  Iteration 14: assign=27.780ms, update=2.710ms, inertia=6.159680e+06
+  Iteration 15: assign=27.820ms, update=2.682ms, inertia=6.159678e+06
+  Run 1: 500.876 ms, final inertia=6.159678e+06
+OpenMP configuration: 16 threads
+  Run 2: 501.033 ms, final inertia=6.159678e+06
+OpenMP configuration: 16 threads
+  Run 3: 499.434 ms, final inertia=6.159678e+06
+OpenMP configuration: 16 threads
+  Run 4: 503.477 ms, final inertia=6.159678e+06
+OpenMP configuration: 16 threads
+  Run 5: 497.597 ms, final inertia=6.159678e+06
+
+=== Performance Summary ===
+Median total time: 500.876 ms
+Median assign time: 27.820 ms
+Median update time: 2.748 ms
+MLUPS: 1.840e+04
+Median final inertia: 6.1596784231e+06
+Iterations per run: 15
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/medium_N500000_D32_K32_T16.csv
+
+OpenMP K-Means completed successfully!
+
+=== Large Scale Test with 16 threads ===
+Test 4: Large Scale (N=1000000, D=64, K=64)
+=== OpenMP K-Means Configuration ===
+N: 1000000 points
+D: 64 dimensions
+K: 64 clusters
+Max iterations: 10
+Random seed: 42
+OpenMP threads: 16
+Warmup iterations: 3
+Benchmark iterations: 5
+
+Generating synthetic data...
+
+Performing 3 warmup runs...
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=1000000, D=64, K=64
+Iteration 1: assign=270.887ms, update=7.795ms, inertia=7.708385e+07
+Iteration 2: assign=228.928ms, update=7.516ms, inertia=4.759241e+07
+Iteration 3: assign=228.878ms, update=7.372ms, inertia=3.516681e+07
+Iteration 4: assign=228.637ms, update=7.411ms, inertia=3.063859e+07
+Iteration 5: assign=254.401ms, update=10.861ms, inertia=3.063855e+07
+Iteration 6: assign=229.485ms, update=6.079ms, inertia=3.063853e+07
+Iteration 7: assign=228.694ms, update=6.062ms, inertia=3.063852e+07
+Iteration 8: assign=228.606ms, update=6.066ms, inertia=3.063851e+07
+Iteration 9: assign=252.107ms, update=15.750ms, inertia=3.063850e+07
+Iteration 10: assign=228.812ms, update=4.962ms, inertia=3.063850e+07
+  Warmup 1: 2566.413 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=1000000, D=64, K=64
+Iteration 1: assign=229.153ms, update=7.118ms, inertia=7.708385e+07
+Iteration 2: assign=229.306ms, update=7.189ms, inertia=4.759241e+07
+Iteration 3: assign=228.777ms, update=7.240ms, inertia=3.516681e+07
+Iteration 4: assign=228.679ms, update=7.308ms, inertia=3.063859e+07
+Iteration 5: assign=228.728ms, update=9.691ms, inertia=3.063855e+07
+Iteration 6: assign=229.076ms, update=7.338ms, inertia=3.063853e+07
+Iteration 7: assign=233.646ms, update=7.415ms, inertia=3.063852e+07
+Iteration 8: assign=228.879ms, update=7.314ms, inertia=3.063851e+07
+Iteration 9: assign=228.715ms, update=7.277ms, inertia=3.063850e+07
+Iteration 10: assign=228.685ms, update=9.819ms, inertia=3.063850e+07
+  Warmup 2: 2475.468 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=1000000, D=64, K=64
+Iteration 1: assign=236.053ms, update=19.591ms, inertia=7.708385e+07
+Iteration 2: assign=228.893ms, update=5.733ms, inertia=4.759241e+07
+Iteration 3: assign=228.897ms, update=5.860ms, inertia=3.516681e+07
+Iteration 4: assign=228.762ms, update=5.915ms, inertia=3.063859e+07
+Iteration 5: assign=232.861ms, update=5.916ms, inertia=3.063855e+07
+Iteration 6: assign=228.907ms, update=5.941ms, inertia=3.063853e+07
+Iteration 7: assign=228.644ms, update=5.919ms, inertia=3.063852e+07
+Iteration 8: assign=228.675ms, update=5.920ms, inertia=3.063851e+07
+Iteration 9: assign=228.698ms, update=5.924ms, inertia=3.063850e+07
+Iteration 10: assign=240.172ms, update=24.402ms, inertia=3.063850e+07
+  Warmup 3: 2505.426 ms
+
+Performing 5 benchmark runs...
+OpenMP configuration: 16 threads
+  Iteration  1: assign=229.071ms, update=7.157ms, inertia=7.708385e+07
+  Iteration  2: assign=228.873ms, update=7.257ms, inertia=4.759241e+07
+  Iteration  3: assign=229.074ms, update=7.268ms, inertia=3.516681e+07
+  Iteration  4: assign=228.923ms, update=7.371ms, inertia=3.063859e+07
+  Iteration  5: assign=231.642ms, update=9.071ms, inertia=3.063855e+07
+  Iteration  6: assign=244.824ms, update=6.412ms, inertia=3.063853e+07
+  Iteration  7: assign=229.119ms, update=5.979ms, inertia=3.063852e+07
+  Iteration  8: assign=237.624ms, update=26.334ms, inertia=3.063851e+07
+  Iteration  9: assign=229.052ms, update=5.171ms, inertia=3.063850e+07
+  Iteration 10: assign=228.823ms, update=4.980ms, inertia=3.063850e+07
+  Run 1: 2519.602 ms, final inertia=3.063850e+07
+OpenMP configuration: 16 threads
+  Run 2: 2528.598 ms, final inertia=3.063850e+07
+OpenMP configuration: 16 threads
+  Run 3: 2582.469 ms, final inertia=3.063850e+07
+OpenMP configuration: 16 threads
+  Run 4: 2605.577 ms, final inertia=3.063850e+07
+OpenMP configuration: 16 threads
+  Run 5: 2470.323 ms, final inertia=3.063850e+07
+
+=== Performance Summary ===
+Median total time: 2528.598 ms
+Median assign time: 229.110 ms
+Median update time: 7.257 ms
+MLUPS: 1.788e+04
+Median final inertia: 3.0638497006e+07
+Iterations per run: 10
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/large_N1000000_D64_K64_T16.csv
+
+OpenMP K-Means completed successfully!
+Test 5: Very Large Scale (N=5000000, D=128, K=128)
+=== OpenMP K-Means Configuration ===
+N: 5000000 points
+D: 128 dimensions
+K: 128 clusters
+Max iterations: 10
+Random seed: 42
+OpenMP threads: 16
+Warmup iterations: 2
+Benchmark iterations: 3
+
+Generating synthetic data...
+
+Performing 2 warmup runs...
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=5000000, D=128, K=128
+Iteration 1: assign=5568.843ms, update=95.342ms, inertia=5.390289e+08
+Iteration 2: assign=5581.206ms, update=95.490ms, inertia=2.664291e+08
+Iteration 3: assign=6219.724ms, update=88.639ms, inertia=2.663951e+08
+Iteration 4: assign=6130.652ms, update=86.633ms, inertia=2.663948e+08
+Iteration 5: assign=5971.768ms, update=84.372ms, inertia=2.663947e+08
+Iteration 6: assign=6168.165ms, update=91.125ms, inertia=2.663946e+08
+Iteration 7: assign=6025.337ms, update=82.965ms, inertia=2.663946e+08
+Iteration 8: assign=6375.336ms, update=82.610ms, inertia=2.663946e+08
+Iteration 9: assign=6096.524ms, update=88.224ms, inertia=2.663945e+08
+Iteration 10: assign=6190.036ms, update=84.110ms, inertia=2.663945e+08
+  Warmup 1: 62469.921 ms
+OpenMP configuration: 16 threads
+Starting OpenMP (16 threads) K-Means with N=5000000, D=128, K=128
+Iteration 1: assign=6182.241ms, update=82.794ms, inertia=5.390289e+08
+Iteration 2: assign=6149.007ms, update=75.891ms, inertia=2.664291e+08
+Iteration 3: assign=6139.124ms, update=82.444ms, inertia=2.663951e+08
+Iteration 4: assign=5934.915ms, update=78.040ms, inertia=2.663948e+08
+Iteration 5: assign=5955.939ms, update=83.429ms, inertia=2.663947e+08
+Iteration 6: assign=6037.677ms, update=78.026ms, inertia=2.663946e+08
+Iteration 7: assign=6445.711ms, update=76.101ms, inertia=2.663946e+08
+Iteration 8: assign=6384.911ms, update=77.493ms, inertia=2.663946e+08
+Iteration 9: assign=6047.731ms, update=74.101ms, inertia=2.663945e+08
+Iteration 10: assign=6138.895ms, update=76.923ms, inertia=2.663945e+08
+  Warmup 2: 63455.559 ms
+
+Performing 3 benchmark runs...
+OpenMP configuration: 16 threads
+  Iteration  1: assign=6387.950ms, update=156.997ms, inertia=5.390289e+08
+  Iteration  2: assign=5529.914ms, update=213.690ms, inertia=2.664291e+08
+  Iteration  3: assign=5483.280ms, update=85.964ms, inertia=2.663951e+08
+  Iteration  4: assign=5515.278ms, update=52.691ms, inertia=2.663948e+08
+  Iteration  5: assign=5517.832ms, update=128.673ms, inertia=2.663947e+08
+  Iteration  6: assign=5478.443ms, update=71.183ms, inertia=2.663946e+08
+  Iteration  7: assign=5503.512ms, update=101.826ms, inertia=2.663946e+08
+  Iteration  8: assign=5470.613ms, update=87.172ms, inertia=2.663946e+08
+  Iteration  9: assign=5512.517ms, update=64.925ms, inertia=2.663945e+08
+  Iteration 10: assign=5509.400ms, update=83.492ms, inertia=2.663945e+08
+  Run 1: 58010.135 ms, final inertia=2.663945e+08
+OpenMP configuration: 16 threads
+  Run 2: 56928.051 ms, final inertia=2.663945e+08
+OpenMP configuration: 16 threads
+  Run 3: 56515.472 ms, final inertia=2.663945e+08
+
+=== Performance Summary ===
+Median total time: 56928.051 ms
+Median assign time: 5512.517 ms
+Median update time: 70.796 ms
+MLUPS: 1.486e+04
+Median final inertia: 2.6639449775e+08
+Iterations per run: 10
+
+Writing results to: ../m2-bench/openmp/baseline_20251028_172938/xlarge_N5000000_D128_K128_T16.csv
+
+OpenMP K-Means completed successfully!
+
+=== OpenMP Scaling Analysis ===
+Thread counts tested: 1 2 4 8 16
+Results saved to: ../m2-bench/openmp/baseline_20251028_172938
+Job completed at: Tue Oct 28 17:39:08 AEST 2025
